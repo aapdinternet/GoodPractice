@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Good Practice des DLH Sek II</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+:root{
+  --ink:#0f1c1a; --ink-soft:#3d4f4b; --ink-faint:#6b7d78;
+  --paper:#f6f8f4; --card:#ffffff; --card-2:#eef2ea;
+  --rule:#d5ded1; --rule-strong:#b3c1ad;
+  --forest:#1d3437; --sage:#cadcca; --sage-deep:#8fae94;
+  --flame:#c1520a; --flame-soft:#f7e6d5;
+  --shadow:0 1px 0 rgba(15,28,26,.04), 0 8px 24px -18px rgba(15,28,26,.35);
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --grot:"Archivo","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --ink:#e6ece6; --ink-soft:#b2c0ba; --ink-faint:#879891;
+  --paper:#0e1614; --card:#15201e; --card-2:#1b2724;
+  --rule:#2a3833; --rule-strong:#3c4d47;
+  --forest:#a8c8c6; --sage:#2e433a; --sage-deep:#4f6b5b;
+  --flame:#f0913f; --flame-soft:#2c211a;
+  --shadow:0 1px 0 rgba(0,0,0,.3), 0 10px 30px -20px rgba(0,0,0,.9);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding:0 26px 80px}
+h1,h2,h3,.grot,a.card b{font-family:var(--grot)}
+h1{font-size:clamp(1.9rem,4vw,2.7rem);line-height:1.05;letter-spacing:-.028em;font-weight:700;margin:0;text-wrap:balance}
+header{border-bottom:1.5px solid var(--ink);padding:38px 0 22px}
+.org{font-family:var(--grot);font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;font-weight:600;color:var(--ink-faint)}
+.lede{font-size:1.1rem;color:var(--ink-soft);margin:16px 0 0}
+a{color:var(--forest)}
+.cards{display:grid;gap:18px;margin:30px 0 0}
+a.card{display:block;border:1.5px solid var(--rule-strong);background:var(--card);border-radius:4px;
+  padding:20px 22px;box-shadow:var(--shadow);text-decoration:none;color:inherit}
+a.card:hover{border-color:var(--flame)}
+a.card b{display:block;font-size:1.2rem;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+a.card .n{font-family:var(--grot);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;color:var(--flame);font-weight:600}
+a.card p{margin:8px 0 0;font-size:.98rem;color:var(--ink-soft)}
+.sheets{margin:34px 0 0;padding:18px 20px;border-left:3px solid var(--flame);background:var(--card-2)}
+.sheets h2{font-size:1.05rem;margin:0 0 6px}
+.sheets p{margin:0 0 10px;font-size:.95rem;color:var(--ink-soft)}
+.sheets a{display:inline-block;font-family:var(--grot);font-size:.86rem;margin-right:18px}
+footer{margin-top:50px;border-top:1.5px solid var(--ink);padding-top:16px;font-family:var(--grot);font-size:.78rem;color:var(--ink-faint)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="org">Digital Learning Hub Sek II &middot; Prototypen</div>
+  <h1>Good Practice des DLH</h1>
+  <p class="lede">Zwei Arbeitsstände, die zeigen, was auf dlh.zh.ch an erprobtem Unterricht liegt –
+  einmal auf das Wesentliche reduziert, einmal vollständig. Beide sind Prototypen zur Diskussion,
+  nicht die offizielle Website.</p>
+</header>
+
+<div class="cards">
+  <a class="card" href="DLH_Seite_GoodPractice_PROTOTYP.html">
+    <span class="n">Für Lehrpersonen</span>
+    <b>Praxisbeispiele – Good-Practice-Beispiele</b>
+    <p>59 Beispiele aus Zürcher Schulen der Sek II, die eine Lehrperson durchgeführt hat und die als
+    Mustervorlage für das eigene Handeln taugen. Einstieg über das Vorhaben oder das Fach.</p>
+  </a>
+  <a class="card" href="DLH_Seite_Angebote_PROTOTYP.html">
+    <span class="n">Der ganze Bestand</span>
+    <b>Wo kann ich was abholen?</b>
+    <p>Alle 363 Angebote des DLH einzeln und verlinkt: Praxisbeispiele, eAssessment-Methoden,
+    Impuls-Workshops, Essenzen, Podcast, Innovationsfonds und Kuratiertes – mit Filtern,
+    Suche und zwei Kreuztabellen.</p>
+  </a>
+</div>
+
+<div class="sheets">
+  <h2>Die beiden A3-Druckblätter</h2>
+  <p>Der ganze Bestand auf je einem Blatt, A3 quer – zum Ausdrucken für Workshops und Schulbesuche.</p>
+  <a href="DLH_Matrix_Anliegen_Gefaess_A3.pdf">Anliegen &times; Gefäss (PDF)</a>
+  <a href="DLH_Matrix_Thema_Gefaess_A3.pdf">Thema &times; Gefäss (PDF)</a>
+</div>
+
+<footer>
+  Digital Learning Hub Sek II &middot; Riesbachstrasse 11 &middot; 8090 Zürich &middot;
+  <a href="https://dlh.zh.ch">dlh.zh.ch</a><br>
+  Stand 12. September 2026. Die Zuordnung der Angebote zu Anliegen und Themen ist ein Vorschlag der Redaktion.
+</footer>
+</div>
+</body>
+</html>
