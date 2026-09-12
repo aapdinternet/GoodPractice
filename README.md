@@ -1,19 +1,23 @@
-# Good Practice – Übersicht für Lehrpersonen
+# Good Practice des DLH Sek II
 
-Wegweiser zu den Good-Practice-Gefässen des Digital Learning Hub Sek II:
-«Zu welchem Thema kann ich wo etwas abholen?»
+Prototypen für eine Übersicht über die erprobten Unterrichtsbeispiele des
+[Digital Learning Hub Sek II](https://dlh.zh.ch).
 
-Die Übersicht bündelt, was auf dlh.zh.ch heute unter verschiedenen Namen
-verstreut ist – Praxisbeispiele, Innovationsfondsprojekte, «Denken mit KI»,
-Prompting-Beispiele, Lehr-Lern-Lösungen, Impuls-Workshops, eAssessments.
+**→ [Zur Übersicht](https://aapdinternet.github.io/GoodPractice/)**
 
-## Aufbau
+| Seite | Was sie zeigt |
+|---|---|
+| [Praxisbeispiele – Good-Practice-Beispiele](https://aapdinternet.github.io/GoodPractice/DLH_Seite_GoodPractice_PROTOTYP.html) | 59 Beispiele aus Zürcher Schulen der Sek II, die eine Lehrperson durchgeführt hat und die als Mustervorlage für das eigene Handeln taugen. |
+| [Wo kann ich was abholen?](https://aapdinternet.github.io/GoodPractice/DLH_Seite_Angebote_PROTOTYP.html) | Alle 363 Angebote des DLH einzeln und verlinkt, mit Filtern, Suche und zwei Kreuztabellen. |
 
-- `index.html` – Standalone-Prototyp der Übersichtsseite (folgt)
-- Filterung nach Fach × Stufe × Aufwand
-- druckbare A3-Variante als PDF
+Dazu die beiden A3-Druckblätter «Anliegen × Gefäss» und «Thema × Gefäss».
 
-## Status
+## Stand und Vorbehalte
 
-In Arbeit. Der Prototyp entsteht zuerst als eigenständige HTML-Seite und
-wird später als YOOtheme-Layout auf dlh.zh.ch übernommen.
+Erhoben am 6. September 2026, nachgeführt am 10. und 12. September 2026.
+Beide Seiten sind **Prototypen zur Diskussion**, nicht die offizielle Website.
+Die Zuordnung der Angebote zu Anliegen und Themen ist regelbasiert vorgeschlagen
+und redaktionell noch nicht freigegeben.
+
+Jede Seite ist eine einzelne HTML-Datei ohne Abhängigkeiten – herunterladen und
+lokal öffnen funktioniert genauso.
