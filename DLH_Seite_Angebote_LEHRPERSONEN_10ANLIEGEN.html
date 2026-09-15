@@ -355,8 +355,10 @@ footer.site{border-top:2px solid var(--ink)}
 .door #deepdive>summary:hover{background:transparent}
 
 /* ===== Ergebnisband: ab dem Querstrich zart hinterlegt =============== */
-.ergebnisse{background:var(--past-ergebnis);margin:30px -26px 0;padding:0 26px 34px}
-.ergebnisse .toolbar{margin:0;padding-top:16px}
+/* Das Band ist genau so breit wie die vier Kästen darüber – kein Rand-zu-Rand mehr.
+   Der Querstrich läuft mit negativen Rändern trotzdem über die ganze Bandbreite. */
+.ergebnisse{background:var(--past-ergebnis);margin:30px 0 0;padding:0 18px 34px}
+.ergebnisse .toolbar{margin:0 -18px 6px;padding:16px 18px 0}
 .ergebnisse #results{margin:0}
 @media print{.ergebnisse{background:#fff;margin:0;padding:0}}
 
