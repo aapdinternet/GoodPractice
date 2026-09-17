@@ -375,6 +375,17 @@ footer.site{border-top:2px solid var(--ink)}
 .seghint{font-family:var(--grot);font-size:.76rem;color:var(--ink-faint);white-space:nowrap}
 .legend .leglab{font-family:var(--grot);font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;
   font-weight:700;color:var(--ink-soft)}
+
+/* ===== Bestandskarte: Felder sind Schaltflächen oder Links =========== */
+.deep .map .cell{border:0;font:inherit;color:inherit;text-align:left;text-decoration:none;width:100%}
+.deep .map button.cell,.deep .map a.cell{cursor:pointer}
+.deep .map button.cell:hover{background:#f9e0c6}
+.deep .map a.cell:hover{background:var(--past-gruen)}
+.deep .map a.cell:hover .loc{color:var(--dlh-orange)}
+.deep .map .cell.teil{background:var(--card-2)}
+.deep .map .cell.teil .metric{color:var(--ink-faint)}
+.deep .map .cell .ext{color:var(--dlh-orange);font-weight:700}
+.deep .map .cell .lbl b{font-weight:700;color:var(--dlh-orange)}
 @media(max-width:700px){.seghint{white-space:normal}}
 
 @media print{
@@ -406,7 +417,7 @@ footer.site{border-top:2px solid var(--ink)}
 <header class="site">
   <div class="kicker">
     <span class="org">Alle Angebote auf einen Blick</span>
-    <span class="org">Stand 12. September 2026</span>
+    <span class="org">Stand 16. September 2026</span>
   </div>
   <h1>Was brauche ich für meinen Unterricht?</h1>
   <p class="lede">Diese Seite bietet einen Überblick über alle <b>363 Angebote</b> des DLH: jede Workshop-Aufzeichnung,
@@ -610,6 +621,17 @@ footer.site{border-top:2px solid var(--ink)}
           
           </div>
         </details>
+
+        <details class="acc accsub">
+          <summary><span class="num">4</span><span>Wo liegt was? Die Bestandskarte</span></summary>
+          <div class="accbody">
+            <p class="accintro">Jedes Gefäss mit seinem Bestand und seinem Ort auf dlh.zh.ch.
+            <b>Orange Felder filtern die Liste weiter unten</b>, die weissen führen auf dlh.zh.ch –
+            dort liegen die Inhalte als Seiten, nicht als einzeln abzählbare Einträge.</p>
+            <div class="mapnote" id="karteLegende"></div>
+            <div class="map" id="bestandskarte"></div>
+          </div>
+        </details>
       </div>
     </details>
   </section>
@@ -664,7 +686,7 @@ var GEF_WAS = {
 var AKURZ = ["KI als Tutorin","anders prüfen","formativ Feedback","prompten & Assistenten","kantonale KI-Tools","Fachschaft vor Ort","wirkungsvoller unterrichten","Matur- und Vertiefungsarbeiten","Sprachen & Schreiben","Medienkompetenz","Lernplattform & Lernumgebung","Regeln & Weiterbildung","eigenes IF-Projekt","Ablenkung zurückdrängen","KI verstehen","digital arbeiten","eigenes Material","VR, 3D und Labor","Gamification","selbstorganisiertes Lernen"];
 var STU = ["Gymnasium","Berufsbildung","Überfachlich"];
 var AUF = ["sofort einsetzbar","anpassen","Inspiration"];
-var S = {q:"", anliegen:new Set(), thema:new Set(), fach:new Set(), gefaess:new Set(), stufe:new Set(), aufwand:new Set(), group:"gefaess", offen:false, themaOffen:false, archiv:false};
+var S = {q:"", anliegen:new Set(), thema:new Set(), fach:new Set(), gefaess:new Set(), quelle:new Set(), stufe:new Set(), aufwand:new Set(), group:"gefaess", offen:false, themaOffen:false, archiv:false};
 
 function norm(s){return (s||"").toLowerCase()
   .replace(/ä/g,"a").replace(/ö/g,"o").replace(/ü/g,"u").replace(/ß/g,"ss")
@@ -686,6 +708,7 @@ function passes(a, skip){
   if(skip!=="thema" && S.themaOffen && a._th.length) return false;
   if(skip!=="fach" && S.fach.size && !a.faecher.some(function(f){return S.fach.has(f)})) return false;
   if(skip!=="gefaess" && S.gefaess.size && !S.gefaess.has(a.gefaess)) return false;
+  if(skip!=="quelle" && S.quelle.size && !S.quelle.has(a.quelle)) return false;
   if(skip!=="stufe" && S.stufe.size && !a.stufen.some(function(s){return S.stufe.has(s)})) return false;
   if(skip!=="aufwand" && S.aufwand.size && !S.aufwand.has(a.aufwand)) return false;
   return true;
@@ -736,6 +759,7 @@ function render(){
   if(S.archiv) act.push(['archiv','1',"inkl. Archiv 2020/21"]);
   S.fach.forEach(function(f){act.push(['fach',f,"Fach: "+f]);});
   S.gefaess.forEach(function(g){act.push(['gefaess',g,g]);});
+  S.quelle.forEach(function(q){act.push(['quelle',q,q]);});
   S.stufe.forEach(function(s){act.push(['stufe',s,s]);});
   S.aufwand.forEach(function(u){act.push(['aufwand',u,u]);});
   var ab = document.getElementById('activebar');
@@ -808,7 +832,7 @@ document.addEventListener('click', function(e){
   if(!b) return;
   if(b.id==="resetAll" || b.id==="resetAll2"){
     S.q=""; document.getElementById('q').value="";
-    ["anliegen","thema","fach","gefaess","stufe","aufwand"].forEach(function(k){S[k].clear();});
+    ["anliegen","thema","fach","gefaess","quelle","stufe","aufwand"].forEach(function(k){S[k].clear();});
     S.offen=false; S.themaOffen=false; S.archiv=false; render(); window.scrollTo({top:0,behavior:'smooth'}); return;
   }
   if(b.id==="fachMore"){ var el=document.getElementById('fachChips'); el.dataset.all = el.dataset.all==="1"?"0":"1"; render(); return; }
@@ -827,6 +851,17 @@ document.addEventListener('click', function(e){
     render();
     var res=document.getElementById('results');
     if(res) res.scrollIntoView({behavior:'smooth',block:'start'});
+    return;
+  }
+  if(b.dataset.karte){
+    var kp = b.dataset.karte.split("|");
+    S.anliegen.clear(); S.thema.clear(); S.gefaess.clear(); S.quelle.clear();
+    S.offen=false; S.themaOffen=false;
+    if(kp[0]) S.gefaess.add(kp[0]);
+    if(kp[1]) S.quelle.add(kp[1]);
+    render();
+    var rz=document.getElementById('results');
+    if(rz) rz.scrollIntoView({behavior:'smooth',block:'start'});
     return;
   }
   if(b.dataset.k){ toggle(b.dataset.k, b.dataset.v); render(); }
@@ -974,16 +1009,77 @@ function matrix(kind){
     '<td class="sum">'+gesamt+'</td></tr></tfoot></table></div>';
   return h;
 }
+
+/* ===== Bestandskarte: jedes Gefäss mit Bestand und Ort =================
+   Die Zahlen der sieben gezählten Gefässe kommen aus der DB, damit sie nicht
+   veralten. Die übrigen sind redaktionelle Angaben – dort führt der Klick
+   auf dlh.zh.ch statt in die Liste. */
+function zGef(g){ return A.filter(function(a){return !a.archiv && a.gefaess===g;}).length; }
+function zQue(q){ return A.filter(function(a){return !a.archiv && a.quelle===q;}).length; }
+var KARTE = [
+ {n:function(){return zGef("Innovationsfonds")}, lbl:"Innovationsfonds&shy;projekte",
+  loc:"Innovationsfonds \u203a \u00dcbersicht Projekte", g:"Innovationsfonds"},
+ {n:function(){return zGef("Praxisbeispiel")}, lbl:"Praxisbeispiele \u00abDenken mit KI\u00bb",
+  loc:"Fokus 2026 \u203a Praxisbeispiele KI", g:"Praxisbeispiel"},
+ {n:function(){return zGef("Impuls-Workshop")}, lbl:"Impuls&#8209;Workshops, Aufzeichnungen",
+  loc:"Impuls-Workshops \u203a sieben Themenarchive", g:"Impuls-Workshop"},
+ {fix:"13", sub:"von 42", lbl:"davon die Reihe \u00abDenken mit KI\u00bb 2026",
+  loc:"GenKI-Archiv 2026 \u00b7 Teilmenge der Impuls-Workshops", teil:true},
+ {n:function(){return zGef("Essenz")}, sub:"+ 6 Archiv", lbl:"Essenzen als OnePager (PDF)",
+  loc:"Impuls-Workshops \u00b7 Kuratiertes", g:"Essenz"},
+ {n:function(){return zGef("Podcast")}, lbl:"DLH&#8209;Talk \u00abDenken mit KI\u00bb, Podcast&#8209;Episoden",
+  loc:"Fokus 2026 \u203a eingebettet", g:"Podcast"},
+ {n:function(){return zQue("eAssessment-Methode, formativ")}, lbl:"eAssessment&#8209;Methoden, <b>formativ</b>",
+  loc:"eAssessments \u203a digitale formative Assessments", g:"eAssessment", q:"eAssessment-Methode, formativ"},
+ {n:function(){return zQue("eAssessment-Methode, summativ")}, lbl:"eAssessment&#8209;Methoden, <b>summativ</b>",
+  loc:"eAssessments \u203a digitale summative Assessments", g:"eAssessment", q:"eAssessment-Methode, summativ"},
+ {n:function(){return zGef("Kuratiertes")}, lbl:"Kuratiertes: Studien, Stecknadeln",
+  loc:"Kuratiertes", g:"Kuratiertes"},
+ {fix:"2", sub:"Seiten", lbl:"Prompting: Prinzipien und Prompt&#8209;Bibliothek",
+  loc:"GenKI \u203a KI verstehen", url:"https://dlh.zh.ch/home/genki/ki-verstehen/prinzipien-von-prompting"},
+ {fix:"3", lbl:"Handreichungen und schulinterne KI&#8209;Guides",
+  loc:"GenKI \u203a KI handhaben und regeln",
+  url:"https://dlh.zh.ch/home/genki/ki-handhaben-und-regeln/beispiele-schulinternter-ki-guides"},
+ {fix:"4", sub:"+ Copilot", lbl:"Kantonal pilotierte KI&#8209;Tools mit Schullizenz",
+  loc:"GenKI \u203a Lehren und Lernen \u00b7 Fobizz",
+  url:"https://dlh.zh.ch/home/genki/lehren-und-lernen-mit-ki/ki-tools-fobizz-to-teach-copilot"},
+ {fix:"21", lbl:"CoPs \u2013 wo man Menschen statt Dateien abholt",
+  loc:"CoPs", url:"https://dlh.zh.ch/home/cops"},
+ {neu:true, lbl:"Lehr&#8209;Lern&#8209;L\u00f6sungen: Fachschafts&shy;begleitung und f\u00fcnf Basis&#8209;Workshops",
+  loc:"noch ohne Ort auf der Website"}
+];
+function drawKarte(){
+  var box = document.getElementById('bestandskarte');
+  if(!box || box.innerHTML) return;
+  box.innerHTML = KARTE.map(function(c){
+    var zahl = c.neu ? 'neu' : (c.fix || String(c.n()));
+    var kopf = '<span class="metric">'+zahl+(c.sub?' <small>'+c.sub+'</small>':'')+'</span>'+
+               '<span class="lbl">'+c.lbl+'</span>'+
+               '<span class="loc">'+c.loc+(c.url?' <span class="ext">\u2197</span>':'')+'</span>';
+    if(c.g) return '<button class="cell filtered" data-karte="'+esc(c.g)+'|'+esc(c.q||'')+'">'+kopf+'</button>';
+    if(c.url) return '<a class="cell" href="'+c.url+'" target="_blank" rel="noopener">'+kopf+'</a>';
+    return '<div class="cell'+(c.neu?' soon':'')+(c.teil?' teil':'')+'">'+kopf+'</div>';
+  }).join("");
+  var leg = document.getElementById('karteLegende');
+  if(leg) leg.innerHTML =
+    '<i><span class="sw f"></span>filtert die Liste unten</i>'+
+    '<i><span class="sw n"></span>f\u00fchrt auf dlh.zh.ch \u2197</i>'+
+    '<i><span class="sw s"></span>neu, im Aufbau</i>'+
+    '<i>Die sieben orangen Best\u00e4nde ergeben zusammen die '+
+      A.filter(function(a){return !a.archiv;}).length+' Angebote der Liste.</i>';
+}
 function drawMatrices(){
   var a=document.getElementById('mxAnliegen'), t=document.getElementById('mxThema');
   if(a && !a.innerHTML) a.innerHTML = matrix("anliegen");
   if(t && !t.innerHTML) t.innerHTML = matrix("thema");
+  drawKarte();
 }
 document.querySelectorAll('.deep details.accsub').forEach(function(d){
   d.addEventListener('toggle', drawMatrices);
 });
 
 render();
+drawKarte();
 </script>
 </body>
 </html>
