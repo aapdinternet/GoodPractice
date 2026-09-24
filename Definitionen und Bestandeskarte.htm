@@ -300,11 +300,12 @@ footer.site{border-top:2px solid var(--ink)}
 
 /* Kopf im Stil von dlh.zh.ch: Farbbalken und Logo */
 .dlhbar{height:6px;background:linear-gradient(90deg,#8a5da4 0%,#ec6608 100%)}
-.dlhtop{max-width:1180px;margin:0 auto;padding:18px 26px 0;display:flex;align-items:center;
-  justify-content:space-between;gap:20px;flex-wrap:wrap}
-.dlhtop img{height:46px;width:auto;display:block}
-.dlhtop .zurueck{font-family:var(--grot);font-size:.8rem;font-weight:700;color:var(--ink);
-  text-decoration:none;border-bottom:2px solid var(--flame);padding-bottom:2px}
+.dlhtop{margin:0;padding:18px 22px 12px;display:flex;align-items:center;
+  justify-content:space-between;gap:20px;flex-wrap:wrap;background:#fff}
+.dlhtop .dlhname{font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:700;
+  color:#8a5da4;text-decoration:underline;text-decoration-color:#ec6608;text-underline-offset:3px}
+.dlhtop .zurueck{font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:700;color:#1d3437;
+  text-decoration:none;border-bottom:2px solid #ec6608;padding-bottom:2px;white-space:nowrap}
 .dlhtop .zurueck:hover{color:var(--flame)}
 @media print{.dlhbar,.dlhtop{display:none!important}}
 
@@ -415,10 +416,10 @@ footer.site{border-top:2px solid var(--ink)}
 </style>
 </head>
 <body>
+<div class="dlhbar" aria-hidden="true"></div>
 <div class="dlhtop">
-  <a href="https://dlh.zh.ch/" target="_blank" rel="noopener" aria-label="Digital Learning Hub Sek II">
-    <img src="Definitionen%20und%20Bestandeskarte_files/DLH-Logo-Wappen-und-Loewe_reQ8.svg" alt="Digital Learning Hub Sek II" onerror="this.closest('a').innerHTML='<span style=&quot;font-family:var(--fett);font-weight:900;font-size:1.05rem;color:var(--ink)&quot;>Digital Learning Hub Sek II</span>'">
-  </a>
+  <a class="dlhname" href="https://dlh.zh.ch/" target="_blank" rel="noopener">Digital Learning Hub Sek II</a>
+  <a class="zurueck" href="https://dlh.zh.ch/" target="_blank" rel="noopener">dlh.zh.ch</a>
 </div>
 <main class="wrap">
 <header class="site"><h1>Übersicht zum Bestand des DLH</h1></header>
