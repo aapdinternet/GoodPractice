@@ -866,6 +866,9 @@ function zeichneListe(){
 /* ---------- Die Brücke: Filter -> Kontext für den Bot ----------------------- */
 function baueKontext(){
   const k = $("#kontext");
+  /* 26.9.2026: Hinweiskasten beim Bot ausgeschaltet (Wunsch André).
+     Zum Wiedereinschalten diese Zeile entfernen. */
+  k.hidden = true; return;
   if (!aktiv()){ k.hidden = true; return; }
   const teile = [];
   if (Z.fach) teile.push(Z.fach);
