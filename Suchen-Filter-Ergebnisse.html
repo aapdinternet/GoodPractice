@@ -223,7 +223,7 @@
   }
   .karte-kopf{display:flex; gap:10px; align-items:flex-start}
   .karte h3{margin:0; font-size:15px; font-weight:600; line-height:1.35; flex:1}
-  .karte h3 a{color:inherit; text-decoration:none}
+  .karte h3 a{color:inherit; text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px}
   .karte h3 a:hover{color:var(--orange); text-decoration:underline}
   .karte p{margin:6px 0 8px; font-size:13.5px; color:var(--muted); line-height:1.5}
   .meta{display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:11.5px}
@@ -237,9 +237,19 @@
   .sortierung button[data-kategorie],.tag[data-kategorie]{background:transparent;color:var(--kat-fg);border-color:var(--kat-rand)}
   .sortierung button[aria-pressed="true"]{outline:2px solid var(--kat-fg);outline-offset:2px}
   .karte h3 a[data-kategorie]{background:transparent;color:var(--kat-fg);padding:0}
+  /* Ergebnistitel orange wie alle Links (27.9.2026) */
+  .karte h3 a[data-kategorie="titel"]{color:var(--orange)}
+  .karte h3 a[data-kategorie="titel"]:hover{color:#b44700}
   .karte-kopf h3{min-width:0;overflow-wrap:anywhere}
   .karte-kopf [data-frage]{flex-shrink:0;font-size:11.5px;padding:3px 8px}
   @media(max-width:420px){.karte-kopf{flex-wrap:wrap}.karte-kopf h3{flex-basis:100%}}
+  /* Merkmale als Fliesstext statt Pillen (27.9.2026) */
+  .merkmal[data-kategorie]{color:var(--kat-fg)}
+  .merkmale-intro{font-style:italic}
+  /* «Bot dazu fragen» dunkelviolett mit weisser Schrift */
+  .karte-kopf [data-frage]{background:#71368a; border-color:#71368a; color:#fff}
+  .karte-kopf [data-frage]:hover{background:#5a2a6e; border-color:#5a2a6e; color:#fff}
+  #suchform{gap:6px; flex-wrap:nowrap}
   .knopf{
     border:1px solid var(--line); background:none; border-radius:7px;
     padding:4px 11px; font-size:12.5px; cursor:pointer; color:var(--muted);
@@ -438,9 +448,11 @@
     <!-- ===== rechts: der Bot ===== -->
     <aside class="rechts" id="rechts">
       <div class="ergebnis-leiste spalten-leiste"><h2 class="ergebnis-titel">Suchen</h2></div>
-      <div class="suchzeile">
-        <input id="suche" type="search" placeholder="Suche: in 369 Angeboten des DLH…" autocomplete="off" aria-label="Volltextsuche">
-      </div>
+      <form class="suchzeile eingabe" id="suchform" role="search">
+        <input id="suche" type="search" placeholder="Suche in DLH Angeboten" autocomplete="off" aria-label="Volltextsuche">
+        <button type="submit" id="suchego">go</button>
+        <button id="suchereset" type="button" title="Suche löschen">reset</button>
+      </form>
       <form class="eingabe" id="form">
         <input id="frage" placeholder="Frage an den Bot …" autocomplete="off" aria-label="Frage">
         <button type="submit" id="senden">go</button>
@@ -721,7 +733,7 @@ function karte(a, mitId=true){
   d.className = "karte";
   if (mitId) d.id = "angebot-"+a._i;
   const meta = [];
-  const tag = (art, wert, beschreibung) => '<span class="tag" data-kategorie="'+art+'" title="'+esc(beschreibung)+'">'+esc(wert)+'</span>';
+  const tag = (art, wert, beschreibung) => '<span class="merkmal" data-kategorie="'+art+'" title="'+esc(beschreibung)+'">'+esc(wert)+'</span>';
   const faecher = a.faecher || [];
   faecher.forEach(fach => meta.push(tag("fach", fach, "Fach: "+fach)));
   if (!faecher.length) meta.push(tag("fach", "überfachlich", "Fach: überfachlich"));
@@ -731,14 +743,15 @@ function karte(a, mitId=true){
   if (a.gefaess) meta.push(tag("gefaess", a.gefaess, "Gefäss: "+a.gefaess));
   if (a.datum) meta.push(tag("datum", a.datum, "Datum: "+a.datum));
   if (a.aufwand) meta.push(tag("aufwand", a.aufwand, "Aufwand: "+a.aufwand));
-  if (a.archiv) meta.push('<span class="tag">Archiv</span>');
+  if (a.archiv) meta.push('<span class="merkmal">Archiv</span>');
   d.innerHTML =
     '<div class="karte-kopf">'+
       '<h3><a data-kategorie="titel" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.titel)+'</a></h3>'+
       '<button class="knopf" type="button" data-frage="'+esc(a.titel)+'">Bot dazu fragen</button>'+
     '</div>'+
-    '<p>'+esc(a.lead)+'</p>'+
-    '<div class="meta">'+meta.join("")+'</div>';
+    '<p>'+esc(a.lead)+
+      (meta.length ? ' <span class="merkmale"><span class="merkmale-intro">Eingeordnet unter:</span> '+meta.join(", ")+'</span>' : '')+
+    '</p>';
   d.querySelector("[data-frage]").addEventListener("click", () => {
     frageStellen('Was steckt hinter «'+a.titel+'»?');
   });
@@ -1014,6 +1027,22 @@ function alles(){ gezeigt = 60; baueFilter(); zeichneListe(); baueKontext(); }
 
 /* ---------- Verdrahtung ----------------------------------------------------- */
 $("#suche").addEventListener("input", e => { Z.suche = e.target.value; Z.nurEins=null; alles(); });
+/* go und reset beim Suchfeld (27.9.2026): gefiltert wird weiterhin schon beim
+   Tippen; go bestätigt und springt an den Anfang der Ergebnisse, reset leert. */
+function zumListenanfang(){
+  let el = $("#liste");
+  while (el && el !== document.body){
+    if (el.scrollHeight > el.clientHeight && getComputedStyle(el).overflowY !== "visible"){ el.scrollTop = 0; break; }
+    el = el.parentElement;
+  }
+}
+$("#suchform").addEventListener("submit", e => {
+  e.preventDefault();
+  Z.suche = $("#suche").value; Z.nurEins=null; alles(); zumListenanfang();
+});
+$("#suchereset").addEventListener("click", () => {
+  $("#suche").value = ""; Z.suche = ""; Z.nurEins=null; alles(); zumListenanfang(); $("#suche").focus();
+});
 $("#sortierung").addEventListener("click", e => {
   const b = e.target.closest("[data-sort]");
   if (!b) return;
