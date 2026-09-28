@@ -242,6 +242,10 @@
   .fundstellen{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
   .schnell{margin:0 18px; padding:12px 14px 10px; border-radius:14px; background:var(--violett-hell); max-height:30dvh; overflow-y:auto; flex-shrink:0}
   .schnell h3{margin:0 0 8px; font-size:13px; font-weight:700}
+  /* Überschrift und «alle anzeigen» in einer Zeile, die vier ersten Links in einer zweiten (28.9.2026) */
+  .schnell h3 .faecher-link{margin:0 0 0 4px; font-size:13px}
+  .schnell .chips{gap:5px}
+  .schnell .chip{font-size:12px; padding:4px 10px}
   .eingabe{display:flex; gap:6px; padding:12px 18px calc(16px + env(safe-area-inset-bottom,0px)); flex-shrink:0}
   .eingabe input{flex:1; min-width:0; padding:11px 13px; border-radius:11px; border:2px solid var(--violett-rand);
                  background:var(--card); color:inherit; font:inherit; font-size:14px}
@@ -385,14 +389,13 @@
         <span id="botlage" style="font-weight:400;font-size:12px">live</span></h2>
       <button class="bot-zu" id="botZu" type="button" aria-label="Bot schliessen">×</button>
     </div>
-    <p class="bot-intro">Der Bot erklärt Begriffe, nennt Personen und kommende Termine – alles, was in der Liste nicht steht.</p>
     <div class="kontext" id="kontext" hidden></div>
     <div class="verlauf" id="verlauf"></div>
     <div class="schnell">
-      <h3>Schnell-Links</h3>
+      <h3>Schnell-Links:
+        <a class="faecher-link" id="alleChatbotInfos" href="#schnellfragen" aria-controls="schnellfragen" aria-expanded="false">alle anzeigen</a>
+        <a class="faecher-link" id="chatbotInfosEinklappen" href="#schnellfragen" aria-controls="schnellfragen" hidden>einklappen</a></h3>
       <div class="chips" id="schnellfragen"></div>
-      <a class="faecher-link" id="alleChatbotInfos" href="#schnellfragen" aria-controls="schnellfragen" aria-expanded="false">alle anzeigen</a>
-      <a class="faecher-link" id="chatbotInfosEinklappen" href="#schnellfragen" aria-controls="schnellfragen" hidden>einklappen</a>
     </div>
     <form class="eingabe" id="form">
       <input id="frage" placeholder="Frage an den Bot …" autocomplete="off" aria-label="Frage">
@@ -1082,7 +1085,7 @@ $("#zumStart").addEventListener("click", zumStart);
 
 $("#botreset").addEventListener("click", botZuruecksetzen);
 
-let alleChatbotInfos = true;   // Schnell-Links von Anfang an ausgeklappt (28.9.2026)
+let alleChatbotInfos = false;  // Schnell-Links anfangs eingeklappt: zwei Zeilen (28.9.2026)
 function baueSchnellfragen(){
   const liste = $("#schnellfragen");
   liste.textContent = "";
