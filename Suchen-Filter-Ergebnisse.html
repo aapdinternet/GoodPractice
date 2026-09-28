@@ -5,363 +5,285 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Alle Angebote des Digital Learning Hub Sek II, filterbar nach Fach und Anliegen - daneben der DLH-Bot fuer alles, was die Liste nicht weiss.">
 <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'&gt;&lt;circle cx='13' cy='16' r='9' fill='%23ec6608'/&gt;&lt;circle cx='21' cy='16' r='8' fill='none' stroke='%238a5da4' stroke-width='2.5'/&gt;&lt;/svg&gt;">
-<title>Suchen – Filtern – Ergebnisse</title>
+<title>Angebote entdecken – DLH (Kombination)</title>
 <style>
   :root{
-    --teal:#1d3437; --orange:#ec6608; --orange65:#f3965e; --orange30:#f9d1b4;
-    --purple:#8a5da4; --purple65:#b396c4; --purple30:#dccee4;
-    --bg:#ffffff; --panel:#f7f8f8; --line:#e2e6e6; --text:#1d3437;
-    --muted:#5d7275; --card:#ffffff; --shadow:0 1px 2px rgba(29,52,55,.06);
+    --ink:#1d3437; --muted:#5b6f72; --line:#e6e2dc;
+    --violett:#71368a; --violett-tief:#4b2a5e; --violett-dunkel:#5a2a6e; --violett-hell:#efe7f4; --violett-rand:#dccbe7;
+    --orange:#ec6608; --orange-tief:#c9560a; --orange-hell:#fcebdc; --orange-rand:#f5d3b6;
+    --petrol:#6b7479; --petrol-hell:#eceeef; --petrol-rand:#d6dadc;
+    --grund:#f6f4f1; --empfang:#f4eff7; --card:#ffffff; --bg:#ffffff;
     --fehler-bg:#fdeceb; --fehler-linie:#f3b8b1; --fehler-text:#8d2b20;
-    /* Die Tönungen der Ursprungsseite: Fach violett, Anliegen orange,
-       Eingrenzung blasser orange, Ergebnisse auf warmem Grund. Beides sind
-       verdünnte DLH-Farben, keine erfundenen. */
-    --box-fach:#f4f0f9;      --box-fach-linie:#ded3e9;
-    --box-anliegen:#fdf4ec;  --box-anliegen-linie:#f2ddc6;
-    --box-eng:#fefaf5;       --box-eng-linie:#f6e7d7;
-    --grund-liste:#fbf8f5;
-    --radius:10px; --col-suche:300px; --col-filter:480px;
+    --schatten:0 1px 2px rgba(29,52,55,.06), 0 6px 18px -12px rgba(29,52,55,.25);
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --bg:#121a1b; --panel:#182223; --line:#2a3839; --text:#e8eded;
-      --muted:#9fb0b2; --card:#1b2627; --shadow:none;
+      --ink:#e8eded; --muted:#a3b3b5; --line:#2c3a3b;
+      --violett-hell:#2a2032; --violett-rand:#3e3048; --orange-hell:#2e2218; --orange-rand:#4a3526;
+      --petrol-hell:#22282a; --petrol-rand:#353d40;
+      --grund:#121a1b; --empfang:#1a1620; --card:#1b2627; --bg:#121a1b;
       --fehler-bg:#3a1d19; --fehler-linie:#7a3a30; --fehler-text:#f0b8ae;
-      --box-fach:#1e1a25;     --box-fach-linie:#342c3e;
-      --box-anliegen:#251d16; --box-anliegen-linie:#3e3227;
-      --box-eng:#201c18;      --box-eng-linie:#362f26;
-      --grund-liste:#151d1e;
     }
-  }
-  :root[data-theme="dark"]{
-    --bg:#121a1b; --panel:#182223; --line:#2a3839; --text:#e8eded;
-    --muted:#9fb0b2; --card:#1b2627; --shadow:none;
-    --fehler-bg:#3a1d19; --fehler-linie:#7a3a30; --fehler-text:#f0b8ae;
-    --box-fach:#1e1a25;     --box-fach-linie:#342c3e;
-    --box-anliegen:#251d16; --box-anliegen-linie:#3e3227;
-    --box-eng:#201c18;      --box-eng-linie:#362f26;
-    --grund-liste:#151d1e;
   }
   @media (prefers-reduced-motion: reduce){
-    *{animation-duration:.01ms!important; transition-duration:.01ms!important;
-      scroll-behavior:auto!important}
+    *{animation-duration:.01ms!important; transition-duration:.01ms!important; scroll-behavior:auto!important}
   }
-  :where(button,input,select,a):focus-visible{
-    outline:2px solid var(--orange); outline-offset:2px;
-  }
-
+  :where(button,input,select,a):focus-visible{outline:3px solid var(--orange); outline-offset:2px}
   *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--text);
-    font:15px/1.5 "Helvetica Neue LT Std","Helvetica Neue",Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
+  html{scroll-behavior:smooth}
+  body{margin:0; background:var(--grund); color:var(--ink);
+       font:15px/1.5 "Helvetica Neue LT Std","Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased}
   button{font:inherit;color:inherit}
   a{color:var(--orange)}
+  [hidden]{display:none !important}
 
-  /* ---------- Gerüst: Kopfzeile + drei Spalten, volle Fensterhöhe ---------- */
-  .app{
-    display:grid;
-    grid-template-rows:auto auto auto minmax(0,1fr);
-    height:100dvh;
-    padding-top:env(safe-area-inset-top,0px);
-  }
+  /* ---------- Marke ---------- */
+  .dlhtop{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 32px; background:var(--bg)}
+  .dlhtop img{height:34px; width:auto; display:block}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .dlhtop img{background:#fff; padding:5px 9px; border-radius:6px} }
+  .dlhtop .ersatz{font-weight:700; font-size:15px; color:var(--violett)}
+  .zurueck{font-size:12.8px; font-weight:700; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--orange); padding-bottom:1px}
 
-  /* ---------- Markenleiste, wie auf der Ursprungsseite ---------- */
-  .dlhbar{height:6px; background:linear-gradient(90deg,var(--purple) 0%,var(--orange) 100%)}
-  .dlhtop{
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
-    padding:14px 22px 12px; background:var(--bg);
-  }
-  .dlhtop img{height:42px; width:auto; display:block}
-  /* Das Logo ist dunkelviolett auf Transparent und verschwindet auf dunklem
-     Grund. Eine helle Platte darunter lässt die Marke unangetastet. */
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]) .dlhtop img{
-      background:#fff; padding:5px 9px; border-radius:6px;
-    }
-  }
-  :root[data-theme="dark"] .dlhtop img{background:#fff; padding:5px 9px; border-radius:6px}
-  .dlhtop .ersatz{font-weight:700; font-size:15px; color:var(--purple)}
-  .zurueck{
-    font-size:12.8px; font-weight:700; color:var(--text); text-decoration:none;
-    border-bottom:2px solid var(--orange); padding-bottom:1px; white-space:nowrap;
-  }
-  .zurueck:hover{color:var(--orange)}
+  /* =====================================================================
+     ZUSTAND 1 – EMPFANG: Titel, Suchfeld, drei Farbflächen. Sonst nichts.
+     ===================================================================== */
+  .start{background:var(--empfang); transition:background .3s}
+  .start-innen{max-width:1040px; margin:0 auto; padding:9vh 32px 10vh; text-align:center}
+  .start h1{margin:0; font-size:clamp(28px,4vw,44px); line-height:1.1; font-weight:700; letter-spacing:-.02em}
+  .start .unter{margin:14px auto 30px; max-width:640px; color:var(--muted); font-size:17px}
+  .start .unter strong{color:var(--ink)}
+  .suchform{display:flex; gap:10px; max-width:720px; margin:0 auto}
+  .suchform input{flex:1; min-width:0; padding:16px 20px; font:inherit; font-size:17px; color:var(--ink);
+    background:var(--card); border:2px solid var(--violett-rand); border-radius:14px; box-shadow:var(--schatten)}
+  .suchform input::placeholder{color:var(--muted)}
+  .suchform input:focus{outline:none; border-color:var(--violett)}
+  .suchform button{border-radius:14px; padding:0 22px; font-weight:600; cursor:pointer; font-size:15px}
+  /* «go» ohne Hintergrundfarbe, nur violette Linie (28.9.2026) */
+  #suchego, #botsuchego{background:transparent; border:2px solid var(--violett); color:var(--violett)}
+  #botsuchego:hover{background:var(--violett-hell)}
+  #botsuchereset{background:transparent; border:2px solid var(--violett-rand); color:var(--muted)}
+  #botsuchereset:hover{border-color:var(--violett); color:var(--violett)}
+  /* zweites Feld: Frage an den Bot, gleich gross wie die Suche (28.9.2026) */
+  .botsuchform{margin-top:12px}
+  body:not(.empfang) .botsuchform{display:none}
+  #suchego:hover{background:var(--violett-hell)}
+  #suchereset{background:transparent; border:2px solid var(--violett-rand); color:var(--muted)}
+  #suchereset:hover{border-color:var(--violett); color:var(--violett)}
 
-  .kopf{
-    display:flex; flex-direction:row; align-items:baseline; flex-wrap:wrap; gap:4px 12px;
-    padding:10px 22px 5px;
-    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-    background:var(--panel);
-  }
-  .kopf h1{font-size:16px; font-weight:600; margin:0; letter-spacing:-.01em}
-  .kopf p{font-size:15px; font-weight:400; margin:0}
-  .kopf .zahl{color:var(--orange); font-weight:700}
+  .kacheln{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:44px auto 0; text-align:left}
+  .kachel{border:0; border-radius:20px; padding:24px 24px 22px; min-height:170px; cursor:pointer; color:#fff;
+          display:flex; flex-direction:column; justify-content:space-between; gap:18px; text-align:left;
+          transition:transform .18s ease, box-shadow .18s ease}
+  .kachel:hover{transform:translateY(-3px); box-shadow:0 14px 28px -16px rgba(29,52,55,.55)}
+  .kachel b{display:block; font-size:24px; line-height:1.15; letter-spacing:-.01em}
+  .kachel span{display:block; font-size:14.5px; opacity:.9; margin-top:6px}
+  .kachel i{font-style:normal; font-size:22px; align-self:flex-end; line-height:1}
+  .kachel.k-fach{background:var(--violett)}
+  .kachel.k-anliegen{background:var(--orange-tief)}
+  .kachel.k-alle{background:var(--petrol)}
+  .bothinweis{margin:26px 0 0; font-size:14.5px; color:var(--muted)}
+  .textknopf{background:none; border:0; padding:0; color:var(--violett); font-weight:700; cursor:pointer;
+             text-decoration:underline; text-underline-offset:3px}
 
-  .spalten{
-    display:grid; grid-template-columns:var(--col-suche) var(--col-filter) minmax(0,1fr);
-    min-height:0;
-  }
-  .spalte{min-height:0; min-width:0; overflow-y:auto; overscroll-behavior:contain}
-  .links{grid-column:2; grid-row:1; border-right:1px solid var(--line); background:var(--panel); padding:0}
-  .filter-bestandslink{display:block; margin:0 14px 16px; color:var(--purple); font-size:13px}
-  .mitte{grid-column:3; grid-row:1; padding:0}
-  .rechts{grid-column:1; grid-row:1; border-right:1px solid var(--line); background:var(--panel);
-          display:flex; flex-direction:column; overflow:hidden}
+  .empfang .haupt, .empfang .bot-fab{display:none}
+  .empfang .start{min-height:calc(100dvh - 58px); display:flex; align-items:center}
+  .empfang .start-innen{width:100%}
 
-  /* ---------- Linke Spalte: Filter untereinander ---------- */
-  .tueren{display:grid; grid-template-columns:1fr; gap:16px; padding:14px; align-items:stretch}
-  .tueren > .spann{grid-column:1 / -1}
-  .box{border-radius:var(--radius); padding:14px 16px 12px; border:1px solid var(--line)}
-  .box-fach{background:var(--box-fach); border-color:var(--box-fach-linie)}
-  .box-anliegen{background:var(--box-fach); border-color:var(--box-fach-linie)}
-  .box-eng{background:var(--box-fach); border-color:var(--box-fach-linie)}
-  .block{margin-bottom:14px}
-  .block:last-child{margin-bottom:0}
-  .box-eng > .block{margin-bottom:0}
-  #weitereEingrenzungen{margin-top:14px}
-  .box > .block:first-of-type{margin-top:0}
-  h2.titel{
-    font-size:11px; text-transform:uppercase; letter-spacing:.09em;
-    color:var(--muted); margin:0 0 10px; font-weight:600;
+  /* =====================================================================
+     ZUSTAND 2 – ARBEIT: der Empfang schrumpft zu einem violetten Band.
+     ===================================================================== */
+  body:not(.empfang) .start{background:var(--violett-tief); position:sticky; top:0; z-index:20}
+  body:not(.empfang) .start-innen{max-width:none; padding:12px 32px; display:flex; align-items:center; gap:24px; text-align:left}
+  body:not(.empfang) .start h1{font-size:18px; color:#fff; white-space:nowrap}
+  body:not(.empfang) .start .unter, body:not(.empfang) .kacheln, body:not(.empfang) .bothinweis{display:none}
+  body:not(.empfang) .suchform{flex:1; max-width:760px; margin:0}
+  body:not(.empfang) .suchform input{padding:9px 14px; font-size:15px; border:0; border-radius:10px; box-shadow:none}
+  body:not(.empfang) .suchform input:focus{outline:3px solid var(--orange)}
+  body:not(.empfang) .suchform button{border-radius:10px; padding:0 16px; font-size:14px}
+  body:not(.empfang) #suchego{background:transparent; border:2px solid #fff; color:#fff}
+  body:not(.empfang) #suchego:hover{background:rgba(255,255,255,.12)}
+  body:not(.empfang) #suchereset{border-color:rgba(255,255,255,.45); color:#fff}
+  body:not(.empfang) #suchereset:hover{border-color:#fff}
+  .zumstart{display:none; margin-left:auto; background:none; border:0; color:#fff; font-size:14px; font-weight:600;
+            cursor:pointer; white-space:nowrap; opacity:.9}
+  .zumstart:hover{opacity:1; text-decoration:underline}
+  body:not(.empfang) .zumstart{display:inline-block}
+
+  .haupt{padding:26px 32px 100px; display:grid; grid-template-columns:var(--filterbreite,400px) minmax(0,1fr); gap:32px; align-items:start;
+         animation:herein .35s ease both}
+  @keyframes herein{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+
+  /* Filter als drei Farbflächen */
+  .filter{position:sticky; top:84px; max-height:calc(100dvh - 100px); overflow-y:auto; display:grid; gap:14px; padding:2px}
+  .filter-kopf{display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:0 4px}
+  .filter-kopf h2{margin:0; font-size:19px; font-weight:700}
+  .loeschen{background:none; border:0; padding:0; color:var(--orange-tief); font-size:13px; font-weight:700; cursor:pointer;
+            text-decoration:underline; text-underline-offset:3px}
+  .fgruppe{border-radius:16px; padding:16px 16px 14px; border:1px solid transparent; transition:box-shadow .3s}
+  .fgruppe h3{margin:0 0 10px; font-size:14px; font-weight:700; letter-spacing:.01em}
+  .fblock h4{margin:14px 0 8px; font-size:13px; font-weight:700}
+  .f-fach{background:var(--violett-hell); border-color:var(--violett-rand);
+          --glow-bg:#c9a8dc; --glow:rgba(113,54,138,.45); --glow-rand:rgba(113,54,138,.6)}
+  .f-anliegen{background:var(--orange-hell); border-color:var(--orange-rand);
+              --glow-bg:#f4b27e; --glow:rgba(201,86,10,.40); --glow-rand:rgba(201,86,10,.55)}
+  .f-aufwand{background:var(--petrol-hell); border-color:var(--petrol-rand);
+             --glow-bg:#c3c9cd; --glow:rgba(107,116,121,.45); --glow-rand:rgba(107,116,121,.55)}
+  /* Aufleuchten des gewählten Kastens (28.9.2026): nur das abgerundete Feld selbst wird satter,
+     nichts ragt darüber hinaus. Start nach 1 Sekunde, ca. 4 Sekunden Dauer.
+     Bewusst auch bei «Bewegung reduzieren» (Windows: Animationseffekte aus): es ist ein Farbwechsel,
+     keine Bewegung. Die höhere Spezifität schlägt die allgemeine Regel oben. */
+  .filter .fgruppe.aufleuchten{animation:glimmen 4s cubic-bezier(.4,0,.2,1) 1s both !important;
+    animation-duration:4s !important; animation-delay:1s !important; animation-iteration-count:1 !important}
+  @keyframes glimmen{
+    0%  {}
+    15% {background-color:var(--glow-bg); border-color:var(--glow-rand)}
+    60% {background-color:var(--glow-bg); border-color:var(--glow-rand)}
+    100%{}
   }
-  .block h2{
-    font-size:11px; text-transform:uppercase; letter-spacing:.09em;
-    color:var(--muted); margin:0 0 8px; font-weight:600;
-  }
-  .chips{display:flex; flex-wrap:wrap; gap:5px}
-  .faecher-link{display:inline-block; margin-top:8px; font-size:13px; color:var(--purple)}
-  .faecher-link[hidden]{display:none}
-  .box-anliegen .faecher-link{color:var(--purple)}
-  .chip{
-    border:1px solid var(--line); background:var(--card); border-radius:6px;
-    padding:3px 10px; font-size:12.5px; cursor:pointer; line-height:1.45;
-    display:inline-flex; align-items:center; gap:5px;
-  }
-  .chip:hover{border-color:var(--orange65)}
-  .chip .n{color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums}
-  .chip[aria-pressed="true"]{background:var(--orange); border-color:var(--orange); color:#fff}
-  .chip[aria-pressed="true"] .n{color:#fff9}
-  /* Jede Box quittiert in ihrer eigenen Farbe: violett beim Fach, orange
-     beim Anliegen. Sonst leuchtet ein oranger Chip aus einem violetten
-     Feld heraus, als gehörte er woandershin. */
-  .box-fach .chip[aria-pressed="true"]{background:var(--purple); border-color:var(--purple)}
+  .chips{display:flex; flex-wrap:wrap; gap:6px}
+  .chip{border:1px solid transparent; background:var(--card); border-radius:999px; padding:5px 12px; font-size:13px;
+        cursor:pointer; line-height:1.4; display:inline-flex; align-items:center; gap:6px}
+  .chip:hover{border-color:var(--ink)}
+  .chip .n{color:var(--muted); font-size:11.5px; font-variant-numeric:tabular-nums}
+  .chip[aria-pressed="true"]{color:#fff}
+  .chip[aria-pressed="true"] .n{color:#fffc}
+  .f-fach .chip[aria-pressed="true"]{background:var(--violett)}
+  /* Fächer etwas kleiner, damit Deutsch, Mathematik, ABU, Englisch in eine Zeile passen (28.9.2026) */
+  .f-fach .chip{font-size:12px; padding:4px 10px; gap:5px}
+  .f-fach .chip .n{font-size:11px}
+  .f-aufwand .chip[aria-pressed="true"]{background:var(--petrol)}
   .chip[data-leer="1"]{opacity:.38}
-  .box-eng .chip{font-size:9px}
-  .box-eng .chip .n{font-size:9px}
-  .anliegen{display:flex; flex-direction:column; gap:4px}
-  .anl{
-    text-align:left; background:var(--card); cursor:pointer; border-radius:6px;
-    padding:6px 9px; font-size:11.5px; display:flex; gap:8px; align-items:baseline;
-    border:1px solid var(--line); border-left:3px solid transparent;
-  }
-  .anl:hover{border-color:var(--orange65); border-left-color:var(--orange65)}
-  .anl[aria-pressed="true"]{background:var(--orange30); border-color:var(--orange30);
-                            border-left-color:var(--orange);
-                            color:var(--teal); font-weight:500}
-  .anl .n{margin-left:auto; color:var(--muted); font-size:11.5px;
-          font-variant-numeric:tabular-nums; flex:none}
+  .anliegen{display:flex; flex-direction:column; gap:3px}
+  .anl{text-align:left; background:var(--card); cursor:pointer; border:0; border-radius:9px; padding:7px 10px;
+       font-size:13px; line-height:1.35; display:flex; gap:10px; align-items:baseline}
+  .anl:hover{box-shadow:inset 0 0 0 1px var(--orange-tief)}
+  .anl[aria-pressed="true"]{background:var(--orange-tief); color:#fff; font-weight:500}
+  .anl .n{margin-left:auto; color:var(--muted); font-size:11.5px; font-variant-numeric:tabular-nums; flex:none}
+  .anl[aria-pressed="true"] .n{color:#fffc}
   .anl[data-leer="1"]{opacity:.4}
-  /* Erscheint nur, wenn wirklich gefiltert ist — dann aber deutlich.
-     Gestrichelt und grau war es vorher, und damit sah es aus wie eine
-     Randnotiz statt wie der Weg zurück. */
-  .zuruecksetzen{
-    width:100%; border:0; background:var(--orange); color:#fff; border-radius:8px;
-    padding:10px 12px; font-size:14px; font-weight:600; cursor:pointer;
-    margin-bottom:16px; display:flex; align-items:center; justify-content:center;
-    gap:8px; box-shadow:0 1px 3px rgba(236,102,8,.35);
-  }
-  .zuruecksetzen:hover{background:#d75c07}
-  .zuruecksetzen .x{
-    font-size:16px; line-height:1; opacity:.85; font-weight:400;
-  }
+  .faecher-link{display:inline-block; margin-top:10px; font-size:13px; color:var(--ink); font-weight:600}
+  .filter-bestandslink{padding:0 4px; color:var(--muted); font-size:12.5px}
 
-  /* ---------- Mittlere Spalte: Ergebnisse, sofort sichtbar ---------- */
-  .suchzeile{
-    flex-shrink:0; background:var(--grund-liste);
-    border-bottom:1px solid var(--line); padding:12px 18px;
-    display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-  }
-  .suchzeile input{
-    flex:1 1 220px; min-width:0; padding:8px 12px; border-radius:8px;
-    border:1px solid var(--line); background:var(--card); color:inherit; font:inherit;
-    font-size:13px;
-  }
-  .suchzeile input:focus{outline:2px solid var(--orange65); outline-offset:-1px}
-  .trefferzahl{font-size:13px; color:var(--muted); white-space:nowrap}
-  .trefferzahl b{color:var(--orange); font-size:15px}
-  .ergebnis-kopf{position:sticky; top:0; z-index:5; background:var(--grund-liste)}
-  .ergebnis-leiste{display:flex; align-items:center; justify-content:space-between;
-                    flex-wrap:wrap; gap:4px 12px; padding:8px 18px; background:var(--orange); color:#fff}
-  .spalten-leiste{background:var(--purple); flex-shrink:0}
-  .links > .spalten-leiste{position:sticky; top:0; z-index:5}
-  .ergebnis-titel{margin:0; font-size:16px; font-weight:600; line-height:1.3}
-  .ergebnis-leiste .trefferzahl{color:#fff; font-size:12px}
-  .ergebnis-leiste .trefferzahl b{color:inherit; font-size:inherit}
-  .ergebnis-werkzeuge{padding:6px 18px; border-bottom:1px solid var(--line)}
-  .sortierzeile{display:flex; align-items:center; flex-wrap:wrap; gap:6px 10px; margin-top:0}
-  #sortierlabel{font-size:12px; letter-spacing:.04em}
-  .sortierung{display:flex; flex-wrap:wrap; gap:5px}
-  .sortierung button{padding:5px 9px; border-radius:6px; border:1px solid var(--text); background:var(--card);
-                      color:var(--text); font-size:12px; font-weight:400; cursor:pointer}
-  .sortierung button[aria-pressed="true"]{background:var(--card)}
-  .sortierung button:hover{box-shadow:inset 0 -2px var(--orange)}
-  .mitte{background:var(--grund-liste)}
-  .liste{padding:14px 18px 40px; display:grid; gap:10px}
-  .ergebnis-gruppe{display:grid; gap:10px; margin:0 0 12px}
-  .gruppen-kopf{
-    display:flex; align-items:baseline; flex-wrap:wrap; gap:5px 9px;
-    margin:8px 2px 1px; padding-bottom:5px; border-bottom:1px solid var(--line);
-  }
-  .gruppen-kopf h3{margin:0; font-size:16px; font-weight:600; line-height:1.3}
-  .gruppen-anzahl{color:var(--orange); font-size:11px; font-weight:700}
-  .gruppen-definition{color:var(--muted); font-size:12px; line-height:1.4}
-  .karte{
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-    padding:12px 14px; box-shadow:var(--shadow);
-  }
-  .karte-kopf{display:flex; gap:10px; align-items:flex-start}
-  .karte h3{margin:0; font-size:15px; font-weight:600; line-height:1.35; flex:1}
-  .karte h3 a{color:inherit; text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px}
-  .karte h3 a:hover{color:var(--orange); text-decoration:underline}
-  .karte p{margin:6px 0 8px; font-size:13.5px; color:var(--muted); line-height:1.5}
-  .meta{display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:11.5px}
-  .tag{border:1px solid var(--line); border-radius:999px; padding:1px 8px; color:var(--muted)}
-  [data-kategorie="fach"]{--kat-fg:#71368a;--kat-rand:#71368a}
-  [data-kategorie="anliegen"]{--kat-fg:#b44700;--kat-rand:#b44700}
-  [data-kategorie="format"]{--kat-fg:#00695c;--kat-rand:#00695c}
-  [data-kategorie="datum"]{--kat-fg:#1565c0;--kat-rand:#1565c0}
-  [data-kategorie="titel"]{--kat-fg:#37474f;--kat-rand:#37474f}
-  [data-kategorie="aufwand"]{--kat-fg:#a41455;--kat-rand:#a41455}
-  .sortierung button[data-kategorie],.tag[data-kategorie]{background:transparent;color:var(--kat-fg);border-color:var(--kat-rand)}
-  .sortierung button[aria-pressed="true"]{outline:2px solid var(--kat-fg);outline-offset:2px}
-  .karte h3 a[data-kategorie]{background:transparent;color:var(--kat-fg);padding:0}
-  /* Ergebnistitel orange wie alle Links (27.9.2026) */
-  .karte h3 a[data-kategorie="titel"]{color:var(--orange)}
-  .karte h3 a[data-kategorie="titel"]:hover{color:#b44700}
-  .karte-kopf h3{min-width:0;overflow-wrap:anywhere}
-  .karte-kopf [data-frage]{flex-shrink:0;font-size:11.5px;padding:3px 8px}
-  @media(max-width:420px){.karte-kopf{flex-wrap:wrap}.karte-kopf h3{flex-basis:100%}}
-  /* Merkmale als Fliesstext statt Pillen (27.9.2026) */
+  /* Ergebnisse */
+  #ergebnisse, .fgruppe, .karte{scroll-margin-top:96px}
+  /* Kopf der Ergebnisse wie in der vereinfachten Fassung (28.9.2026) */
+  .ergebnis-kopf{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px 16px;
+                 padding-bottom:12px; margin-bottom:2px; border-bottom:2px solid var(--ink)}
+  .trefferzahl{font-size:17px; font-weight:700; color:var(--ink)}
+  .trefferzahl b{color:var(--orange)}
+  .sortwahl{display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--muted)}
+  .sortwahl select{font:inherit; font-size:13.5px; font-weight:700; color:var(--kat-fg,var(--ink)); background:var(--card);
+                   border:1.5px solid var(--kat-fg,var(--line)); border-radius:8px; padding:6px 10px; cursor:pointer}
+  .sortwahl option{font-weight:600; color:var(--kat-fg,var(--ink)); background:var(--card)}
+  .nur-schmal, .knopf.nur-schmal{display:none}
+  .liste{display:grid; gap:12px}
+  .ergebnis-gruppe{display:grid; gap:12px; margin:0 0 6px}
+  /* Gruppenüberschrift wie in der vereinfachten Fassung: Name, Anzahl, Kurzerklärung, Linie */
+  .gruppen-kopf{display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 10px; padding:22px 2px 8px;
+                border-bottom:1px solid var(--line)}
+  .gruppen-kopf h3{margin:0; font-size:18px; font-weight:700; line-height:1.3}
+  .gruppen-anzahl{color:var(--orange); font-size:12.5px; font-weight:700}
+  .gruppen-definition{color:var(--muted); font-size:13px}
+  .karte{background:var(--card); border-radius:16px; padding:16px 20px 17px; box-shadow:var(--schatten)}
+  .karte-kopf{display:flex; gap:14px; align-items:flex-start}
+  .karte h3{margin:0; font-size:16.5px; font-weight:700; line-height:1.35; flex:1; min-width:0; overflow-wrap:anywhere}
+  .karte h3 a{color:var(--orange); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px}
+  .karte h3 a:hover{color:#b44700}
+  .karte p{margin:6px 0 0; font-size:14px; color:var(--muted); line-height:1.55}
+  [data-kategorie="fach"]{--kat-fg:#71368a}
+  [data-kategorie="anliegen"]{--kat-fg:#b44700}
+  [data-kategorie="format"]{--kat-fg:#00695c}
+  [data-kategorie="datum"]{--kat-fg:#1565c0}
+  [data-kategorie="aufwand"]{--kat-fg:#a41455}
+  [data-kategorie="titel"]{--kat-fg:#37474f}
   .merkmal[data-kategorie]{color:var(--kat-fg)}
   .merkmale-intro{font-style:italic}
-  /* «Bot dazu fragen» dunkelviolett mit weisser Schrift */
-  .karte-kopf [data-frage]{background:#71368a; border-color:#71368a; color:#fff}
-  .karte-kopf [data-frage]:hover{background:#5a2a6e; border-color:#5a2a6e; color:#fff}
-  #suchform{gap:6px; flex-wrap:nowrap}
-  .knopf{
-    border:1px solid var(--line); background:none; border-radius:7px;
-    padding:4px 11px; font-size:12.5px; cursor:pointer; color:var(--muted);
-    text-decoration:none; display:inline-block;
-  }
-  .knopf:hover{border-color:var(--orange); color:var(--orange)}
-  .knopf.primaer{border-color:var(--orange); color:var(--orange)}
-  .leer{padding:50px 18px; text-align:center; color:var(--muted)}
-  .mehr{margin:6px auto 0; display:block}
+  .karte h3 .botfrage{display:inline-block; margin-left:8px; vertical-align:2px; background:transparent;
+    border:1px solid var(--violett); color:var(--muted); border-radius:7px; padding:1px 9px;
+    font-size:12px; font-weight:400; line-height:1.5; cursor:pointer; white-space:nowrap}
+  .karte h3 .botfrage:hover{background:var(--violett-hell); color:var(--violett)}
+  .karte-kopf [data-frage]{flex-shrink:0; background:var(--violett); border:0; color:#fff; border-radius:9px;
+                           padding:6px 12px; font-size:12.5px; font-weight:600; cursor:pointer; white-space:nowrap}
+  .karte-kopf [data-frage]:hover{background:var(--violett-dunkel)}
+  .knopf{border:1px solid var(--line); background:var(--card); border-radius:10px; padding:7px 14px; font-size:13px;
+         cursor:pointer; color:var(--ink); text-decoration:none; display:inline-block; font-weight:600}
+  .knopf:hover{border-color:var(--ink)}
+  .leer{padding:50px 18px; text-align:center; color:var(--muted); background:var(--card); border-radius:16px}
+  .mehr{margin:12px auto 0; display:block}
 
-  /* ---------- Rechte Spalte: der Bot ---------- */
-  .bot-kopf{padding:12px 14px; border-bottom:1px solid var(--line)}
-  .bot-kopf h2{margin:0; font-size:13px; font-weight:600; display:flex;
-               align-items:center; gap:7px}
-  .punkt{width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
-  .punkt[data-status="ok"]{background:#2f9e5f}
-  .punkt[data-status="weg"]{background:#c8402f}
-
-  .kontext{
-    margin:10px 14px 0; padding:9px 11px; border-radius:8px;
-    background:var(--card); border:1px solid var(--line); font-size:12px;
-  }
-  .kontext b{color:var(--orange)}
-  .verlauf{flex:1; min-height:0; overflow-y:auto; padding:12px 14px;
-           display:flex; flex-direction:column; gap:10px}
+  /* ---------- Der DLH-Bot ---------- */
+  .bot-fab{position:fixed; right:24px; bottom:calc(24px + env(safe-area-inset-bottom,0px)); z-index:30; border:0;
+           border-radius:999px; padding:13px 22px; font-weight:700; font-size:14.5px; background:var(--violett); color:#fff;
+           cursor:pointer; box-shadow:0 8px 22px -8px rgba(75,42,94,.6)}
+  .bot-fab:hover{background:var(--violett-dunkel)}
+  .botfenster{position:fixed; top:0; right:0; bottom:0; width:min(430px,100vw); z-index:40; background:var(--bg);
+              box-shadow:-10px 0 34px rgba(29,52,55,.18); display:flex; flex-direction:column}
+  .bot-kopf{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:16px 18px;
+            background:var(--violett-tief); color:#fff}
+  .bot-kopf h2{margin:0; font-size:17px; font-weight:700; display:flex; align-items:center; gap:8px}
+  #botlage{color:#fffb !important}
+  .bot-zu{background:none; border:0; font-size:26px; line-height:1; cursor:pointer; color:#fff; padding:0 4px}
+  .bot-intro{margin:14px 18px 0; font-size:13.5px; color:var(--muted)}
+  .punkt{width:8px;height:8px;border-radius:50%;background:#ccc;flex:none}
+  .punkt[data-status="ok"]{background:#5fd18f}
+  .punkt[data-status="weg"]{background:#ff8a78}
+  .kontext{margin:10px 18px 0; padding:9px 11px; border-radius:10px; background:var(--violett-hell); font-size:12px}
+  .verlauf{flex:1; min-height:0; overflow-y:auto; padding:14px 18px; display:flex; flex-direction:column; gap:10px}
   .austausch{display:flex; flex-direction:column; gap:10px; min-height:100%; flex-shrink:0}
   .austausch > .blase{flex-shrink:0}
-  .blase{padding:9px 12px; border-radius:11px; font-size:12.5px; line-height:1.45; max-width:100%}
-  .blase.ich{background:var(--orange); color:#fff; align-self:flex-end; border-bottom-right-radius:3px}
-  .blase.bot{background:var(--card); border:1px solid var(--line); border-bottom-left-radius:3px}
+  .blase{padding:10px 13px; border-radius:14px; font-size:13.5px; line-height:1.45; max-width:100%}
+  .blase.ich{background:var(--violett); color:#fff; align-self:flex-end; border-bottom-right-radius:4px}
+  .blase.bot{background:var(--grund); border-bottom-left-radius:4px}
   .blase.bot :where(p,ul,ol){margin:.4em 0}
   .blase.bot ul,.blase.bot ol{padding-left:1.15em}
-  .blase.bot h1,.blase.bot h2,.blase.bot h3{font-size:13px; margin:.5em 0 .3em}
-  .blase.fehler{background:var(--fehler-bg); border:1px solid var(--fehler-linie);
-                color:var(--fehler-text)}
+  .blase.bot h1,.blase.bot h2,.blase.bot h3{font-size:14px; margin:.5em 0 .3em}
+  .blase.fehler{background:var(--fehler-bg); border:1px solid var(--fehler-linie); color:var(--fehler-text)}
   .blase.laedt{color:var(--muted); font-style:italic}
   .fundstellen{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
-  .schnell{margin:10px 14px 12px; flex-shrink:0;
-           max-height:34dvh; overflow-y:auto}
-  .eingabe{border-bottom:1px solid var(--line); padding:12px 18px;
-           background:var(--grund-liste); display:flex; align-items:center; gap:6px; flex-shrink:0}
-  .eingabe input{
-    flex:1; min-width:0; padding:8px 12px; border-radius:8px; border:1px solid var(--line);
-    background:var(--card); color:inherit; font:inherit; font-size:13px;
-  }
-  .eingabe input:focus{outline:2px solid var(--orange65); outline-offset:-1px}
-  .eingabe button{
-    border:1px solid var(--line); background:var(--card); color:var(--muted); border-radius:8px;
-    padding:7px 8px; font-size:11.5px; font-weight:400; cursor:pointer;
-  }
-  .eingabe button:hover{border-color:var(--purple); color:var(--purple)}
-  .eingabe button:disabled{opacity:.5; cursor:default}
-
-  /* Suchfeld und Botfeld: violett unterlegt, weisse Schrift (26.9.2026) */
-  #suche, #frage{background:var(--purple) !important; color:#fff !important;
-    border-color:var(--purple) !important; font-weight:600}
-  #suche::placeholder, #frage::placeholder{color:#fff; opacity:.85; font-weight:400}
-  #suche::-webkit-search-cancel-button{filter:invert(1) brightness(2)}
-  #suche:focus, #frage:focus{outline:2px solid var(--orange) !important; outline-offset:1px}
-
-  .umschalter{display:none}
+  .schnell{margin:0 18px; padding:12px 14px 10px; border-radius:14px; background:var(--violett-hell); max-height:30dvh; overflow-y:auto; flex-shrink:0}
+  .schnell h3{margin:0 0 8px; font-size:13px; font-weight:700}
+  .eingabe{display:flex; gap:6px; padding:12px 18px calc(16px + env(safe-area-inset-bottom,0px)); flex-shrink:0}
+  .eingabe input{flex:1; min-width:0; padding:11px 13px; border-radius:11px; border:2px solid var(--violett-rand);
+                 background:var(--card); color:inherit; font:inherit; font-size:14px}
+  .eingabe input:focus{outline:none; border-color:var(--violett)}
+  .eingabe button{border-radius:11px; padding:0 14px; font-weight:700; font-size:13.5px; cursor:pointer}
+  #senden{background:transparent; border:2px solid var(--violett); color:var(--violett)}
+  #senden:hover{background:var(--violett-hell)}
+  #senden:disabled{opacity:.5; cursor:default}
+  #botreset{background:transparent; border:2px solid var(--violett-rand); color:var(--muted)}
+  .schleier{display:none}
 
   /* ---------- schmale Fenster ---------- */
-  @media (max-width:1500px){ :root{--col-suche:280px; --col-filter:440px} }
-  @media (max-width:1340px){
-    :root{--col-suche:260px; --col-filter:320px}
-    .tueren{grid-template-columns:1fr}
+  @media (max-width:900px){
+    .kacheln{grid-template-columns:minmax(0,1fr); gap:12px; margin-top:28px}
+    .kachel{min-height:0; flex-direction:row; align-items:center; padding:18px 20px}
+    .kachel i{align-self:center}
+    .start-innen{padding:7vh 18px 8vh}
+    body:not(.empfang) .start-innen{padding:10px 16px; gap:10px; flex-wrap:wrap}
+    body:not(.empfang) .start h1{font-size:15px}
+    body:not(.empfang) .suchform{order:3; flex-basis:100%; max-width:none}
+    .haupt{grid-template-columns:minmax(0,1fr); gap:14px; padding:16px 16px 100px}
+    .filter{display:none; position:static; max-height:none}
+    .filter.offen{display:grid}
+    .nur-schmal, .knopf.nur-schmal{display:inline-block}
+    .schleier{display:block; position:fixed; inset:0; background:rgba(18,26,27,.35); z-index:35}
   }
-  @media (max-width:980px){
-    .tueren{grid-template-columns:1fr}
-  }
-  @media (max-width:620px){ .tueren{grid-template-columns:1fr} }
   @media (max-width:560px){
-    .dlhtop{padding:10px 16px 8px}
-    .dlhtop img{height:34px}
-    .kopf{padding:9px 16px 5px}
-    .kopf h1{font-size:15px}
-    .kopf p{font-size:14px}
-  }
-  @media (max-width:980px){
-    /* minmax(0,…) statt 1fr: sonst setzt der breiteste Inhalt — eine lange
-       Fachbezeichnung in einer Karte — die Untergrenze der Spalte, und die
-       Seite scrollt seitlich. Bei 400 px war rechts alles abgeschnitten. */
-    .spalten{grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr)}
-    .links,.mitte,.rechts{grid-column:1;grid-row:auto}
-    .links{
-      border-right:0; border-bottom:1px solid var(--line); max-height:42dvh;
-    }
-    .links[hidden]{display:none}
-    .rechts{
-      position:fixed; inset:auto 0 0 0; height:72dvh; z-index:20;
-      border-left:0; border-right:0; border-top:1px solid var(--line);
-      border-radius:14px 14px 0 0; box-shadow:0 -6px 24px rgba(29,52,55,.18);
-    }
-    .rechts[hidden]{display:none}
-    .umschalter{
-      display:flex; gap:8px; position:fixed; right:14px;
-      bottom:calc(14px + env(safe-area-inset-bottom,0px)); z-index:30;
-    }
-    .umschalter button{
-      border:0; border-radius:999px; padding:10px 16px; font-weight:600;
-      background:var(--orange); color:#fff; box-shadow:0 3px 12px rgba(29,52,55,.22);
-      cursor:pointer;
-    }
-    .umschalter button.grau{background:var(--teal)}
+    .dlhtop{padding:10px 16px}
+    .dlhtop img{height:30px}
+    .start .unter{font-size:15px; margin-bottom:22px}
+    .suchform input{padding:13px 15px; font-size:16px}
+    .suchform button{padding:0 14px}
+    .kachel b{font-size:20px}
+    .karte{padding:14px 15px}
+    .karte-kopf{flex-wrap:wrap}
+    .karte-kopf h3{flex-basis:100%}
+    .bot-fab{right:14px; bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   }
 </style>
-</head>
-<body>
-<div class="app">
-  <div class="dlhbar" aria-hidden="true"></div>
 
+</head>
+<body class="empfang">
   <div class="dlhtop">
     <a href="https://dlh.zh.ch/" target="_blank" rel="noopener" aria-label="Digital Learning Hub Sek II">
       <img id="dlhlogo" src="Angebote%20und%20Bot_files/DLH-Logo-Wappen-und-Loewe_YLcm.svg" alt="Digital Learning Hub Sek II">
@@ -369,116 +291,115 @@
     <a class="zurueck" href="https://dlh.zh.ch/" target="_blank" rel="noopener">dlh.zh.ch</a>
   </div>
 
-  <header class="kopf">
-    <h1>Was brauche ich für meinen Unterricht?</h1>
-    <p>Entdecken Sie <strong>369 Angebote</strong> des DLH (Stand 16.09.2026) – filtern Sie nach Fach, Anliegen und Aufwand.</p>
-    <span class="trefferzahl" style="display:none"></span>
-  </header>
-
-  <div class="spalten">
-
-    <!-- ===== links: die Türen ===== -->
-    <aside class="spalte links" id="links">
-      <div class="ergebnis-leiste spalten-leiste"><h2 class="ergebnis-titel">Filtern</h2></div>
-
-      <div class="tueren">
-        <section class="box box-fach spann">
-          <h2 class="titel">Mein Fach</h2>
-          <div class="chips" id="faecher"></div>
-          <a class="faecher-link" id="alleFaecher" href="#faecher" aria-controls="faecher" aria-expanded="false">alle 35 Fächer zeigen</a>
-          <a class="faecher-link" id="faecherEinklappen" href="#faecher" aria-controls="faecher" hidden>einklappen</a>
-        </section>
-
-        <section class="box box-anliegen">
-          <h2 class="titel">Ich möchte</h2>
-          <div class="anliegen" id="anliegen"></div>
-          <a class="faecher-link" id="alleAnliegen" href="#anliegen" aria-controls="anliegen" aria-expanded="false">alle 20 Anliegen zeigen</a>
-          <a class="faecher-link" id="anliegenEinklappen" href="#anliegen" aria-controls="anliegen" hidden>einklappen</a>
-        </section>
-
-        <section class="box box-eng">
-          <h2 class="titel">Weiter eingrenzen</h2>
-          <div class="block">
-            <h2>Aufwand</h2>
-            <div class="chips" id="aufwaende"><button class="chip" type="button" aria-pressed="false">sofort einsetzbar<span class="n">37</span></button><button class="chip" type="button" aria-pressed="false">anpassen<span class="n">121</span></button><button class="chip" type="button" aria-pressed="false">Inspiration<span class="n">205</span></button></div>
-          </div>
-
-          <div id="weitereEingrenzungen" hidden>
-          <div class="block">
-            <h2>Stufe</h2>
-            <div class="chips" id="stufen"><button class="chip" type="button" aria-pressed="false">Gymnasium<span class="n">142</span></button><button class="chip" type="button" aria-pressed="false">Berufsbildung<span class="n">46</span></button><button class="chip" type="button" aria-pressed="false">Überfachlich<span class="n">190</span></button></div>
-          </div>
-
-          <div class="block">
-            <h2>Format</h2>
-            <div class="chips" id="formate"><button class="chip" type="button" aria-pressed="false">Praxisbeispiel<span class="n">10</span></button><button class="chip" type="button" aria-pressed="false">Impuls-Workshop<span class="n">85</span></button><button class="chip" type="button" aria-pressed="false">Essenz<span class="n">96</span></button><button class="chip" type="button" aria-pressed="false">Innovationsfonds<span class="n">128</span></button><button class="chip" type="button" aria-pressed="false">eAssessment<span class="n">20</span></button><button class="chip" type="button" aria-pressed="false">Kuratiertes<span class="n">16</span></button><button class="chip" type="button" aria-pressed="false">Podcast<span class="n">8</span></button></div>
-          </div>
-          </div>
-          <a class="faecher-link" id="alleEingrenzungen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" aria-expanded="false">alle Eingrenzungen anzeigen</a>
-          <a class="faecher-link" id="eingrenzungenEinklappen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" hidden>einklappen</a>
-        </section>
-      </div>
-      <a class="filter-bestandslink" href="https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm" target="_blank" rel="noopener">Definitionen und Bestandskarte</a>
-    </aside>
-
-    <!-- ===== Mitte: Ergebnisse ===== -->
-    <main class="spalte mitte">
-      <div class="ergebnis-kopf">
-        <div class="ergebnis-leiste">
-          <h2 class="ergebnis-titel">Ergebnisse</h2>
-          <span class="trefferzahl" id="treffer"><b>369</b> von 369 Angeboten</span>
-        </div>
-        <div class="ergebnis-werkzeuge">
-          <div class="sortierzeile">
-            <span id="sortierlabel">klick-sortieren nach</span>
-            <div class="sortierung" id="sortierung" role="group" aria-labelledby="sortierlabel">
-              <button type="button" data-sort="fach" data-kategorie="fach" aria-pressed="false">Fach</button>
-              <button type="button" data-sort="anliegen" data-kategorie="anliegen" aria-pressed="false">Anliegen</button>
-              <button type="button" data-sort="format" data-kategorie="format" aria-pressed="true">Format</button>
-              <button type="button" data-sort="aufwand" data-kategorie="aufwand" aria-pressed="false">Aufwand</button>
-              <button type="button" data-sort="datum" data-kategorie="datum" aria-pressed="false" title="Neuste zuerst">Datum</button>
-              <button type="button" data-sort="titel" data-kategorie="titel" aria-pressed="false">A bis Z</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="liste" id="liste"></div>
-    </main>
-
-    <!-- ===== rechts: der Bot ===== -->
-    <aside class="rechts" id="rechts">
-      <div class="ergebnis-leiste spalten-leiste"><h2 class="ergebnis-titel">Suchen</h2></div>
-      <form class="suchzeile eingabe" id="suchform" role="search">
+  <!-- ===== Empfang: Titel, Suchfeld, drei Farbflächen. Wird im zweiten Schritt zum schmalen Band. ===== -->
+  <header class="start">
+    <div class="start-innen">
+      <h1>Was brauche ich für meinen Unterricht?</h1>
+      <p class="unter"><strong>369 Angebote</strong> des DLH (Stand 16.09.2026)</p>
+      <form class="suchform" id="suchform" role="search">
         <input id="suche" type="search" placeholder="Suche in DLH Angeboten" autocomplete="off" aria-label="Volltextsuche">
         <button type="submit" id="suchego">go</button>
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
       </form>
-      <form class="eingabe" id="form">
-        <input id="frage" placeholder="Frage an den Bot …" autocomplete="off" aria-label="Frage">
-        <button type="submit" id="senden">go</button>
-        <button id="botreset" type="button" title="Gespräch löschen und neu beginnen">reset</button>
+      <form class="suchform botsuchform" id="botsuchform">
+        <input id="botsuche" type="text" placeholder="Frage den DLH Chat-Bot" autocomplete="off" aria-label="Frage an den DLH Chat-Bot">
+        <button type="submit" id="botsuchego">go</button>
+        <button id="botsuchereset" type="button" title="Frage löschen">reset</button>
       </form>
-      <div class="bot-kopf">
-        <h2><span class="punkt" id="punkt" data-status="ok"></span> DLH-Bot
-            <span id="botlage" style="font-weight:400;color:var(--muted);font-size:11.5px">live</span></h2>
-      </div>
-      <div class="kontext" id="kontext" hidden=""></div>
-      <div class="verlauf" id="verlauf"></div>
-      <div class="schnell box box-fach">
-        <h2 class="titel">DLH-Bot Schnell-Links</h2>
-        <div class="chips" id="schnellfragen"></div>
-        <a class="faecher-link" id="alleChatbotInfos" href="#schnellfragen" aria-controls="schnellfragen" aria-expanded="false">alle anzeigen</a>
-        <a class="faecher-link" id="chatbotInfosEinklappen" href="#schnellfragen" aria-controls="schnellfragen" hidden>einklappen</a>
+      <button class="zumstart" id="zumStart" type="button">← zum Start</button>
+
+      <div class="kacheln">
+        <button class="kachel k-fach" id="kachelFach" type="button">
+          <div><b>Mein Fach</b><span>35 Fächer – Deutsch, Mathematik, ABU und viele mehr</span></div><i aria-hidden="true">→</i>
+        </button>
+        <button class="kachel k-anliegen" id="kachelAnliegen" type="button">
+          <div><b>Ich möchte …</b><span>20 Anliegen, etwa anders prüfen oder Feedback geben</span></div><i aria-hidden="true">→</i>
+        </button>
+        <button class="kachel k-alle" id="kachelAlle" type="button">
+          <div><b>Alles ansehen</b><span>alle 369 Angebote, nach Fach geordnet</span></div><i aria-hidden="true">→</i>
+        </button>
       </div>
 
+    </div>
+  </header>
+
+  <div class="haupt">
+    <aside class="filter" id="links" aria-label="Filter">
+      <div class="filter-kopf">
+        <h2>Eingrenzen</h2>
+        <button class="loeschen" id="allesZurueck" type="button" hidden>alle Filter löschen</button>
+      </div>
+
+      <section class="fgruppe f-fach" id="gruppeFach">
+        <h3>Mein Fach</h3>
+        <div class="chips" id="faecher"></div>
+        <a class="faecher-link" id="alleFaecher" href="#faecher" aria-controls="faecher" aria-expanded="false">alle 35 Fächer zeigen</a>
+        <a class="faecher-link" id="faecherEinklappen" href="#faecher" aria-controls="faecher" hidden>einklappen</a>
+      </section>
+
+      <section class="fgruppe f-anliegen" id="gruppeAnliegen">
+        <h3>Ich möchte …</h3>
+        <div class="anliegen" id="anliegen"></div>
+        <a class="faecher-link" id="alleAnliegen" href="#anliegen" aria-controls="anliegen" aria-expanded="false">alle 20 Anliegen zeigen</a>
+        <a class="faecher-link" id="anliegenEinklappen" href="#anliegen" aria-controls="anliegen" hidden>einklappen</a>
+      </section>
+
+      <section class="fgruppe f-aufwand">
+        <h3>Aufwand</h3>
+        <div class="chips" id="aufwaende"></div>
+        <div id="weitereEingrenzungen" hidden>
+          <div class="fblock"><h4>Stufe</h4><div class="chips" id="stufen"></div></div>
+          <div class="fblock"><h4>Format</h4><div class="chips" id="formate"></div></div>
+        </div>
+        <a class="faecher-link" id="alleEingrenzungen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" aria-expanded="false">auch nach Stufe und Format</a>
+        <a class="faecher-link" id="eingrenzungenEinklappen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" hidden>einklappen</a>
+      </section>
+
+      <a class="filter-bestandslink" href="https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm" target="_blank" rel="noopener">Definitionen und Bestandskarte</a>
     </aside>
-  </div>
-</div>
 
-<div class="umschalter">
-  <button class="grau" id="btnFilter" type="button">Filter</button>
-  <button id="btnBot" type="button">Bot</button>
-</div>
+    <main id="ergebnisse">
+      <div class="ergebnis-kopf">
+        <span class="trefferzahl" id="treffer" aria-live="polite"><b>369</b> von 369 Angeboten</span>
+        <button class="knopf nur-schmal" id="btnFilter" type="button" aria-controls="links" aria-expanded="false">Filter anzeigen</button>
+        <label class="sortwahl">sortieren nach
+          <select id="sortwahl" data-kategorie="fach" autocomplete="off">
+            <option value="fach" data-kategorie="fach" selected>Fach</option>
+            <option value="format" data-kategorie="format">Format</option>
+            <option value="anliegen" data-kategorie="anliegen">Anliegen</option>
+            <option value="aufwand" data-kategorie="aufwand">Aufwand</option>
+            <option value="datum" data-kategorie="datum">Datum (neuste zuerst)</option>
+            <option value="titel" data-kategorie="titel">A bis Z</option>
+          </select>
+        </label>
+      </div>
+      <div class="liste" id="liste"></div>
+    </main>
+  </div>
+
+  <button class="bot-fab" id="btnBot" type="button" aria-controls="rechts" aria-expanded="false">DLH-Bot fragen</button>
+  <div class="schleier" id="schleier" hidden></div>
+  <aside class="botfenster" id="rechts" aria-label="DLH-Bot" hidden>
+    <div class="bot-kopf">
+      <h2><span class="punkt" id="punkt" data-status="ok"></span> DLH-Bot
+        <span id="botlage" style="font-weight:400;font-size:12px">live</span></h2>
+      <button class="bot-zu" id="botZu" type="button" aria-label="Bot schliessen">×</button>
+    </div>
+    <p class="bot-intro">Der Bot erklärt Begriffe, nennt Personen und kommende Termine – alles, was in der Liste nicht steht.</p>
+    <div class="kontext" id="kontext" hidden></div>
+    <div class="verlauf" id="verlauf"></div>
+    <div class="schnell">
+      <h3>Schnell-Links</h3>
+      <div class="chips" id="schnellfragen"></div>
+      <a class="faecher-link" id="alleChatbotInfos" href="#schnellfragen" aria-controls="schnellfragen" aria-expanded="false">alle anzeigen</a>
+      <a class="faecher-link" id="chatbotInfosEinklappen" href="#schnellfragen" aria-controls="schnellfragen" hidden>einklappen</a>
+    </div>
+    <form class="eingabe" id="form">
+      <input id="frage" placeholder="Frage an den Bot …" autocomplete="off" aria-label="Frage">
+      <button type="submit" id="senden">go</button>
+      <button id="botreset" type="button" title="Gespräch löschen und neu beginnen">reset</button>
+    </form>
+  </aside>
 
 <script>
 /* ==========================================================================
@@ -571,8 +492,9 @@ const SCHNELL = [
 ];
 
 const ANG = DB.angebote, ANL = DB.anliegen, FAECHER = DB.faecher;
-const FORMATE = ["Praxisbeispiel","Impuls-Workshop","Essenz","Innovationsfonds",
-                  "eAssessment","Kuratiertes","Podcast"];
+/* Reihenfolge der Formate für Filter-Knöpfe und Ergebnisgruppen (28.9.2026) */
+const FORMATE = ["Praxisbeispiel","eAssessment","Impuls-Workshop","Innovationsfonds",
+                  "Kuratiertes","Podcast","Essenz"];
 const FORMAT_DEFINITIONEN = {
   "Praxisbeispiel":"erprobte Unterrichtssequenz zum Übernehmen",
   "Impuls-Workshop":"Aufzeichnung eines einstündigen Online-Inputs",
@@ -622,7 +544,7 @@ ANG.forEach((a,i) => {
 });
 
 const Z = {fach:null, anliegen:null, formate:new Set(), stufen:new Set(),
-           aufwaende:new Set(), suche:"", sortierung:"format",
+           aufwaende:new Set(), suche:"", sortierung:"fach",
            nurEins:null};
 
 const $ = s => document.querySelector(s);
@@ -746,8 +668,8 @@ function karte(a, mitId=true){
   if (a.archiv) meta.push('<span class="merkmal">Archiv</span>');
   d.innerHTML =
     '<div class="karte-kopf">'+
-      '<h3><a data-kategorie="titel" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.titel)+'</a></h3>'+
-      '<button class="knopf" type="button" data-frage="'+esc(a.titel)+'">Bot dazu fragen</button>'+
+      '<h3><a data-kategorie="titel" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.titel)+'</a>'+
+        '<button class="botfrage" type="button" data-frage="'+esc(a.titel)+'">Bot dazu fragen</button></h3>'+
     '</div>'+
     '<p>'+esc(a.lead)+
       (meta.length ? ' <span class="merkmale"><span class="merkmale-intro">Eingeordnet unter:</span> '+meta.join(", ")+'</span>' : '')+
@@ -857,7 +779,7 @@ function zeichneListe(){
   const liste = $("#liste"); liste.textContent = "";
   if (!sortiert.length){
     liste.innerHTML = '<div class="leer">Nichts gefunden. Weniger Filter – oder '+
-      'fragen Sie rechts den Bot, er sucht anders.</div>';
+      'fragen Sie den DLH-Bot, er sucht anders.</div>';
     return;
   }
   if (["fach","anliegen","format"].includes(Z.sortierung)){
@@ -911,10 +833,12 @@ const nachUrl = new Map();
 ANG.forEach(a => { if(!nachUrl.has(a.url)) nachUrl.set(a.url, a._i); });
 
 function zeigeEinzeln(i){
+  zurArbeit();
   Z.nurEins = i; gezeigt = 60; zeichneListe(); baueFilter();
   const el = document.getElementById("angebot-"+i);
   el?.scrollIntoView?.({behavior:"smooth", block:"center"});
-  if (window.innerWidth <= 980) umschalten("liste");
+  if (window.innerWidth <= 900) botSchliessen();
+  zeigeReset();
 }
 
 function fundstellenAus(el){
@@ -967,7 +891,7 @@ async function frageStellen(text){
   if (!f) return;
   $("#frage").value = "";
   $("#senden").disabled = true;
-  if (window.innerWidth <= 980) umschalten("bot");
+  botOeffnen();
   const austausch = document.createElement("div");
   austausch.className = "austausch";
   const verlauf = $("#verlauf");
@@ -997,7 +921,7 @@ async function frageStellen(text){
     laedt.remove();
     blase("Der Bot ist nicht erreichbar (" + e.message + "). Auf GitHub Pages " +
           "und perino.info funktioniert er; von einer anderen Adresse blockiert " +
-          "ihn der Browser (CORS). Die Liste links arbeitet unabhängig weiter.",
+          "ihn der Browser (CORS). Die Liste arbeitet unabhängig weiter.",
           "bot fehler", false, austausch);
     frageOben();
   } finally {
@@ -1014,42 +938,55 @@ async function botStatus(){
 
 }
 
-/* ---------- schmale Fenster: umschalten ------------------------------------ */
-function umschalten(was){
-  const schmal = window.innerWidth <= 980;
-  if (!schmal){ $("#links").hidden = false; $("#rechts").hidden = false; return; }
-  $("#rechts").hidden = (was !== "bot");
-  $("#links").hidden  = (was !== "filter");
+/* ---------- Bot als Seitenfenster, Filter auf schmalen Bildschirmen ---------
+   Vereinfachte Fassung (27.9.2026): der Bot ist nicht mehr dauernd sichtbar,
+   sondern öffnet sich auf Wunsch – über den Knopf unten rechts, den Hinweis
+   unter dem Suchfeld oder «Bot dazu fragen» auf einer Karte. */
+function botOeffnen(){
+  $("#rechts").hidden = false; $("#btnBot").hidden = true;
+  $("#btnBot").setAttribute("aria-expanded","true");
+  $("#schleier").hidden = window.innerWidth > 900;
+}
+function botSchliessen(){
+  $("#rechts").hidden = true; $("#btnBot").hidden = false;
+  $("#btnBot").setAttribute("aria-expanded","false");
+  $("#schleier").hidden = true;
+}
+function filterUmschalten(){
+  const offen = $("#links").classList.toggle("offen");
+  $("#btnFilter").setAttribute("aria-expanded", String(offen));
+  $("#btnFilter").textContent = offen ? "Filter ausblenden" : "Filter anzeigen";
+}
+/* «alle Filter löschen» erscheint nur, wenn wirklich etwas gesetzt ist. */
+function zeigeReset(){ $("#allesZurueck").hidden = !aktiv(); }
+function allesZuruecksetzen(){
+  Z.fach = null; Z.anliegen = null; Z.formate.clear(); Z.stufen.clear(); Z.aufwaende.clear();
+  Z.suche = ""; Z.nurEins = null; $("#suche").value = ""; alles();
 }
 
 /* ---------- alles neu ------------------------------------------------------- */
-function alles(){ gezeigt = 60; baueFilter(); zeichneListe(); baueKontext(); }
+function alles(){ gezeigt = 60; baueFilter(); zeichneListe(); baueKontext(); zeigeReset(); }
 
 /* ---------- Verdrahtung ----------------------------------------------------- */
 $("#suche").addEventListener("input", e => { Z.suche = e.target.value; Z.nurEins=null; alles(); });
 /* go und reset beim Suchfeld (27.9.2026): gefiltert wird weiterhin schon beim
    Tippen; go bestätigt und springt an den Anfang der Ergebnisse, reset leert. */
 function zumListenanfang(){
-  let el = $("#liste");
-  while (el && el !== document.body){
-    if (el.scrollHeight > el.clientHeight && getComputedStyle(el).overflowY !== "visible"){ el.scrollTop = 0; break; }
-    el = el.parentElement;
-  }
+  const kopf = $("#ergebnisse");
+  if (kopf.getBoundingClientRect().top < 0 || kopf.getBoundingClientRect().top > window.innerHeight*0.6)
+    kopf.scrollIntoView({block:"start"});
 }
 $("#suchform").addEventListener("submit", e => {
   e.preventDefault();
+  zurArbeit();
   Z.suche = $("#suche").value; Z.nurEins=null; alles(); zumListenanfang();
 });
 $("#suchereset").addEventListener("click", () => {
-  $("#suche").value = ""; Z.suche = ""; Z.nurEins=null; alles(); zumListenanfang(); $("#suche").focus();
+  $("#suche").value = ""; Z.suche = ""; Z.nurEins=null; alles(); if (!imEmpfang()) zumListenanfang(); $("#suche").focus();
 });
-$("#sortierung").addEventListener("click", e => {
-  const b = e.target.closest("[data-sort]");
-  if (!b) return;
-  Z.sortierung = b.dataset.sort;
-  $("#sortierung").querySelectorAll("[data-sort]").forEach(button => {
-    button.setAttribute("aria-pressed", String(button === b));
-  });
+$("#sortwahl").addEventListener("change", e => {
+  Z.sortierung = e.target.value;
+  e.target.dataset.kategorie = e.target.value;   // Farbe der gewählten Sortierung
   gezeigt = 60;
   zeichneListe();
 });
@@ -1095,17 +1032,57 @@ $("#anliegenEinklappen").addEventListener("click", e => {
   $("#alleAnliegen").focus();
 });
 $("#form").addEventListener("submit", e => { e.preventDefault(); frageStellen(); });
-$("#btnFilter").addEventListener("click", () =>
-  umschalten($("#links").hidden ? "filter" : "liste"));
-$("#btnBot").addEventListener("click", () =>
-  umschalten($("#rechts").hidden ? "bot" : "liste"));
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 980){ $("#links").hidden=false; $("#rechts").hidden=false; }
+$("#btnFilter").addEventListener("click", filterUmschalten);
+$("#btnBot").addEventListener("click", () => { botOeffnen(); $("#frage").focus(); });
+/* Frage an den Bot direkt von der Startseite: Botfenster öffnen, Frage anzeigen, Bot sucht. */
+$("#botsuchform").addEventListener("submit", e => {
+  e.preventDefault();
+  const f = $("#botsuche").value.trim();
+  if (!f) { $("#botsuche").focus(); return; }
+  botOeffnen();
+  frageStellen(f);
 });
+$("#botsuchereset").addEventListener("click", () => { $("#botsuche").value = ""; $("#botsuche").focus(); });
+$("#botZu").addEventListener("click", () => { botSchliessen(); $("#btnBot").focus(); });
+$("#schleier").addEventListener("click", botSchliessen);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#rechts").hidden) botSchliessen(); });
+$("#allesZurueck").addEventListener("click", allesZuruecksetzen);
+
+/* ---------- Zwei Zustände: Empfang und Arbeit (plakative Fassung, 27.9.2026) ----------
+   Am Anfang nur Titel, Suchfeld und drei Farbflächen. Sobald jemand sucht oder
+   eine Fläche wählt, schrumpft der Empfang zu einem Band und Filter und
+   Ergebnisse erscheinen. «zum Start» führt zurück und löscht alle Filter. */
+const imEmpfang = () => document.body.classList.contains("empfang");
+function zurArbeit(ziel){
+  if (imEmpfang()){ document.body.classList.remove("empfang"); window.scrollTo({top:0}); }
+  if (!ziel) return;
+  const g = $(ziel);
+  if (window.innerWidth <= 900 && !$("#links").classList.contains("offen")) filterUmschalten();
+  g.classList.remove("aufleuchten"); void g.offsetWidth;   // Animation neu starten
+  g.classList.add("aufleuchten");
+  clearTimeout(g._glimmen);
+  g._glimmen = setTimeout(() => g.classList.remove("aufleuchten"), 5100);
+  (g.querySelector("button") || g).focus({preventScroll:true});
+  g.scrollIntoView({block:"nearest"});
+}
+function zumStart(){
+  botSchliessen();
+  allesZuruecksetzen();
+  if ($("#links").classList.contains("offen")) filterUmschalten();
+  document.body.classList.add("empfang");
+  window.scrollTo({top:0});
+  $("#suche").focus();
+}
+$("#kachelFach").addEventListener("click", () => zurArbeit("#gruppeFach"));
+$("#kachelAnliegen").addEventListener("click", () => zurArbeit("#gruppeAnliegen"));
+$("#kachelAlle").addEventListener("click", () => zurArbeit());
+$("#zumStart").addEventListener("click", zumStart);
+/* Im Empfang wechselt die Seite erst mit «go» (oder Enter) zu den Ergebnissen,
+   nicht schon beim Tippen (28.9.2026). In der Arbeitsansicht filtert die Liste weiterhin live. */
 
 $("#botreset").addEventListener("click", botZuruecksetzen);
 
-let alleChatbotInfos = false;
+let alleChatbotInfos = true;   // Schnell-Links von Anfang an ausgeklappt (28.9.2026)
 function baueSchnellfragen(){
   const liste = $("#schnellfragen");
   liste.textContent = "";
@@ -1145,8 +1122,12 @@ $("#dlhlogo").addEventListener("error", function(){
   this.replaceWith(ersatz);
 });
 
+/* Das Auswahlfeld zeigt immer die tatsächlich aktive Sortierung. Manche Browser (v. a. Firefox)
+   stellen beim Neuladen die zuletzt gewählte Option wieder her – das würde «Format» anzeigen,
+   obwohl nach Fach sortiert ist. */
+$("#sortwahl").value = Z.sortierung;
+$("#sortwahl").dataset.kategorie = Z.sortierung;
 alles();
-umschalten("liste");
 botStatus();
 </script>
 
