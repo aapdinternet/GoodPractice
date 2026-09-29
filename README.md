@@ -1,13 +1,13 @@
-# Good Practice des DLH Sek II
+# Was brauche ich für meinen Unterricht?
 
-Prototypen für eine Übersicht über die erprobten Unterrichtsbeispiele des
-[Digital Learning Hub Sek II](https://dlh.zh.ch).
+Mit dieser Frage kommen Lehrpersonen auf dlh.zh.ch. Die Prototypen in diesem Repository zeigen,
+wie sie schnell zu den erprobten Angeboten des [Digital Learning Hub Sek II](https://dlh.zh.ch) finden könnten.
 
 **→ [Zur Übersicht](https://aapdinternet.github.io/GoodPractice/)**
 
 Vier Seiten, vom Konzept bis zur neusten Fassung, dazu eine Seite zum Nachschlagen.
-Die drei Filterseiten zeigen denselben Bestand in unterschiedlicher Aufmachung –
-sie sind zum Vergleichen gedacht.
+Die drei Filterseiten führen durch denselben Bestand in unterschiedlicher Aufmachung,
+zwei davon mit DLH-Bot – sie sind zum Vergleichen gedacht.
 
 | Seite | Was sie zeigt |
 |---|---|
