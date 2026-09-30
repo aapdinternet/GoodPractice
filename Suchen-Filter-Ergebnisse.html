@@ -75,7 +75,7 @@
   #suchereset{background:transparent; border:2px solid var(--violett-rand); color:var(--muted)}
   #suchereset:hover{border-color:var(--violett); color:var(--violett)}
 
-  .kacheln{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:44px auto 0; text-align:left}
+  .kacheln{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; margin:32px auto 0; text-align:left}
   .kachel{border:0; border-radius:20px; padding:24px 24px 22px; min-height:170px; cursor:pointer; color:#fff;
           display:flex; flex-direction:column; justify-content:space-between; gap:18px; text-align:left;
           transition:transform .18s ease, box-shadow .18s ease}
@@ -86,6 +86,17 @@
   .kachel.k-fach{background:var(--violett)}
   .kachel.k-anliegen{background:var(--orange-tief)}
   .kachel.k-alle{background:var(--petrol)}
+  /* zweite Reihe (30.9.2026): gleiche Farbe wie die Kachel darüber, eine Stufe heller */
+  /* 30.9.2026 nachgebessert: deutlich heller, darum dunkle Schrift in der Familienfarbe (Kontrast) */
+  .kachel.k-eassess{background:#d3b8e0; color:#3e1a4f}
+  .kachel.k-prompt{background:#f6b98a; color:#5c2703}
+  .kachel.k-aufwand{background:#c9cfd2; color:#2c3336}
+  .kachel.k-eassess span, .kachel.k-prompt span, .kachel.k-aufwand span{opacity:1}
+  /* Startseite ohne Suchfeld und ohne Bot-Link (30.9.2026); in der Arbeitsansicht bleibt die Suche im Band */
+  .empfang .suchform{display:none}
+  .start .einstieg{margin:0 auto; max-width:640px; color:var(--muted); font-size:17px}
+  .empfang .start .unter{margin-bottom:6px}
+  body:not(.empfang) .einstieg{display:none}
   .bothinweis{margin:26px 0 0; font-size:14.5px; color:var(--muted)}
   .textknopf{background:none; border:0; padding:0; color:var(--violett); font-weight:700; cursor:pointer;
              text-decoration:underline; text-underline-offset:3px}
@@ -112,6 +123,9 @@
   body:not(.empfang) #suchego:hover{background:rgba(255,255,255,.12)}
   body:not(.empfang) #suchereset{border-color:rgba(255,255,255,.45); color:#fff}
   body:not(.empfang) #suchereset:hover{border-color:#fff}
+  /* «Bot fragen» im Band (30.9.2026): schickt den Suchtext als Frage an den Bot */
+  #suchebot{background:transparent; border:2px solid #fff; color:#fff; white-space:nowrap}
+  #suchebot:hover{background:rgba(255,255,255,.12)}
   .zumstart{display:none; margin-left:auto; background:none; border:0; color:#fff; font-size:14px; font-weight:600;
             cursor:pointer; white-space:nowrap; opacity:.9}
   .zumstart:hover{opacity:1; text-decoration:underline}
@@ -291,6 +305,10 @@
     .start .unter{font-size:15px; margin-bottom:22px}
     .suchform input{padding:13px 15px; font-size:16px}
     .suchform button{padding:0 14px}
+    /* Handy: Suchfeld eine Zeile, go/reset/Bot fragen darunter (30.9.2026) */
+    body:not(.empfang) .suchform{flex-wrap:wrap}
+    body:not(.empfang) .suchform input{flex-basis:100%}
+    body:not(.empfang) .suchform button{padding:7px 14px}
     .kachel b{font-size:20px}
     .karte{padding:14px 15px}
     .karte-kopf{flex-wrap:wrap}
@@ -313,25 +331,33 @@
     <div class="start-innen">
       <h1>Was brauche ich für meinen Unterricht?</h1>
       <p class="unter"><strong>377 Angebote</strong> des DLH (Stand 30.09.2026)</p>
+      <p class="einstieg">Wählen Sie Ihren Einstieg</p>
       <form class="suchform" id="suchform" role="search">
-        <input id="suche" type="search" placeholder="Suche in DLH Angeboten" autocomplete="off" aria-label="Volltextsuche">
+        <input id="suche" type="search" placeholder="Stichwortsuche: aus Titel, Anliegen, Format, Fach, Beruf, etc. oder DLH-Bot fragen" autocomplete="off" aria-label="Volltextsuche">
         <button type="submit" id="suchego">go</button>
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
+        <button id="suchebot" type="button" title="Text im Suchfeld als Frage an den DLH-Bot schicken">Bot fragen</button>
       </form>
-      <p class="botlink"><button class="textknopf" id="btnBotLink" type="button" aria-controls="rechts">
-        <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/></svg>
-        DLH Chat-Bot</button></p>
       <button class="zumstart" id="zumStart" type="button">← zum Start</button>
 
       <div class="kacheln">
         <button class="kachel k-fach" id="kachelFach" type="button">
-          <div><b>Mein Fach</b><span>35 Fächer – Deutsch, Mathematik, ABU und viele mehr</span></div><i aria-hidden="true">→</i>
+          <div><b>Mein Fach</b><span>Steigen Sie über Ihr eigenes Fach ein</span></div><i aria-hidden="true">→</i>
         </button>
         <button class="kachel k-anliegen" id="kachelAnliegen" type="button">
-          <div><b>Ich möchte …</b><span>20 Anliegen, etwa anders prüfen oder Feedback geben</span></div><i aria-hidden="true">→</i>
+          <div><b>Ich möchte …</b><span>anders prüfen, KI-Assistenten bauen, meine Lehr-Lern-Aktivitäten digital optimieren, …</span></div><i aria-hidden="true">→</i>
         </button>
         <button class="kachel k-alle" id="kachelAlle" type="button">
-          <div><b>Alles ansehen</b><span>alle 377 Angebote, nach Fach geordnet</span></div><i aria-hidden="true">→</i>
+          <div><b>Praxisbeispiele</b><span>erprobte Unterrichtssequenzen zum Übernehmen</span></div><i aria-hidden="true">→</i>
+        </button>
+        <button class="kachel k-eassess" id="kachelEassess" type="button">
+          <div><b>eAssessments</b><span>Formative Feedbacks und summative Prüfungen gestalten</span></div><i aria-hidden="true">→</i>
+        </button>
+        <button class="kachel k-prompt" id="kachelPrompt" type="button">
+          <div><b>Prompting</b><span>Besser prompten mit wenigen Prinzipien</span></div><i aria-hidden="true">→</i>
+        </button>
+        <button class="kachel k-aufwand" id="kachelAufwand" type="button">
+          <div><b>Minimaler Aufwand</b><span>Angebote anzeigen, die mit minimalem Aufwand im Unterricht eingesetzt werden können</span></div><i aria-hidden="true">→</i>
         </button>
       </div>
 
@@ -360,7 +386,7 @@
         <a class="faecher-link" id="anliegenEinklappen" href="#anliegen" aria-controls="anliegen" hidden>einklappen</a>
       </section>
 
-      <section class="fgruppe f-aufwand">
+      <section class="fgruppe f-aufwand" id="gruppeAufwand">
         <h3>Aufwand</h3>
         <div class="chips" id="aufwaende"></div>
         <div id="weitereEingrenzungen" hidden>
@@ -1015,6 +1041,14 @@ $("#suchform").addEventListener("submit", e => {
   zurArbeit();
   Z.suche = $("#suche").value; Z.nurEins=null; alles(); zumListenanfang();
 });
+/* «Bot fragen» (30.9.2026): Text aus dem Suchfeld geht als Frage an den Bot,
+   Suchfeld und Stichwortfilter werden geleert. Leeres Feld: Bot öffnen, Cursor in dessen Eingabe. */
+$("#suchebot").addEventListener("click", () => {
+  const t = $("#suche").value.trim();
+  if (!t){ botOeffnen(); $("#frage").focus(); return; }
+  $("#suche").value = ""; Z.suche = ""; Z.nurEins = null; alles();
+  frageStellen(t);
+});
 $("#suchereset").addEventListener("click", () => {
   $("#suche").value = ""; Z.suche = ""; Z.nurEins=null; alles(); if (!imEmpfang()) zumListenanfang(); $("#suche").focus();
 });
@@ -1068,8 +1102,6 @@ $("#anliegenEinklappen").addEventListener("click", e => {
 $("#form").addEventListener("submit", e => { e.preventDefault(); frageStellen(); });
 $("#btnFilter").addEventListener("click", filterUmschalten);
 $("#btnBot").addEventListener("click", () => { botOeffnen(); $("#frage").focus(); });
-/* Kurzer Link «DLH Chat-Bot» unter dem Suchfeld öffnet das Botfenster (29.9.2026) */
-$("#btnBotLink").addEventListener("click", () => { botOeffnen(); $("#frage").focus(); });
 $("#botZu").addEventListener("click", () => { botSchliessen(); $("#btnBot").focus(); });
 $("#schleier").addEventListener("click", botSchliessen);
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#rechts").hidden) botSchliessen(); });
@@ -1090,19 +1122,33 @@ function zurArbeit(ziel){
   clearTimeout(g._glimmen);
   g._glimmen = setTimeout(() => g.classList.remove("aufleuchten"), 5100);
   (g.querySelector("button") || g).focus({preventScroll:true});
-  g.scrollIntoView({block:"nearest"});
+  window.scrollTo({top:0});   // immer ganz oben beginnen, auch wenn der Kasten tiefer liegt (30.9.2026)
 }
 function zumStart(){
   botSchliessen();
   allesZuruecksetzen();
   if ($("#links").classList.contains("offen")) filterUmschalten();
+  eingrenzungenUmschalten(false);
   document.body.classList.add("empfang");
   window.scrollTo({top:0});
   $("#suche").focus();
 }
 $("#kachelFach").addEventListener("click", () => zurArbeit("#gruppeFach"));
 $("#kachelAnliegen").addEventListener("click", () => zurArbeit("#gruppeAnliegen"));
-$("#kachelAlle").addEventListener("click", () => zurArbeit());
+/* Vier Kacheln mit gesetztem Filter (30.9.2026): die Liste zeigt sofort nur das Gewählte */
+function mitFilter(setzen, ziel){
+  allesZuruecksetzen();
+  setzen();
+  alles();
+  zurArbeit(ziel);
+}
+const mitFormat = f => mitFilter(() => { Z.formate.add(f); eingrenzungenUmschalten(true); }, "#gruppeAufwand");
+$("#kachelAlle").addEventListener("click", () => mitFormat("Praxisbeispiel"));
+$("#kachelEassess").addEventListener("click", () => mitFormat("eAssessment"));
+$("#kachelPrompt").addEventListener("click", () => mitFilter(() => {
+  Z.anliegen = ANL.findIndex(t => t.includes("besser prompten"));
+}, "#gruppeAnliegen"));
+$("#kachelAufwand").addEventListener("click", () => mitFilter(() => { Z.aufwaende.add("sofort einsetzbar"); }, "#gruppeAufwand"));
 $("#zumStart").addEventListener("click", zumStart);
 /* Im Empfang wechselt die Seite erst mit «go» (oder Enter) zu den Ergebnissen,
    nicht schon beim Tippen (28.9.2026). In der Arbeitsansicht filtert die Liste weiterhin live. */
