@@ -793,7 +793,10 @@ function zeichneGruppen(t, liste){
   } else if (Z.sortierung === "anliegen"){
     reihenfolge = [...ANL, ohne].filter(v => gruppen.has(v));
   } else {
+    // Das gewählte Fach steht zuoberst, die übrigen Fächer alphabetisch darunter (1.10.2026)
     reihenfolge = [...gruppen.keys()].sort((a,b) => {
+      if (Z.fach && a===Z.fach) return -1;
+      if (Z.fach && b===Z.fach) return 1;
       if (a===ohne) return 1;
       if (b===ohne) return -1;
       return a.localeCompare(b,"de");
