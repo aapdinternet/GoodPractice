@@ -136,7 +136,8 @@
   @keyframes herein{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
 
   /* Filter als drei Farbflächen */
-  .filter{position:sticky; top:84px; max-height:calc(100dvh - 100px); overflow-y:auto; display:grid; gap:14px; padding:2px}
+  /* max-height so, dass das Spaltenende auch bei ungescrollter Seite im Bild ist (1.10.2026) */
+  .filter{position:sticky; top:84px; max-height:calc(100dvh - 150px); overflow-y:auto; display:grid; gap:14px; padding:2px}
   .filter-kopf{display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:0 4px}
   .filter-kopf h2{margin:0; font-size:19px; font-weight:700}
   .loeschen{background:none; border:0; padding:0; color:var(--orange-tief); font-size:13px; font-weight:700; cursor:pointer;
@@ -170,6 +171,27 @@
   .chip[aria-pressed="true"]{color:#fff}
   .chip[aria-pressed="true"] .n{color:#fffc}
   .f-fach .chip[aria-pressed="true"]{background:var(--violett)}
+  /* Scheinwerfer auf «Mein Fach» (1.10.2026): nach der Kachel «Mein Fach» tritt alles andere
+     zurück, der Fach-Kasten bekommt einen violetten Rahmen und den Hinweis «Schritt 1».
+     Endet mit der Wahl eines Fachs, einem Klick ausserhalb oder Esc. */
+  .schritt{display:none}
+  body.fokus-fach #gruppeFach .schritt, body.fokus-anliegen #gruppeAnliegen .schritt{display:inline-flex; align-items:center; gap:8px; margin:0 0 12px;
+    padding:6px 12px 6px 10px; border-radius:999px; background:var(--violett); color:#fff;
+    font-size:13.5px; font-weight:700}
+  .schritt .puls{width:9px; height:9px; border-radius:50%; background:#fff; flex:none;
+    animation:puls 1.4s ease-out infinite !important; animation-duration:1.4s !important;
+    animation-iteration-count:infinite !important}
+  @keyframes puls{0%{box-shadow:0 0 0 0 rgba(255,255,255,.85)} 100%{box-shadow:0 0 0 9px rgba(255,255,255,0)}}
+  #ergebnisse, .filter > *{transition:opacity .35s ease, filter .35s ease}
+  body.fokus-fach #ergebnisse, body.fokus-anliegen #ergebnisse,
+  body.fokus-fach .filter > :not(#gruppeFach),
+  body.fokus-anliegen .filter > :not(#gruppeAnliegen){opacity:.28; filter:grayscale(.7)}
+  body.fokus-fach #gruppeFach{border-color:var(--violett);
+    box-shadow:inset 0 0 0 2px var(--violett)}
+  /* dasselbe für «Ich möchte …» (1.10.2026), in Orange; Pille dunkler für genug Kontrast */
+  body.fokus-anliegen #gruppeAnliegen .schritt{background:#a84808}
+  body.fokus-anliegen #gruppeAnliegen{border-color:var(--orange-tief);
+    box-shadow:inset 0 0 0 2px var(--orange-tief)}
   /* Fächer etwas kleiner, damit Deutsch, Mathematik, ABU, Englisch in eine Zeile passen (28.9.2026) */
   .f-fach .chip{font-size:12px; padding:4px 10px; gap:5px}
   .f-fach .chip .n{font-size:11px}
@@ -373,6 +395,7 @@
       </div>
 
       <section class="fgruppe f-fach" id="gruppeFach">
+        <p class="schritt" id="schrittFach"><span class="puls" aria-hidden="true"></span>Schritt 1: Wählen Sie hier Ihr Fach</p>
         <h3>Mein Fach</h3>
         <div class="chips" id="faecher"></div>
         <a class="faecher-link" id="alleFaecher" href="#faecher" aria-controls="faecher" aria-expanded="false">alle 35 Fächer zeigen</a>
@@ -380,6 +403,7 @@
       </section>
 
       <section class="fgruppe f-anliegen" id="gruppeAnliegen">
+        <p class="schritt" id="schrittAnliegen"><span class="puls" aria-hidden="true"></span>Schritt 1: Wählen Sie hier Ihr Anliegen</p>
         <h3>Ich möchte …</h3>
         <div class="anliegen" id="anliegen"></div>
         <a class="faecher-link" id="alleAnliegen" href="#anliegen" aria-controls="anliegen" aria-expanded="false">alle 20 Anliegen zeigen</a>
@@ -1125,16 +1149,44 @@ function zurArbeit(ziel){
   window.scrollTo({top:0});   // immer ganz oben beginnen, auch wenn der Kasten tiefer liegt (30.9.2026)
 }
 function zumStart(){
+  fokusEnde();
+  alleFaecher = false; alleAnliegen = false;   // Listen beim nächsten Einstieg wieder eingeklappt
   botSchliessen();
   allesZuruecksetzen();
   if ($("#links").classList.contains("offen")) filterUmschalten();
   eingrenzungenUmschalten(false);
+  $("#links").scrollTop = 0;
   document.body.classList.add("empfang");
   window.scrollTo({top:0});
   $("#suche").focus();
 }
-$("#kachelFach").addEventListener("click", () => zurArbeit("#gruppeFach"));
-$("#kachelAnliegen").addEventListener("click", () => zurArbeit("#gruppeAnliegen"));
+/* Kacheln «Mein Fach» und «Ich möchte …» (1.10.2026): Liste ganz ausgeklappt,
+   Scheinwerfer auf den passenden Kasten. Endet mit einer Wahl im Kasten,
+   einem Klick ausserhalb oder Esc. Ein-/Ausklappen im Kasten lässt ihn an. */
+const FOKUS = {
+  fach:     {klasse:"fokus-fach",     kasten:"#gruppeFach",     wahl:"#faecher button", kachel:"#kachelFach"},
+  anliegen: {klasse:"fokus-anliegen", kasten:"#gruppeAnliegen", wahl:"#anliegen button", kachel:"#kachelAnliegen"}
+};
+function fokusEnde(){ Object.values(FOKUS).forEach(f => document.body.classList.remove(f.klasse)); }
+function fokusStart(art){
+  const f = FOKUS[art];
+  if (art === "fach") alleFaecher = true; else alleAnliegen = true;
+  baueFilter();
+  zurArbeit();
+  if (window.innerWidth <= 900 && !$("#links").classList.contains("offen")) filterUmschalten();
+  fokusEnde();
+  document.body.classList.add(f.klasse);
+  ($(f.wahl) || $(f.kasten)).focus({preventScroll:true});
+  window.scrollTo({top:0});
+}
+$("#kachelFach").addEventListener("click", () => fokusStart("fach"));
+$("#kachelAnliegen").addEventListener("click", () => fokusStart("anliegen"));
+document.addEventListener("click", e => {
+  const f = Object.values(FOKUS).find(f => document.body.classList.contains(f.klasse));
+  if (!f || e.target.closest(f.kachel)) return;
+  if (e.target.closest(f.wahl) || !e.target.closest(f.kasten)) fokusEnde();
+}, true);
+document.addEventListener("keydown", e => { if (e.key === "Escape") fokusEnde(); });
 /* Vier Kacheln mit gesetztem Filter (30.9.2026): die Liste zeigt sofort nur das Gewählte */
 function mitFilter(setzen, ziel){
   allesZuruecksetzen();
@@ -1142,13 +1194,18 @@ function mitFilter(setzen, ziel){
   alles();
   zurArbeit(ziel);
 }
-const mitFormat = f => mitFilter(() => { Z.formate.add(f); eingrenzungenUmschalten(true); }, "#gruppeAufwand");
+/* Filterspalte ganz nach unten rollen, damit der Kasten Aufwand/Stufe/Format und der Link
+   «Definitionen und Bestandskarte» zu sehen sind; die Seite selbst bleibt oben (1.10.2026). */
+function filterspalteNachUnten(){
+  requestAnimationFrame(() => { const l = $("#links"); l.scrollTo({top:l.scrollHeight, behavior:"smooth"}); });
+}
+const mitFormat = f => { mitFilter(() => { Z.formate.add(f); eingrenzungenUmschalten(true); }, "#gruppeAufwand"); filterspalteNachUnten(); };
 $("#kachelAlle").addEventListener("click", () => mitFormat("Praxisbeispiel"));
 $("#kachelEassess").addEventListener("click", () => mitFormat("eAssessment"));
 $("#kachelPrompt").addEventListener("click", () => mitFilter(() => {
   Z.anliegen = ANL.findIndex(t => t.includes("besser prompten"));
 }, "#gruppeAnliegen"));
-$("#kachelAufwand").addEventListener("click", () => mitFilter(() => { Z.aufwaende.add("sofort einsetzbar"); }, "#gruppeAufwand"));
+$("#kachelAufwand").addEventListener("click", () => { mitFilter(() => { Z.aufwaende.add("sofort einsetzbar"); eingrenzungenUmschalten(true); }, "#gruppeAufwand"); filterspalteNachUnten(); });
 $("#zumStart").addEventListener("click", zumStart);
 /* Im Empfang wechselt die Seite erst mit «go» (oder Enter) zu den Ergebnissen,
    nicht schon beim Tippen (28.9.2026). In der Arbeitsansicht filtert die Liste weiterhin live. */
