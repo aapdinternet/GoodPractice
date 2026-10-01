@@ -567,7 +567,7 @@ const SCHNELL = [
 
 const ANG = DB.angebote, ANL = DB.anliegen, FAECHER = DB.faecher;
 /* Reihenfolge der Formate für Filter-Knöpfe und Ergebnisgruppen (28.9.2026) */
-const FORMATE = ["Praxisbeispiele KI","eAssessment","Impuls-Workshop","Innovationsfonds",
+const FORMATE = ["Praxisbeispiele KI","Good Practice","eAssessment","Impuls-Workshop","Innovationsfonds",
                   "Kuratiertes","Podcast","Essenz"];
 const FORMAT_DEFINITIONEN = {
   "Praxisbeispiele KI":"Unterrichtsanwendung im Rahmen «Denken mit KI», mit SuS/Lernenden durchgeführt, beschrieben zum Übernehmen",
@@ -609,7 +609,28 @@ function datumSchluessel(d){
 }
 
 /* Suchtext je Angebot einmal vorbereiten (die Filterseite hatte das als _s). */
+/* «Good Practice» (1.10.2026): kein eigenes Format eines Angebots, sondern eine inhaltliche
+   Auswahl quer über die Formate, nach Andrés Definition – erprobt, praktisch, bewährt,
+   übertragbar. Ob das Wort im Text steht, spielt keine Rolle. Regel wie auf der
+   Good-Practice-Seite vom 12.9.2026 (build_goodpractice_2026-09-12.py):
+   – alle Praxisbeispiele KI und alle eAssessments
+   – Impuls-Workshops, die sich als Praxis- oder Projektbericht ausweisen (Erfahrungsberichte)
+   – Innovationsfondsprojekte mit greifbarem Ergebnis: Schlagwort «easy to use» oder
+     von den Urheberinnen in einem IFMS-/IFBB-Workshop vorgestellt
+   Im Filter «Format» wirkt der Knopf wie ein weiteres Format (oder-verknüpft). */
+const GP_BERICHT = /praxisbericht|erfahrungsbericht|erfahrungen (aus|mit|und)|projektvorstellung|ifms-|ifbb-|austausch-call|good-practice|good practice|austausch und umfrage|lernpfade/;
+const GP_VORGESTELLT = ["/428-","/554-","/996-","/556-","/739-","/555-"];
+function istGoodPractice(a){
+  if (a.archiv) return false;
+  if (a.format === "Praxisbeispiele KI" || a.format === "eAssessment") return true;
+  if (a.format === "Impuls-Workshop") return GP_BERICHT.test((a.titel+" "+(a.lead||"")).toLowerCase());
+  if (a.format === "Innovationsfonds")
+    return (a.tags||[]).includes("easy to use") || GP_VORGESTELLT.some(k => (a.url||"").includes(k));
+  return false;
+}
+const hatFormat = (a, f) => f === "Good Practice" ? a.gp : a.format === f;
 ANG.forEach((a,i) => {
+  a.gp = istGoodPractice(a);
   a._i = i;
   a._such = falte([a.titel, a.lead, a.quelle, (a.faecher||[]).join(" "),
                    (a.tags||[]).join(" "), (a.anliegen||[]).map(j=>ANL[j]||"").join(" "),
@@ -637,7 +658,7 @@ function passt(a, ausser){
   if (ausser !== "fach" && Z.fach && !(a.faecher||[]).includes(Z.fach)) return false;
   if (ausser !== "anliegen" && Z.anliegen !== null
       && !(a.anliegen||[]).includes(Z.anliegen)) return false;
-  if (ausser !== "format" && Z.formate.size && !Z.formate.has(a.format)) return false;
+  if (ausser !== "format" && Z.formate.size && ![...Z.formate].some(f => hatFormat(a, f))) return false;
   if (ausser !== "stufe" && Z.stufen.size
       && !(a.stufen||[]).some(s => Z.stufen.has(s))) return false;
   if (ausser !== "aufwand" && Z.aufwaende.size && !Z.aufwaende.has(a.aufwand)) return false;
@@ -709,7 +730,7 @@ function baueFilter(){
     const z = $(ziel); z.textContent = "";
     werte.forEach(w => {
       const n = ANG.filter(a => passt(a,ausser) &&
-        (feld==="stufen" ? (a.stufen||[]).includes(w) : a[feld]===w)).length;
+        (feld==="stufen" ? (a.stufen||[]).includes(w) : feld==="format" ? hatFormat(a, w) : a[feld]===w)).length;
       if (alleFaecher && !n) return;
       z.appendChild(chip(w, menge.has(w), () => {
         menge.has(w) ? menge.delete(w) : menge.add(w); Z.nurEins=null; alles();
