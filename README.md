@@ -24,8 +24,9 @@ Aus den Fassungen mit Bot verlinkt.
 Dazu die beiden A3-Druckblätter [«Anliegen × Format»](https://aapdinternet.github.io/GoodPractice/DLH_Matrix_Anliegen_Format_A3.pdf)
 und [«Thema × Format»](https://aapdinternet.github.io/GoodPractice/DLH_Matrix_Thema_Format_A3.pdf).
 
-Ausserhalb dieser Sammlung entsteht [Angebote und Bot](https://hjperino.github.io/DLH-Searchbot-Frontend/angebote.html)
-in einem eigenen Repository.
+Ausserhalb dieser Sammlung entstehen in einem eigenen Repository der [DLH Chatbot](https://hjperino.github.io/DLH-Searchbot-Frontend/)
+– der Bot für sich allein, mit schnellen Infos zu Fokus, Newsletter, Impuls-Workshops, eAssessments und mehr –
+und [Angebote und Bot](https://hjperino.github.io/DLH-Searchbot-Frontend/angebote.html).
 
 ## Stand und Vorbehalte
 
