@@ -673,7 +673,8 @@ function baueFilter(){
   sichtbar.forEach(fach => {
     const n = ANG.filter(a => passt(a,"fach") && (a.faecher||[]).includes(fach)).length;
     f.appendChild(chip(fach, Z.fach===fach,
-      () => { Z.fach = Z.fach===fach ? null : fach; Z.nurEins=null; alles(); }, n));
+      () => { Z.fach = Z.fach===fach ? null : fach; Z.nurEins=null;
+              setzeSortierung(Z.fach ? "format" : "fach"); alles(); }, n));
   });
 
   $("#alleFaecher").setAttribute("aria-expanded", String(alleFaecher));
@@ -1054,6 +1055,7 @@ function filterUmschalten(){
 function zeigeReset(){ $("#allesZurueck").hidden = !aktiv(); }
 function allesZuruecksetzen(){
   Z.fach = null; Z.anliegen = null; Z.formate.clear(); Z.stufen.clear(); Z.aufwaende.clear();
+  setzeSortierung("fach");
   Z.suche = ""; Z.nurEins = null; $("#suche").value = ""; alles();
 }
 
@@ -1085,6 +1087,13 @@ $("#suchebot").addEventListener("click", () => {
 $("#suchereset").addEventListener("click", () => {
   $("#suche").value = ""; Z.suche = ""; Z.nurEins=null; alles(); if (!imEmpfang()) zumListenanfang(); $("#suche").focus();
 });
+/* Mit gewähltem Fach ist die Liste nach Format geordnet, sonst nach Fach (1.10.2026).
+   Das Auswahlfeld zeigt den Wechsel an; man kann es weiterhin selbst umstellen. */
+function setzeSortierung(w){
+  Z.sortierung = w;
+  $("#sortwahl").value = w;
+  $("#sortwahl").dataset.kategorie = w;
+}
 $("#sortwahl").addEventListener("change", e => {
   Z.sortierung = e.target.value;
   e.target.dataset.kategorie = e.target.value;   // Farbe der gewählten Sortierung
