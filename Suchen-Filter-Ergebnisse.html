@@ -183,6 +183,12 @@
     animation-iteration-count:infinite !important}
   @keyframes puls{0%{box-shadow:0 0 0 0 rgba(255,255,255,.85)} 100%{box-shadow:0 0 0 9px rgba(255,255,255,0)}}
   #ergebnisse, .filter > *{transition:opacity .35s ease, filter .35s ease}
+  /* auch das Band oben mit Titel, Suchfeld und Knöpfen tritt zurück (1.10.2026);
+     die dunkelviolette Fläche selbst bleibt, nur ihr Inhalt wird blass */
+  .start-innen > *{transition:opacity .35s ease, filter .35s ease}
+  .bot-fab{transition:opacity .35s ease, filter .35s ease}
+  body.fokus-fach .bot-fab, body.fokus-anliegen .bot-fab,
+  body.fokus-fach .start-innen > *, body.fokus-anliegen .start-innen > *,
   body.fokus-fach #ergebnisse, body.fokus-anliegen #ergebnisse,
   body.fokus-fach .filter > :not(#gruppeFach),
   body.fokus-anliegen .filter > :not(#gruppeAnliegen){opacity:.28; filter:grayscale(.7)}
