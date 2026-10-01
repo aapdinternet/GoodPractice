@@ -294,7 +294,10 @@
   .blase.bot h1,.blase.bot h2,.blase.bot h3{font-size:14px; margin:.5em 0 .3em}
   .blase.fehler{background:var(--fehler-bg); border:1px solid var(--fehler-linie); color:var(--fehler-text)}
   .blase.laedt{color:var(--muted); font-style:italic}
-  .fundstellen{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
+  .fundstellen{display:flex; flex-wrap:wrap; gap:5px; margin-top:12px;
+             padding-top:10px; border-top:1px solid var(--line)}
+  .fundstellen-titel{flex-basis:100%; font-weight:700; font-size:14px; margin:.3em 0 .1em}
+  @media (max-width:900px){ .fundstellen-titel .fs-links{display:none} }
   .schnell{margin:0 18px; padding:12px 14px 10px; border-radius:14px; background:var(--violett-hell); max-height:30dvh; overflow-y:auto; flex-shrink:0}
   .schnell h3{margin:0 0 8px; font-size:13px; font-weight:700}
   /* Überschrift und «alle anzeigen» in einer Zeile, die vier ersten Links in einer zweiten (28.9.2026) */
@@ -945,11 +948,15 @@ function fundstellenAus(el){
   if (!gefunden.size) return null;
   const box = document.createElement("div");
   box.className = "fundstellen";
+  const titel = document.createElement("div");
+  titel.className = "fundstellen-titel";
+  titel.innerHTML = 'In der Liste <span class="fs-links">links </span>anzeigen:';
+  box.appendChild(titel);
   gefunden.forEach((i,href) => {
     const b = document.createElement("button");
     b.className = "knopf"; b.type = "button";
-    b.textContent = "↧ "+ANG[i].titel.slice(0,34)+(ANG[i].titel.length>34?"…":"");
-    b.title = "In der Liste zeigen";
+    b.textContent = ANG[i].titel.slice(0,34)+(ANG[i].titel.length>34?"…":"");
+    b.title = ANG[i].titel;   // voller Titel, falls gekürzt
     b.addEventListener("click", () => zeigeEinzeln(i));
     box.appendChild(b);
   });
