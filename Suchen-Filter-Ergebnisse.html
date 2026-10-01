@@ -395,7 +395,7 @@
       <h1>Was brauche ich für meinen Unterricht?</h1>
       <p class="unter"><strong>377 Angebote</strong> des DLH (Stand 30.09.2026)</p>
       <form class="suchform" id="suchform" role="search">
-        <input id="suche" type="search" placeholder="Stichwortsuche: aus Titel, Anliegen, Angebotsart, Fach, Beruf, etc. oder DLH-Bot fragen" autocomplete="off" aria-label="Volltextsuche">
+        <input id="suche" type="search" placeholder="Stichwortsuche: aus Titel, Anliegen, Art des Angebots, Fach, Beruf, etc. oder DLH-Bot fragen" autocomplete="off" aria-label="Volltextsuche">
         <button type="submit" id="suchego">go</button>
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
         <button id="suchebot" type="button" title="Text im Suchfeld als Frage an den DLH-Bot schicken">Bot fragen</button>
@@ -445,8 +445,8 @@
       </section>
 
       <section class="fgruppe f-aufwand" id="gruppeAufwand">
-        <!-- Reihenfolge Angebotsart – Einsatz – Stufe (1.10.2026) -->
-        <h3>Angebotsart</h3>
+        <!-- Reihenfolge Art des Angebots – Einsatz – Stufe (1.10.2026) -->
+        <h3>Art des Angebots</h3>
         <div class="chips" id="formate"></div>
         <div id="weitereEingrenzungen" hidden>
           <div class="fblock"><h4>Einsatz</h4><div class="chips" id="aufwaende"></div></div>
@@ -466,7 +466,7 @@
         <label class="sortwahl">sortieren nach
           <select id="sortwahl" data-kategorie="fach" autocomplete="off">
             <option value="fach" data-kategorie="fach" selected>Fach</option>
-            <option value="format" data-kategorie="format">Angebotsart</option>
+            <option value="format" data-kategorie="format">Art des Angebots</option>
             <option value="anliegen" data-kategorie="anliegen">Anliegen</option>
             <option value="aufwand" data-kategorie="aufwand">Einsatz</option>
             <option value="datum" data-kategorie="datum">Datum (neuste zuerst)</option>
@@ -729,6 +729,8 @@ function baueFachwahl(){
     if (n === 0) b.dataset.leer = "1";
     b.addEventListener("click", () => {
       Z.fach = wert; Z.nurEins = null;
+      // Fach ausserhalb der sieben sichtbaren Knöpfe: alle 35 aufklappen, damit der Knopf markiert sichtbar ist (1.10.2026)
+      if (wert && !STARTFAECHER.includes(wert)) alleFaecher = true;
       setzeSortierung(Z.fach ? "format" : "fach");
       fachwahlZu(); alles(); $("#fachwahlKnopf").focus();
     });
@@ -829,7 +831,7 @@ function karte(a, mitId=true){
   (a.anliegen || []).forEach(i => {
     if (ANL[i]) meta.push(tag("anliegen", ANL_KURZ[i] || ANL[i], "Anliegen: "+ANL[i]));
   });
-  if (a.format) meta.push(tag("format", a.format, "Angebotsart: "+a.format));
+  if (a.format) meta.push(tag("format", a.format, "Art des Angebots: "+a.format));
   if (a.datum) meta.push(tag("datum", a.datum, "Datum: "+a.datum));
   if (a.aufwand) meta.push(tag("aufwand", a.aufwand, "Einsatz: "+a.aufwand));
   if (a.archiv) meta.push('<span class="merkmal">Archiv</span>');
@@ -857,7 +859,7 @@ function zeichneGruppen(t, liste){
       return anliegen.length ? anliegen : [ohne];
     }
     if (Z.sortierung === "aufwand") return [a.aufwand || "Ohne Einsatzangabe"];
-    return [a.format || "Ohne Angebotsart"];
+    return [a.format || "Ohne Art des Angebots"];
   };
 
   t.forEach(a => werte(a).forEach(wert => {
