@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Alle Angebote des Digital Learning Hub Sek II, filterbar nach Fach und Anliegen - daneben der DLH-Bot fuer alles, was die Liste nicht weiss.">
 <link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'&gt;&lt;circle cx='13' cy='16' r='9' fill='%23ec6608'/&gt;&lt;circle cx='21' cy='16' r='8' fill='none' stroke='%238a5da4' stroke-width='2.5'/&gt;&lt;/svg&gt;">
-<title>DLH-Angebote entdecken</title>
+<title>DLH-Angebote entdecken – Dropdown</title>
 <style>
   :root{
     --ink:#1d3437; --muted:#5b6f72; --line:#e6e2dc;
@@ -365,6 +365,100 @@
     .karte-kopf h3{flex-basis:100%}
     .bot-fab{right:14px; bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   }
+
+  /* ===================== Variante Dropdown (2.10.2026) ===================== */
+  #links, #btnFilter{display:none !important}
+  .haupt{grid-template-columns:minmax(0,1fr) !important}
+  #ergebnisse, .karte{scroll-margin-top:150px}
+  body:not(.empfang) .start-innen{flex-wrap:wrap; row-gap:10px}
+  .filterleiste{display:flex; flex-wrap:wrap; align-items:center; gap:8px; flex-basis:100%; order:10}
+  body.empfang .filterleiste{display:none}
+  .dd{position:relative}
+  .dd-knopf{position:relative; font:inherit; font-size:13.5px; color:#fff; background:rgba(255,255,255,.07);
+    border:1.5px solid rgba(255,255,255,.45); border-radius:10px; padding:6px 30px 6px 12px; cursor:pointer;
+    max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left}
+  .dd-knopf::after{content:""; position:absolute; right:12px; top:50%; width:6px; height:6px; margin-top:-5px;
+    border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg)}
+  .dd-knopf[aria-expanded="true"]::after{transform:rotate(-135deg); margin-top:-1px}
+  .dd-knopf:hover, .dd-knopf[aria-expanded="true"]{border-color:#fff}
+  .dd-knopf .wert{font-weight:700}
+  .dd-knopf.gesetzt{background:#fff; border-color:#fff; color:var(--ink)}
+  /* Einstieg über die Kachel: das passende Dropdown ist farbig unterlegt */
+  body[data-einstieg="fach"] #ddFach .dd-knopf{background:#e3d0ef; border-color:#e3d0ef; color:var(--violett-tief); font-weight:600}
+  body[data-einstieg="anliegen"] #ddAnliegen .dd-knopf{background:var(--orange); border-color:var(--orange); color:#fff; font-weight:600}
+  .dd-panel{position:absolute; top:calc(100% + 6px); left:0; z-index:30; width:300px; max-width:calc(100vw - 32px);
+    max-height:min(62vh,440px); overflow-y:auto; background:var(--card); color:var(--ink); border-radius:12px;
+    box-shadow:0 14px 36px -10px rgba(0,0,0,.5); padding:6px}
+  #ddAnliegen .dd-panel{width:420px}
+  .dd-panel[hidden]{display:none}
+  .dd-opt{display:flex; align-items:baseline; gap:9px; width:100%; text-align:left; font:inherit; font-size:13.5px;
+    color:var(--ink); background:none; border:0; border-radius:7px; padding:6px 9px; cursor:pointer; line-height:1.35}
+  .dd-opt:hover, .dd-opt:focus-visible{background:var(--violett-hell); outline:none}
+  #ddAnliegen .dd-opt:hover, #ddAnliegen .dd-opt:focus-visible{background:var(--orange-hell)}
+  .dd-opt .n{margin-left:auto; padding-left:8px; color:var(--muted); font-size:11.5px; font-variant-numeric:tabular-nums}
+  .dd-opt[data-leer="1"]{opacity:.45}
+  .dd-opt.alle{font-style:italic; color:var(--muted)}
+  #ddFach .dd-opt[aria-selected="true"]{background:var(--violett); color:#fff}
+  #ddAnliegen .dd-opt[aria-selected="true"]{background:var(--orange-tief); color:#fff}
+  .dd-opt[aria-selected="true"] .n{color:#fffc}
+  .dd-opt .kasten{width:15px; height:15px; border:1.5px solid var(--muted); border-radius:4px; flex:none;
+    align-self:center; position:relative; background:var(--card)}
+  .dd-opt[aria-checked="true"] .kasten{background:var(--petrol); border-color:var(--petrol)}
+  .dd-opt[aria-checked="true"] .kasten::after{content:""; position:absolute; left:4px; top:1px; width:4px; height:8px;
+    border-right:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(45deg)}
+  .dd-opt[aria-checked="true"]{font-weight:600}
+  .dd-hinweis{margin:0; padding:4px 9px 6px; font-size:11.5px; color:var(--muted)}
+  .ddloeschen{background:none; border:0; padding:0 4px; color:#fff; font:inherit; font-size:13px; font-weight:600;
+    text-decoration:underline; text-underline-offset:3px; cursor:pointer; opacity:.9}
+  .ddloeschen:hover{opacity:1}
+  .ddloeschen[hidden]{display:none}
+  /* Ergebniskopf: Stand und Bestandskarte neben der Trefferzahl */
+  .kopf-links{display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 16px}
+  .stand-zeile{font-size:12.5px; color:var(--muted)}
+  .stand-zeile a{color:var(--muted); text-underline-offset:2px}
+  .stand-zeile a:hover{color:var(--ink)}
+  /* Ergebnisse über die ganze Breite: Karten in Spalten, höchstens drei (2.10.2026) */
+  .liste{grid-template-columns:repeat(auto-fill, minmax(max(min(440px,100%), calc((100% - 24px) / 3)), 1fr))}
+  .liste > :not(.karte){grid-column:1 / -1}
+  .ergebnis-gruppe{grid-template-columns:repeat(auto-fill, minmax(max(min(440px,100%), calc((100% - 24px) / 3)), 1fr))}
+  .ergebnis-gruppe > .gruppen-kopf{grid-column:1 / -1}
+  .karte.aktiv{box-shadow:inset 0 0 0 2px var(--orange), var(--schatten)}
+  /* Ansichtsfenster rechts */
+  .ansicht{position:fixed; top:0; right:0; bottom:0; width:min(52vw,900px); z-index:40; background:var(--bg);
+    box-shadow:-10px 0 34px rgba(29,52,55,.22); display:flex; flex-direction:column}
+  .ansicht[hidden]{display:none}
+  .ansicht-kopf{display:flex; align-items:center; gap:14px; padding:12px 16px; background:var(--violett-tief); color:#fff}
+  .ansicht-kopf h2{margin:0; flex:1; min-width:0; font-size:15px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .ansicht-neu{color:#fff; font-size:13px; font-weight:600; white-space:nowrap}
+  .ansicht-zu{background:none; border:0; font-size:26px; line-height:1; cursor:pointer; color:#fff; padding:0 4px}
+  .ansicht-hinweis{margin:0; padding:6px 16px; font-size:12px; color:var(--muted); background:var(--grund); border-bottom:1px solid var(--line)}
+  .ansicht iframe{flex:1; width:100%; border:0; background:#fff}
+  body.ansicht-offen .haupt{padding-right:calc(min(52vw,900px) + 24px)}
+  body.ansicht-offen .bot-fab{display:none}
+  @media (max-width:900px){
+    .ansicht{width:100vw}
+    body.ansicht-offen .haupt{padding-right:16px}
+    .dd-knopf{max-width:calc(100vw - 48px)}
+  }
+
+  /* Band neu geordnet (2.10.2026): Zeile 1 die Dropdowns in der Mitte, Zeile 2 Stichwortsuche bis Bot */
+  body:not(.empfang) .start-innen{position:relative; justify-content:center; row-gap:12px}
+  body:not(.empfang) .filterleiste{order:1; flex-basis:100%; justify-content:center; gap:10px}
+  body:not(.empfang) .start h1{order:20}
+  body:not(.empfang) .suchform{order:21}
+  .dd-knopf{min-width:180px; padding:8px 34px 8px 14px; font-size:14px}
+  .dd-panel{min-width:100%}
+  @media (min-width:901px){
+    body:not(.empfang) .zumstart{position:absolute; left:32px; top:19px; margin:0}
+    body:not(.empfang) .filterleiste{padding:0 130px}
+    /* «alle Filter löschen» rechts oben, spiegelbildlich zu «← zurück», damit die Dropdowns mittig bleiben */
+    body:not(.empfang) .ddloeschen{position:absolute; right:32px; top:21px}
+  }
+  @media (max-width:900px){
+    body:not(.empfang) .zumstart{order:0; margin-left:auto}
+    body:not(.empfang) .filterleiste{justify-content:flex-start}
+    .dd-knopf{min-width:0}
+  }
 </style>
 
 </head>
@@ -387,7 +481,17 @@
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
         <button id="suchebot" type="button" title="Text im Suchfeld als Frage an den DLH-Bot schicken">Bot fragen</button>
       </form>
-      <button class="zumstart" id="zumStart" type="button">← zurück zum Start</button>
+      <button class="zumstart" id="zumStart" type="button">← zurück</button>
+
+      <!-- Variante Dropdown (2.10.2026): die fünf Filter als Dropdowns im Band statt der linken Spalte -->
+      <div class="filterleiste" id="filterleiste" role="group" aria-label="Filter">
+        <div class="dd" id="ddFach"><button class="dd-knopf" type="button" aria-haspopup="true" aria-expanded="false">Mein Fach</button><div class="dd-panel" role="listbox" aria-label="Mein Fach" hidden></div></div>
+        <div class="dd" id="ddAnliegen"><button class="dd-knopf" type="button" aria-haspopup="true" aria-expanded="false">Ich möchte …</button><div class="dd-panel" role="listbox" aria-label="Ich möchte" hidden></div></div>
+        <div class="dd" id="ddFormat"><button class="dd-knopf" type="button" aria-haspopup="true" aria-expanded="false">Art des Angebots</button><div class="dd-panel" role="group" aria-label="Art des Angebots" hidden></div></div>
+        <div class="dd" id="ddAufwand"><button class="dd-knopf" type="button" aria-haspopup="true" aria-expanded="false">Einsatz</button><div class="dd-panel" role="group" aria-label="Einsatz" hidden></div></div>
+        <div class="dd" id="ddStufe"><button class="dd-knopf" type="button" aria-haspopup="true" aria-expanded="false">Stufe</button><div class="dd-panel" role="group" aria-label="Stufe" hidden></div></div>
+        <button class="ddloeschen" id="ddLoeschen" type="button" hidden>alle Filter löschen</button>
+      </div>
 
       <div class="kacheln">
         <button class="kachel k-fach" id="kachelFach" type="button">
@@ -435,15 +539,14 @@
         <a class="faecher-link" id="eingrenzungenEinklappen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" hidden>einklappen</a>
       </section>
 
-      <div class="filter-fuss">
-        <a class="filter-bestandslink" href="https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm" target="_blank" rel="noopener">Definitionen und Bestandskarte</a>
-        <span class="filter-stand">Stand 30.09.2026</span>
-      </div>
     </aside>
 
     <main id="ergebnisse">
       <div class="ergebnis-kopf">
-        <span class="trefferzahl" id="treffer" aria-live="polite"><b>377</b> von 377 Angeboten</span>
+        <div class="kopf-links">
+          <span class="trefferzahl" id="treffer" aria-live="polite"><b>377</b> von 377 Angeboten</span>
+          <span class="stand-zeile">Stand 30.09.2026 · <a href="https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm" target="_blank" rel="noopener">Definitionen und Bestandskarte</a></span>
+        </div>
         <button class="knopf nur-schmal" id="btnFilter" type="button" aria-controls="links" aria-expanded="false">Filter anzeigen</button>
         <label class="sortwahl">sortieren nach
           <select id="sortwahl" data-kategorie="fach" autocomplete="off">
@@ -462,6 +565,16 @@
 
   <button class="bot-fab" id="btnBot" type="button" aria-controls="rechts" aria-expanded="false">DLH-Bot fragen</button>
   <div class="schleier" id="schleier" hidden></div>
+  <!-- Ansicht (2.10.2026): Klick auf einen Titel zeigt die Seite rechts im selben Tab -->
+  <aside class="ansicht" id="ansicht" aria-label="Ansicht des Angebots" hidden>
+    <div class="ansicht-kopf">
+      <h2 id="ansichtTitel"></h2>
+      <a class="ansicht-neu" id="ansichtNeu" href="#" target="_blank" rel="noopener">in neuem Tab öffnen ↗</a>
+      <button class="ansicht-zu" id="ansichtZu" type="button" aria-label="Ansicht schliessen">×</button>
+    </div>
+    <p class="ansicht-hinweis">Bleibt das Fenster leer, lässt die Website die Anzeige hier nicht zu – dann «in neuem Tab öffnen».</p>
+    <iframe id="ansichtRahmen" title="Inhalt des Angebots" src="about:blank" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </aside>
   <aside class="botfenster" id="rechts" aria-label="DLH-Bot" hidden>
     <div class="bot-kopf">
       <h2><span class="punkt" id="punkt" data-status="ok"></span> DLH-Bot
@@ -791,7 +904,7 @@ function karte(a, mitId=true){
   if (a.archiv) meta.push('<span class="merkmal">Archiv</span>');
   d.innerHTML =
     '<div class="karte-kopf">'+
-      '<h3><a data-kategorie="titel" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.titel)+'</a>'+
+      '<h3><a data-kategorie="titel" data-i="'+a._i+'" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.titel)+'</a>'+
         '<button class="botfrage" type="button" data-frage="'+esc(a.titel)+'">Bot dazu fragen</button></h3>'+
     '</div>'+
     '<p>'+esc(a.lead)+
@@ -1327,6 +1440,164 @@ $("#sortwahl").dataset.kategorie = Z.sortierung;
   const setze = () => { inp.placeholder = imEmpfang() ? start : arbeit; };
   new MutationObserver(setze).observe(document.body, {attributes:true, attributeFilter:["class"]});
   setze(); }
+
+/* ===================== Variante Dropdown (2.10.2026) =====================
+   Die linke Filterspalte bleibt unsichtbar im Dokument, damit die bestehende
+   Logik unverändert läuft; bedient wird über die fünf Dropdowns im Band. */
+const DD = {
+  fach:     {id:"ddFach",     titel:"Mein Fach",        kurz:"Mein Fach"},
+  anliegen: {id:"ddAnliegen", titel:"Ich möchte …",     kurz:"Ich möchte"},
+  format:   {id:"ddFormat",   titel:"Art des Angebots", kurz:"Art",     menge:() => Z.formate,   werte:() => FORMATE,   feld:"format"},
+  aufwand:  {id:"ddAufwand",  titel:"Einsatz",          kurz:"Einsatz", menge:() => Z.aufwaende, werte:() => AUFWAENDE, feld:"aufwand"},
+  stufe:    {id:"ddStufe",    titel:"Stufe",            kurz:"Stufe",   menge:() => Z.stufen,    werte:() => STUFEN,    feld:"stufen"}
+};
+let ddOffen = null;
+const ddEl = (k, sel) => $("#"+DD[k].id+" "+sel);
+const anlKurz = i => ANL_KURZ[i] || ANL[i].replace(/^…\s*/,"");
+function ddWert(k){
+  if (k === "fach") return Z.fach || "";
+  if (k === "anliegen") return Z.anliegen !== null ? anlKurz(Z.anliegen) : "";
+  const m = DD[k].menge();
+  return m.size ? [...m][0] + (m.size > 1 ? " +" + (m.size-1) : "") : "";
+}
+function ddKnoepfe(){
+  Object.keys(DD).forEach(k => {
+    const b = ddEl(k, ".dd-knopf"), w = ddWert(k), d = DD[k];
+    b.classList.toggle("gesetzt", !!w);
+    b.innerHTML = w ? esc(d.kurz) + ': <span class="wert">' + esc(w) + '</span>' : esc(d.titel);
+    b.title = w ? d.titel.replace(" …","") + ": " + w : d.titel.replace(" …","") + " wählen";
+  });
+  $("#ddLoeschen").hidden = !aktiv();
+}
+function ddOption(text, n, gewaehlt, mehrfach, beiKlick){
+  const o = document.createElement("button");
+  o.type = "button"; o.className = "dd-opt";
+  o.setAttribute("role", mehrfach ? "menuitemcheckbox" : "option");
+  o.setAttribute(mehrfach ? "aria-checked" : "aria-selected", String(gewaehlt));
+  if (n === 0) o.dataset.leer = "1";
+  o.innerHTML = (mehrfach ? '<span class="kasten" aria-hidden="true"></span>' : '') +
+    '<span class="txt">' + esc(text) + '</span>' + (n === undefined ? '' : '<span class="n">' + n + '</span>');
+  o.addEventListener("click", beiKlick);
+  return o;
+}
+function ddBauen(k){
+  const p = ddEl(k, ".dd-panel"); p.textContent = "";
+  if (k === "fach"){
+    if (Z.fach){ const o = ddOption("alle Fächer", undefined, false, false, () => {
+      Z.fach = null; Z.nurEins = null; setzeSortierung("fach"); ddZu(true); alles(); }); o.classList.add("alle"); p.appendChild(o); }
+    FAECHER.map(({fach}) => fach).sort((x,y) => x.localeCompare(y,"de")).forEach(fach => {
+      const n = ANG.filter(a => passt(a,"fach") && (a.faecher||[]).includes(fach)).length;
+      p.appendChild(ddOption(fach, n, Z.fach === fach, false, () => {
+        Z.fach = Z.fach === fach ? null : fach; Z.nurEins = null;
+        setzeSortierung(Z.fach ? "format" : "fach"); ddZu(true); alles(); }));
+    });
+  } else if (k === "anliegen"){
+    if (Z.anliegen !== null){ const o = ddOption("alle Anliegen", undefined, false, false, () => {
+      Z.anliegen = null; Z.nurEins = null; ddZu(true); alles(); }); o.classList.add("alle"); p.appendChild(o); }
+    ANL.forEach((txt,i) => {
+      const n = ANG.filter(a => passt(a,"anliegen") && (a.anliegen||[]).includes(i)).length;
+      p.appendChild(ddOption(txt.replace(/^…\s*/,""), n, Z.anliegen === i, false, () => {
+        Z.anliegen = Z.anliegen === i ? null : i; Z.nurEins = null; ddZu(true); alles(); }));
+    });
+  } else {
+    const d = DD[k], m = d.menge();
+    const h = document.createElement("p"); h.className = "dd-hinweis"; h.textContent = "mehrere möglich"; p.appendChild(h);
+    d.werte().forEach((w, idx) => {
+      const n = ANG.filter(a => passt(a,k) &&
+        (d.feld === "stufen" ? (a.stufen||[]).includes(w) : d.feld === "format" ? hatFormat(a,w) : a[d.feld] === w)).length;
+      p.appendChild(ddOption(w, n, m.has(w), true, () => {
+        m.has(w) ? m.delete(w) : m.add(w); Z.nurEins = null; alles();
+        ddBauen(k); p.querySelectorAll(".dd-opt")[idx]?.focus();
+      }));
+    });
+  }
+}
+function ddOeffnen(k){
+  if (ddOffen === k){ ddZu(true); return; }
+  ddZu();
+  ddBauen(k);
+  ddEl(k, ".dd-panel").hidden = false;
+  ddEl(k, ".dd-knopf").setAttribute("aria-expanded", "true");
+  ddOffen = k;
+}
+function ddZu(fokus){
+  if (!ddOffen) return;
+  const k = ddOffen; ddOffen = null;
+  ddEl(k, ".dd-panel").hidden = true;
+  ddEl(k, ".dd-knopf").setAttribute("aria-expanded", "false");
+  if (fokus) ddEl(k, ".dd-knopf").focus();
+}
+Object.keys(DD).forEach(k => {
+  ddEl(k, ".dd-knopf").addEventListener("click", () => ddOeffnen(k));
+  ddEl(k, ".dd-panel").addEventListener("keydown", e => {
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const o = [...ddEl(k, ".dd-panel").querySelectorAll(".dd-opt")], i = o.indexOf(document.activeElement);
+    o[Math.max(0, Math.min(o.length-1, i + (e.key === "ArrowDown" ? 1 : -1)))]?.focus();
+  });
+});
+// Klick ausserhalb schliesst; composedPath, weil Optionen beim Klick neu gebaut werden
+document.addEventListener("click", e => {
+  if (ddOffen && !e.composedPath().some(el => el.classList && el.classList.contains("dd"))) ddZu();
+});
+$("#ddLoeschen").addEventListener("click", () => { ddZu(); allesZuruecksetzen(); });
+
+/* Einstieg über die Kacheln: Dropdown farbig unterlegen und gleich öffnen */
+fokusStart = function(art){
+  document.body.dataset.einstieg = art;
+  zurArbeit();
+  window.scrollTo({top:0});
+  // erst nach dem Kachel-Klick öffnen, sonst schliesst ihn der Klick-ausserhalb-Handler gleich wieder
+  setTimeout(() => { ddZu(); ddOeffnen(art); ddEl(art, ".dd-opt")?.focus({preventScroll:true}); }, 0);
+};
+mitFilter = function(setzen){ allesZuruecksetzen(); setzen(); alles(); zurArbeit(); };
+filterspalteNachUnten = function(){};
+{ const _alles = alles; alles = function(){ _alles(); ddKnoepfe(); }; }
+
+/* Ansicht rechts: Klick auf einen Titel öffnet die Seite im selben Tab.
+   Ctrl/Cmd-Klick oder mittlere Maustaste öffnet wie gewohnt einen neuen Tab. */
+function ansichtUrl(u){
+  const m = (u||"").match(/^https:\/\/open\.spotify\.com\/(episode|show|track)\/([A-Za-z0-9]+)/);
+  return m ? "https://open.spotify.com/embed/" + m[1] + "/" + m[2] : u;
+}
+function ansichtAuf(a, karteEl){
+  ddZu();
+  if (!$("#rechts").hidden) botSchliessen();
+  $("#ansichtTitel").textContent = a.titel;
+  $("#ansichtNeu").href = a.url;
+  const f = $("#ansichtRahmen");
+  if (f.dataset.url !== a.url){ f.src = ansichtUrl(a.url); f.dataset.url = a.url; }
+  $("#ansicht").hidden = false;
+  document.body.classList.add("ansicht-offen");
+  document.querySelectorAll(".karte.aktiv").forEach(k => k.classList.remove("aktiv"));
+  if (karteEl){ karteEl.classList.add("aktiv"); karteEl.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+}
+function ansichtZu(){
+  if ($("#ansicht").hidden) return;
+  $("#ansicht").hidden = true;
+  document.body.classList.remove("ansicht-offen");
+  document.querySelectorAll(".karte.aktiv").forEach(k => k.classList.remove("aktiv"));
+  const f = $("#ansichtRahmen"); f.src = "about:blank"; f.dataset.url = "";
+}
+$("#liste").addEventListener("click", e => {
+  const l = e.target.closest("a[data-i]");
+  if (!l || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  const a = ANG.find(x => String(x._i) === l.dataset.i);
+  if (!a) return;
+  e.preventDefault();
+  ansichtAuf(a, l.closest(".karte"));
+});
+$("#ansichtZu").addEventListener("click", ansichtZu);
+{ const _bo = botOeffnen; botOeffnen = function(){ ansichtZu(); _bo(); }; }
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (ddOffen) ddZu(true); else ansichtZu();
+});
+// Zurück zur Startseite: Einstiegsfarbe, Dropdowns und Ansicht zurücksetzen
+new MutationObserver(() => {
+  if (imEmpfang()){ delete document.body.dataset.einstieg; ddZu(); ansichtZu(); }
+}).observe(document.body, {attributes:true, attributeFilter:["class"]});
+
 alles();
 botStatus();
 </script>
