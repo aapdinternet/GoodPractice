@@ -5,22 +5,23 @@ wie sie schnell zu den erprobten Angeboten des [Digital Learning Hub Sek II](htt
 
 **→ [Zur Übersicht](https://aapdinternet.github.io/GoodPractice/)**
 
-Vier Seiten, vom Konzept bis zur neusten Fassung, dazu eine Seite zum Nachschlagen.
-Die drei Filterseiten führen durch denselben Bestand in unterschiedlicher Aufmachung,
-zwei davon mit DLH-Bot – sie sind zum Vergleichen gedacht.
+Fünf Seiten, vom Konzept bis zur neusten Fassung, dazu eine Seite zum Nachschlagen.
+Die vier Filterseiten führen durch denselben Bestand in unterschiedlicher Aufmachung,
+drei davon mit DLH-Bot – sie sind zum Vergleichen gedacht.
 
 | Seite | Was sie zeigt |
 |---|---|
 | [Wo kann ich was abholen? – das Konzept](https://aapdinternet.github.io/GoodPractice/Filterseite_Konzept.html) | Die Diskussionsgrundlage, aus der die Filterseiten entstanden sind: der Befund (elf Formate, eine Suchlogik zu wenig), fünf Vorschläge für eine Übersichtsseite und der Bauplan, was daraus gebaut wird. Stand 10. September 2026. |
 | [Was brauche ich für meinen Unterricht?](https://aapdinternet.github.io/GoodPractice/Filterseite_Fassung_ohne_Bot.html) | Die Filterseite ohne Bot, im Design von dlh.zh.ch: alle 363 Angebote, Einstieg über das Fach, das Anliegen oder beides, weitere Filter nach Format, Stufe und Aufwand. |
 | [Filter – Ergebnisse – Suchen](https://aapdinternet.github.io/GoodPractice/Filter-Ergebnisse-Suchen.html) | Fassung mit Bot, Anordnung A: drei Spalten. Links die Filter, in der Mitte die Ergebnisliste, rechts Suche und Bot. 369 Angebote, sortierbar nach Fach, Anliegen, Format, Datum, Titel oder Aufwand. |
-| [Suchen – Filter – Ergebnisse](https://aapdinternet.github.io/GoodPractice/Suchen-Filter-Ergebnisse.html) | Neuste Fassung, in zwei Schritten: Zuerst ein ruhiger Empfang mit dem Titel und zwei Kacheln als Einstieg – Mein Fach und Ich möchte … Nach der Wahl lenkt ein Scheinwerfer den Blick auf den passenden Filterkasten. In der Arbeitsansicht oben ein violettes Band mit Stichwortsuche und Knopf «Bot fragen», links die Filter – Fach (Knöpfe und Auswahlliste), Anliegen, Art des Angebots mit Good Practice, Einsatz und Stufe –, rechts die Ergebnisse als Karten, sortierbar nach Fach, Art des Angebots, Anliegen, Einsatz, Datum oder Titel. Mit gewähltem Fach ordnet sich die Liste nach Art des Angebots. Der Bot öffnet sich auf Wunsch als Seitenfenster. 377 Einträge, Stand 30. September 2026. |
+| [Suchen – Filter – Ergebnisse](https://aapdinternet.github.io/GoodPractice/Suchen-Filter-Ergebnisse.html) | Fassung mit Filterspalte, in zwei Schritten: Zuerst ein ruhiger Empfang mit dem Titel und zwei Kacheln als Einstieg – Mein Fach und Ich möchte … Nach der Wahl lenkt ein Scheinwerfer den Blick auf den passenden Filterkasten; wer über das Fach kommt, sieht alle Fächer alphabetisch. In der Arbeitsansicht oben ein violettes Band mit Stichwortsuche und grünem Knopf «Bot fragen», links die Filter – Fach, Anliegen, Art des Angebots mit Good Practice, Einsatz und Stufe –, rechts die Ergebnisse als Karten, sortierbar nach Fach, Art des Angebots, Anliegen, Einsatz, Datum oder Titel. Mit gewähltem Fach ordnet sich die Liste nach Art des Angebots. Der Bot öffnet sich auf Wunsch als Seitenfenster. 377 Einträge, Stand 30. September 2026. |
+| [Suchen – Filter – Ergebnisse mit Dropdowns](https://aapdinternet.github.io/GoodPractice/Suchen-Filter-Ergebnisse-Dropdown.html) | Neuste Fassung, gleicher Empfang mit zwei Kacheln, aber ohne Filterspalte: Im violetten Band stehen oben in der Mitte fünf Dropdowns – Mein Fach, Ich möchte …, Art des Angebots, Einsatz, Stufe –, darunter die Stichwortsuche mit «Bot fragen». Wer über eine Kachel kommt, findet das passende Dropdown farbig hervorgehoben und gleich geöffnet; gewählte Filter bleiben im Band sichtbar. Die Ergebnisse laufen über die ganze Breite, in höchstens drei Spalten. Ein Klick auf einen Titel öffnet das Angebot rechts in einem Ansichtsfenster im selben Tab – sofern dlh.zh.ch die Anzeige dort zulässt, sonst über «in neuem Tab öffnen». 377 Einträge, Stand 30. September 2026. |
 
 Zum Nachschlagen: [Übersicht zum Bestand des DLH](https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm) –
 die zwölf Angebotsarten mit Herkunft, Erprobung, Einsatz, Anzahl und Ort, dazu Good Practice als Auswahl
 quer über vier davon, die Übersichten Thema × Angebotsart und Anliegen × Angebotsart mit klickbaren Zahlen
 und die Bestandskarte.
-Aus den Fassungen mit Bot verlinkt.
+Aus den Fassungen mit Bot verlinkt; dort steht der Link mit dem Stand des Bestands.
 
 Dazu die beiden A3-Druckblätter [«Anliegen × Format»](https://aapdinternet.github.io/GoodPractice/DLH_Matrix_Anliegen_Format_A3.pdf)
 und [«Thema × Format»](https://aapdinternet.github.io/GoodPractice/DLH_Matrix_Thema_Format_A3.pdf).
@@ -44,6 +45,8 @@ Titel, Fächer, Stufen und die Zuordnung zu den zwanzig Anliegen. Diese bereinig
 die Übersicht zum Bestand (374 Einträge, davon 368 aktive und 6 im Archiv) und die beiden A3-Blätter
 (je 368 Angebote). «Suchen – Filter – Ergebnisse» ist am 30. September 2026 nachgeführt (unter anderem alle
 Downloads geprüft und die kantonal lizenzierten KI-Tools neu zugeordnet) und zählt 377 Einträge, davon 371 aktive.
+Am 2. Oktober 2026 kam die Fassung mit Dropdowns dazu; sie zeigt denselben Bestand.
+Ob dlh.zh.ch sich in ihrem Ansichtsfenster anzeigen lässt, hängt von den Einstellungen der Website ab und ist noch zu prüfen.
 Die älteren Seiten zeigen noch die frühere, regelbasiert vorgeschlagene Zuordnung: Anordnung A 369 Angebote, die Seite ohne Bot 363.
 
 Jede Seite ist eine einzelne HTML-Datei ohne Abhängigkeiten – herunterladen und
