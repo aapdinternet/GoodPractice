@@ -1433,10 +1433,33 @@ function ansichtAuf(a, karteEl){
   $("#ansichtNeu").href = a.url;
   const f = $("#ansichtRahmen");
   if (f.dataset.url !== a.url){ f.src = ansichtUrl(a.url); f.dataset.url = a.url; }
+  const vorher = (karteEl && !document.body.classList.contains("ansicht-offen")) ? karteEl.getBoundingClientRect().top : null;
   $("#ansicht").hidden = false;
   document.body.classList.add("ansicht-offen");
   document.querySelectorAll(".karte.aktiv").forEach(k => k.classList.remove("aktiv"));
-  if (karteEl){ karteEl.classList.add("aktiv"); karteEl.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+  if (karteEl){
+    karteEl.classList.add("aktiv");
+    if (vorher === null) karteEl.scrollIntoView({block:"nearest", behavior:"smooth"});
+    else karteHalten(karteEl, vorher);
+  }
+}
+/* Erstes Öffnen der Ansicht (3.10.2026): die Liste wird schmaler und bricht neu um.
+   Der angeklickte Titel bleibt dort, wo er vor dem Klick auf dem Bildschirm stand –
+   höchstens so weit verschoben, dass er unter dem Band und ganz im Bild ist.
+   Mehrmals nachgeführt, weil Spaltenmessung und Schrift erst nach dem Umbruch fertig sind. */
+function karteHalten(k, ziel){
+  const setze = () => {
+    const band = document.querySelector(".start")?.getBoundingClientRect();
+    const oben = (band && band.top <= 1 ? band.bottom : 0) + 12;
+    const r = k.getBoundingClientRect();
+    let soll = Math.max(ziel, oben);
+    if (soll + r.height > innerHeight - 12) soll = Math.max(oben, innerHeight - 12 - r.height);
+    const d = Math.round(r.top - soll);
+    if (d) window.scrollBy({top:d, behavior:"instant"});
+  };
+  setze();
+  requestAnimationFrame(() => { setze(); requestAnimationFrame(setze); });
+  setTimeout(setze, 250);
 }
 function ansichtZu(){
   if ($("#ansicht").hidden) return;
