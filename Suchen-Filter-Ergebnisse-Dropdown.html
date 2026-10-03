@@ -38,9 +38,9 @@
   [hidden]{display:none !important}
 
   /* ---------- Marke ---------- */
-  .dlhtop{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 32px; background:var(--bg)}
-  .dlhtop img{height:34px; width:auto; display:block}
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .dlhtop img{background:#fff; padding:5px 9px; border-radius:6px} }
+  .dlhtop{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:8px 32px; background:var(--empfang)}
+  .dlhtop img{height:22px; width:auto; display:block}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .dlhtop img{background:#fff; padding:3px 6px; border-radius:5px} }
   .dlhtop .ersatz{font-weight:700; font-size:15px; color:var(--violett)}
   .zurueck{font-size:12.8px; font-weight:700; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--orange); padding-bottom:1px}
 
@@ -105,7 +105,7 @@
              text-decoration:underline; text-underline-offset:3px}
 
   .empfang .haupt, .empfang .bot-fab{display:none}
-  .empfang .start{min-height:calc(100dvh - 58px); display:flex; align-items:center}
+  .empfang .start{min-height:calc(100dvh - 38px); display:flex; align-items:center}
   .empfang .start-innen{width:100%}
   /* Startseite mit zwei Kacheln (1.10.2026): die Kacheln sind zusammen so breit wie der Titel
      und der Block aus Titel und Kacheln steht vertikal in der Mitte. Die Kacheln für
@@ -120,7 +120,7 @@
   /* =====================================================================
      ZUSTAND 2 – ARBEIT: der Empfang schrumpft zu einem violetten Band.
      ===================================================================== */
-  body:not(.empfang) .start{background:var(--violett-tief); position:sticky; top:0; z-index:20}
+  body:not(.empfang) .start{background:#8a5da4; position:sticky; top:0; z-index:20}
   body:not(.empfang) .start-innen{max-width:none; padding:12px 32px; display:flex; align-items:center; gap:24px; text-align:left}
   body:not(.empfang) .start h1{font-size:18px; color:#fff; white-space:nowrap}
   body:not(.empfang) .start .unter, body:not(.empfang) .kacheln, body:not(.empfang) .bothinweis{display:none}
@@ -286,9 +286,9 @@
 
   /* ---------- Der DLH-Bot ---------- */
   .bot-fab{position:fixed; right:24px; bottom:calc(24px + env(safe-area-inset-bottom,0px)); z-index:30; border:0;
-           border-radius:999px; padding:13px 22px; font-weight:700; font-size:14.5px; background:#a9dbb7; color:#14482a;
-           cursor:pointer; box-shadow:0 8px 22px -8px rgba(29,90,51,.55); border:1px solid #8cc79c}
-  .bot-fab:hover{background:#92cfa3}
+           border-radius:999px; padding:13px 22px; font-weight:700; font-size:14.5px; background:#ec6608; color:#fff;
+           cursor:pointer; box-shadow:0 8px 22px -8px rgba(150,60,0,.55); border:1px solid #c9560a}
+  .bot-fab:hover{background:#c9560a}
   /* schmaler, gerade so breit, dass die vier ersten Schnell-Links in eine Zeile passen (28.9.2026) */
   .botfenster{position:fixed; top:0; right:0; bottom:0; width:min(400px,100vw); z-index:40; background:var(--bg);
               box-shadow:-10px 0 34px rgba(29,52,55,.18); display:flex; flex-direction:column}
@@ -350,8 +350,8 @@
     .schleier{display:block; position:fixed; inset:0; background:rgba(18,26,27,.35); z-index:35}
   }
   @media (max-width:560px){
-    .dlhtop{padding:10px 16px}
-    .dlhtop img{height:30px}
+    .dlhtop{padding:7px 16px}
+    .dlhtop img{height:20px}
     .start .unter{font-size:15px; margin-bottom:22px}
     .suchform input{padding:13px 15px; font-size:16px}
     .suchform button{padding:0 14px}
@@ -459,15 +459,57 @@
     body:not(.empfang) .filterleiste{justify-content:flex-start}
     .dd-knopf{min-width:0}
   }
+
+  /* Logo nur auf der Startseite (3.10.2026): Grösse wie dlh.zh.ch, etwas kleiner
+     (dort 85px Desktop / 47px mobil). Der Balken behält seine 38px Höhe, das Logo
+     ragt darüber hinaus, ohne Titel, Kacheln und Disclaimer zu verschieben.
+     Auf der Ergebnisseite fallen Logo und Balken ganz weg. */
+  .dlhtop{position:relative; z-index:25; height:38px; padding-top:0; padding-bottom:0; overflow:visible}
+  .dlhtop a{position:absolute; top:14px; left:32px; display:block}
+  .dlhtop img{height:68px}
+  body:not(.empfang) .dlhtop{display:none}
+  @media (max-width:560px){
+    .dlhtop{height:34px}
+    .dlhtop a{top:10px; left:16px}
+    .dlhtop img{height:40px}
+  }
+
+  /* dlh-label oben rechts, nur Startseite (3.10.2026). Auf dlh.zh.ch 59px neben
+     85px Logo (mobil 33 neben 47) -> hier 47px neben 68px (mobil 28 neben 40),
+     vertikal mittig zum Logo. */
+  .dlhtop img.dlhlabel{position:absolute; top:25px; right:32px; height:47px; width:auto}
+  @media (max-width:560px){ .dlhtop img.dlhlabel{top:16px; right:16px; height:28px} }
+
+  /* 3.10.2026: Nach einer Wahl ist auch das Einstiegs-Dropdown weiss wie alle anderen;
+     im Knopf steht nur noch der gewählte Wert. Dropdowns etwas breiter, auf breiten
+     Bildschirmen immer in einer Zeile (sie werden notfalls schmaler statt umzubrechen). */
+  body[data-einstieg="fach"] #ddFach .dd-knopf.gesetzt,
+  body[data-einstieg="anliegen"] #ddAnliegen .dd-knopf.gesetzt{background:#fff; border-color:#fff; color:var(--ink); font-weight:400}
+  .dd-knopf .wert{font-weight:600}
+  @media (min-width:901px){
+    body:not(.empfang) .filterleiste{flex-wrap:nowrap; padding:0 110px}
+    body:not(.empfang) .filterleiste .dd{flex:0 1 230px; min-width:0}
+    /* «alle Filter löschen» rechts in die zweite Zeile, damit die Dropdowns Platz haben */
+    body:not(.empfang) .ddloeschen{top:auto; bottom:23px}
+    body:not(.empfang) .filterleiste .dd-knopf{width:100%; min-width:0; max-width:none}
+  }
+
+  /* Umschalter Einspaltig/Dreispaltig neben der Trefferzahl (3.10.2026) */
+  .spaltenwahl{background:none; border:0; padding:0; font:inherit; font-size:12.5px; font-weight:400; color:var(--muted);
+    text-decoration:underline; text-underline-offset:2px; cursor:pointer}
+  .spaltenwahl:hover{color:var(--ink)}
+  body.einspaltig .liste, body.einspaltig .ergebnis-gruppe{grid-template-columns:minmax(0,1fr)}
+  /* einspaltig: rechts bündig mit dem linken Rand von «sortieren nach» (Abstand per JS gemessen) */
+  body.einspaltig .liste{margin-right:var(--rechtsfrei,0px)}
 </style>
 
 </head>
 <body class="empfang">
   <div class="dlhtop">
     <a href="https://dlh.zh.ch/" target="_blank" rel="noopener" aria-label="Digital Learning Hub Sek II">
-      <img id="dlhlogo" src="Angebote%20und%20Bot_files/DLH-Logo-Wappen-und-Loewe_YLcm.svg" alt="Digital Learning Hub Sek II">
+      <img id="dlhlogo" src="https://dlh.zh.ch/images/elements/DLH-Logo-Wappen-und-Loewe.svg" alt="Digital Learning Hub Sek II">
     </a>
-    <a class="zurueck" href="https://dlh.zh.ch/" target="_blank" rel="noopener">dlh.zh.ch</a>
+    <img class="dlhlabel" src="https://dlh.zh.ch/images/elements/dlh-label.svg" alt="" onerror="this.remove()">
   </div>
 
   <!-- ===== Empfang: Titel, Suchfeld, drei Farbflächen. Wird im zweiten Schritt zum schmalen Band. ===== -->
@@ -479,7 +521,6 @@
         <input id="suche" type="search" placeholder="Stichwortsuche: aus Titel, Anliegen, Art des Angebots, Fach, Beruf, etc. oder DLH-Bot fragen" autocomplete="off" aria-label="Volltextsuche">
         <button type="submit" id="suchego">go</button>
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
-        <button id="suchebot" type="button" title="Text im Suchfeld als Frage an den DLH-Bot schicken">Bot fragen</button>
       </form>
       <button class="zumstart" id="zumStart" type="button">← zurück</button>
 
@@ -503,7 +544,7 @@
       </div>
 
     </div>
-    <p class="ki-hinweis">Diese Übersicht wurde mit Unterstützung von KI erstellt. Zuordnungen und Kurzbeschreibungen können Fehler enthalten – massgeblich sind die Originalbeiträge auf dlh.zh.ch.</p>
+    <p class="ki-hinweis">Diese Übersicht wurde mit Unterstützung von KI erstellt. Zuordnungen und Kurzbeschreibungen können Fehler enthalten – massgeblich sind die Originalbeiträge auf <a href="https://dlh.zh.ch/" target="_blank" rel="noopener">dlh.zh.ch</a>.</p>
   </header>
 
   <div class="haupt">
@@ -545,6 +586,7 @@
       <div class="ergebnis-kopf">
         <div class="kopf-links">
           <span class="trefferzahl" id="treffer" aria-live="polite"><b>377</b> von 377 Angeboten</span>
+          <button class="spaltenwahl" id="spaltenwahl" type="button" aria-pressed="false">Einspaltig</button>
           <span class="stand-zeile">Stand 30.09.2026 · <a href="https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm" target="_blank" rel="noopener">Definitionen und Bestandskarte</a></span>
         </div>
         <button class="knopf nur-schmal" id="btnFilter" type="button" aria-controls="links" aria-expanded="false">Filter anzeigen</button>
@@ -1231,7 +1273,7 @@ $("#suchform").addEventListener("submit", e => {
 });
 /* «Bot fragen» (30.9.2026): Text aus dem Suchfeld geht als Frage an den Bot,
    Suchfeld und Stichwortfilter werden geleert. Leeres Feld: Bot öffnen, Cursor in dessen Eingabe. */
-$("#suchebot").addEventListener("click", () => {
+$("#suchebot")?.addEventListener("click", () => {
   const t = $("#suche").value.trim();
   if (!t){ botOeffnen(); $("#frage").focus(); return; }
   $("#suche").value = ""; Z.suche = ""; Z.nurEins = null; alles();
@@ -1464,7 +1506,8 @@ function ddKnoepfe(){
   Object.keys(DD).forEach(k => {
     const b = ddEl(k, ".dd-knopf"), w = ddWert(k), d = DD[k];
     b.classList.toggle("gesetzt", !!w);
-    b.innerHTML = w ? esc(d.kurz) + ': <span class="wert">' + esc(w) + '</span>' : esc(d.titel);
+    b.innerHTML = w ? '<span class="wert">' + esc(w) + '</span>' : esc(d.titel);   // nach der Wahl nur der Wert (3.10.2026)
+    if (w) b.setAttribute("aria-label", d.titel.replace(" …","") + ": " + w); else b.removeAttribute("aria-label");
     b.title = w ? d.titel.replace(" …","") + ": " + w : d.titel.replace(" …","") + " wählen";
   });
   $("#ddLoeschen").hidden = !aktiv();
@@ -1540,7 +1583,7 @@ Object.keys(DD).forEach(k => {
 document.addEventListener("click", e => {
   if (ddOffen && !e.composedPath().some(el => el.classList && el.classList.contains("dd"))) ddZu();
 });
-$("#ddLoeschen").addEventListener("click", () => { ddZu(); allesZuruecksetzen(); });
+$("#ddLoeschen").addEventListener("click", () => { ddZu(); delete document.body.dataset.einstieg; allesZuruecksetzen(); });   // danach alle Dropdowns neutral (3.10.2026)
 
 /* Einstieg über die Kacheln: Dropdown farbig unterlegen und gleich öffnen */
 fokusStart = function(art){
@@ -1598,6 +1641,22 @@ new MutationObserver(() => {
   if (imEmpfang()){ delete document.body.dataset.einstieg; ddZu(); ansichtZu(); }
 }).observe(document.body, {attributes:true, attributeFilter:["class"]});
 
+/* Einspaltig/Dreispaltig (3.10.2026) */
+$("#spaltenwahl").addEventListener("click", () => {
+  const ein = document.body.classList.toggle("einspaltig");
+  $("#spaltenwahl").textContent = ein ? "Dreispaltig" : "Einspaltig";
+  $("#spaltenwahl").setAttribute("aria-pressed", String(ein));
+  rechtsfreiMessen();
+});
+function rechtsfreiMessen(){
+  const liste = $("#liste"), sel = $("#sortwahl");
+  if (!liste || !sel || !document.body.classList.contains("einspaltig")) return;
+  const rechts = liste.parentElement.getBoundingClientRect().right, links = sel.getBoundingClientRect().left;
+  const frei = window.innerWidth > 900 && links > 0 ? Math.max(0, Math.round(rechts - links)) : 0;
+  liste.style.setProperty("--rechtsfrei", frei + "px");
+}
+new ResizeObserver(rechtsfreiMessen).observe($("#liste").parentElement);
+window.addEventListener("resize", rechtsfreiMessen);
 alles();
 botStatus();
 </script>

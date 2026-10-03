@@ -38,9 +38,9 @@
   [hidden]{display:none !important}
 
   /* ---------- Marke ---------- */
-  .dlhtop{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:12px 32px; background:var(--bg)}
-  .dlhtop img{height:34px; width:auto; display:block}
-  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .dlhtop img{background:#fff; padding:5px 9px; border-radius:6px} }
+  .dlhtop{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:8px 32px; background:var(--empfang)}
+  .dlhtop img{height:22px; width:auto; display:block}
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .dlhtop img{background:#fff; padding:3px 6px; border-radius:5px} }
   .dlhtop .ersatz{font-weight:700; font-size:15px; color:var(--violett)}
   .zurueck{font-size:12.8px; font-weight:700; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--orange); padding-bottom:1px}
 
@@ -105,7 +105,7 @@
              text-decoration:underline; text-underline-offset:3px}
 
   .empfang .haupt, .empfang .bot-fab{display:none}
-  .empfang .start{min-height:calc(100dvh - 58px); display:flex; align-items:center}
+  .empfang .start{min-height:calc(100dvh - 38px); display:flex; align-items:center}
   .empfang .start-innen{width:100%}
   /* Startseite mit zwei Kacheln (1.10.2026): die Kacheln sind zusammen so breit wie der Titel
      und der Block aus Titel und Kacheln steht vertikal in der Mitte. Die Kacheln für
@@ -120,7 +120,7 @@
   /* =====================================================================
      ZUSTAND 2 – ARBEIT: der Empfang schrumpft zu einem violetten Band.
      ===================================================================== */
-  body:not(.empfang) .start{background:var(--violett-tief); position:sticky; top:0; z-index:20}
+  body:not(.empfang) .start{background:#8a5da4; position:sticky; top:0; z-index:20}
   body:not(.empfang) .start-innen{max-width:none; padding:12px 32px; display:flex; align-items:center; gap:24px; text-align:left}
   body:not(.empfang) .start h1{font-size:18px; color:#fff; white-space:nowrap}
   body:not(.empfang) .start .unter, body:not(.empfang) .kacheln, body:not(.empfang) .bothinweis{display:none}
@@ -286,9 +286,9 @@
 
   /* ---------- Der DLH-Bot ---------- */
   .bot-fab{position:fixed; right:24px; bottom:calc(24px + env(safe-area-inset-bottom,0px)); z-index:30; border:0;
-           border-radius:999px; padding:13px 22px; font-weight:700; font-size:14.5px; background:#a9dbb7; color:#14482a;
-           cursor:pointer; box-shadow:0 8px 22px -8px rgba(29,90,51,.55); border:1px solid #8cc79c}
-  .bot-fab:hover{background:#92cfa3}
+           border-radius:999px; padding:13px 22px; font-weight:700; font-size:14.5px; background:#ec6608; color:#fff;
+           cursor:pointer; box-shadow:0 8px 22px -8px rgba(150,60,0,.55); border:1px solid #c9560a}
+  .bot-fab:hover{background:#c9560a}
   /* schmaler, gerade so breit, dass die vier ersten Schnell-Links in eine Zeile passen (28.9.2026) */
   .botfenster{position:fixed; top:0; right:0; bottom:0; width:min(400px,100vw); z-index:40; background:var(--bg);
               box-shadow:-10px 0 34px rgba(29,52,55,.18); display:flex; flex-direction:column}
@@ -350,8 +350,8 @@
     .schleier{display:block; position:fixed; inset:0; background:rgba(18,26,27,.35); z-index:35}
   }
   @media (max-width:560px){
-    .dlhtop{padding:10px 16px}
-    .dlhtop img{height:30px}
+    .dlhtop{padding:7px 16px}
+    .dlhtop img{height:20px}
     .start .unter{font-size:15px; margin-bottom:22px}
     .suchform input{padding:13px 15px; font-size:16px}
     .suchform button{padding:0 14px}
@@ -365,15 +365,61 @@
     .karte-kopf h3{flex-basis:100%}
     .bot-fab{right:14px; bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   }
+
+  /* Logo nur auf der Startseite (3.10.2026): Grösse wie dlh.zh.ch, etwas kleiner
+     (dort 85px Desktop / 47px mobil). Der Balken behält seine 38px Höhe, das Logo
+     ragt darüber hinaus, ohne Titel, Kacheln und Disclaimer zu verschieben.
+     Auf der Ergebnisseite fallen Logo und Balken ganz weg. */
+  .dlhtop{position:relative; z-index:25; height:38px; padding-top:0; padding-bottom:0; overflow:visible}
+  .dlhtop a{position:absolute; top:14px; left:32px; display:block}
+  .dlhtop img{height:68px}
+  body:not(.empfang) .dlhtop{display:none}
+  @media (max-width:560px){
+    .dlhtop{height:34px}
+    .dlhtop a{top:10px; left:16px}
+    .dlhtop img{height:40px}
+  }
+
+  /* dlh-label oben rechts, nur Startseite (3.10.2026). Auf dlh.zh.ch 59px neben
+     85px Logo (mobil 33 neben 47) -> hier 47px neben 68px (mobil 28 neben 40),
+     vertikal mittig zum Logo. */
+  .dlhtop img.dlhlabel{position:absolute; top:25px; right:32px; height:47px; width:auto}
+  @media (max-width:560px){ .dlhtop img.dlhlabel{top:16px; right:16px; height:28px} }
+
+  /* 3.10.2026: Titel der Filterspalte kleiner; «Überfachlich» mit dezentem violettem Rand */
+  .filter-kopf h2{font-size:15.5px}
+  .f-fach .chip.ueberfachlich{border-color:rgba(113,54,138,.55)}
+  .f-fach .chip.ueberfachlich:hover{border-color:var(--violett)}
+
+  /* Ansichtsfenster rechts (3.10.2026, wie in der Dropdown-Fassung). Solange es offen ist,
+     tritt die Filterspalte zurück, damit die Liste neben dem Fenster lesbar bleibt. */
+  .ansicht{position:fixed; top:0; right:0; bottom:0; width:min(52vw,900px); z-index:40; background:var(--bg);
+    box-shadow:-10px 0 34px rgba(29,52,55,.22); display:flex; flex-direction:column}
+  .ansicht[hidden]{display:none}
+  .ansicht-kopf{display:flex; align-items:center; gap:14px; padding:12px 16px; background:var(--violett-tief); color:#fff}
+  .ansicht-kopf h2{margin:0; flex:1; min-width:0; font-size:15px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .ansicht-neu{color:#fff; font-size:13px; font-weight:600; white-space:nowrap}
+  .ansicht-zu{background:none; border:0; font-size:26px; line-height:1; cursor:pointer; color:#fff; padding:0 4px}
+  .ansicht-hinweis{margin:0; padding:6px 16px; font-size:12px; color:var(--muted); background:var(--grund); border-bottom:1px solid var(--line)}
+  .ansicht iframe{flex:1; width:100%; border:0; background:#fff}
+  .karte.aktiv{box-shadow:inset 0 0 0 2px var(--orange), var(--schatten)}
+  #ergebnisse, .karte{scroll-margin-top:90px}
+  body.ansicht-offen .haupt{grid-template-columns:minmax(0,1fr); padding-right:calc(min(52vw,900px) + 24px)}
+  body.ansicht-offen #links, body.ansicht-offen #btnFilter{display:none !important}
+  body.ansicht-offen .bot-fab{display:none}
+  @media (max-width:900px){
+    .ansicht{width:100vw}
+    body.ansicht-offen .haupt{padding-right:16px}
+  }
 </style>
 
 </head>
 <body class="empfang">
   <div class="dlhtop">
     <a href="https://dlh.zh.ch/" target="_blank" rel="noopener" aria-label="Digital Learning Hub Sek II">
-      <img id="dlhlogo" src="Angebote%20und%20Bot_files/DLH-Logo-Wappen-und-Loewe_YLcm.svg" alt="Digital Learning Hub Sek II">
+      <img id="dlhlogo" src="https://dlh.zh.ch/images/elements/DLH-Logo-Wappen-und-Loewe.svg" alt="Digital Learning Hub Sek II">
     </a>
-    <a class="zurueck" href="https://dlh.zh.ch/" target="_blank" rel="noopener">dlh.zh.ch</a>
+    <img class="dlhlabel" src="https://dlh.zh.ch/images/elements/dlh-label.svg" alt="" onerror="this.remove()">
   </div>
 
   <!-- ===== Empfang: Titel, Suchfeld, drei Farbflächen. Wird im zweiten Schritt zum schmalen Band. ===== -->
@@ -385,7 +431,6 @@
         <input id="suche" type="search" placeholder="Stichwortsuche: aus Titel, Anliegen, Art des Angebots, Fach, Beruf, etc. oder DLH-Bot fragen" autocomplete="off" aria-label="Volltextsuche">
         <button type="submit" id="suchego">go</button>
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
-        <button id="suchebot" type="button" title="Text im Suchfeld als Frage an den DLH-Bot schicken">Bot fragen</button>
       </form>
       <button class="zumstart" id="zumStart" type="button">← zurück zum Start</button>
 
@@ -399,13 +444,13 @@
       </div>
 
     </div>
-    <p class="ki-hinweis">Diese Übersicht wurde mit Unterstützung von KI erstellt. Zuordnungen und Kurzbeschreibungen können Fehler enthalten – massgeblich sind die Originalbeiträge auf dlh.zh.ch.</p>
+    <p class="ki-hinweis">Diese Übersicht wurde mit Unterstützung von KI erstellt. Zuordnungen und Kurzbeschreibungen können Fehler enthalten – massgeblich sind die Originalbeiträge auf <a href="https://dlh.zh.ch/" target="_blank" rel="noopener">dlh.zh.ch</a>.</p>
   </header>
 
   <div class="haupt">
     <aside class="filter" id="links" aria-label="Filter">
       <div class="filter-kopf">
-        <h2>Eingrenzen</h2>
+        <h2>Filter frei kombinierbar</h2>
         <button class="loeschen" id="allesZurueck" type="button" hidden>alle Filter löschen</button>
       </div>
 
@@ -462,6 +507,16 @@
 
   <button class="bot-fab" id="btnBot" type="button" aria-controls="rechts" aria-expanded="false">DLH-Bot fragen</button>
   <div class="schleier" id="schleier" hidden></div>
+  <!-- Ansicht (3.10.2026, aus der Dropdown-Fassung übernommen): Klick auf einen Titel zeigt die Seite rechts im selben Tab -->
+  <aside class="ansicht" id="ansicht" aria-label="Ansicht des Angebots" hidden>
+    <div class="ansicht-kopf">
+      <h2 id="ansichtTitel"></h2>
+      <a class="ansicht-neu" id="ansichtNeu" href="#" target="_blank" rel="noopener">in neuem Tab öffnen ↗</a>
+      <button class="ansicht-zu" id="ansichtZu" type="button" aria-label="Ansicht schliessen">×</button>
+    </div>
+    <p class="ansicht-hinweis">Bleibt das Fenster leer, lässt die Website die Anzeige hier nicht zu – dann «in neuem Tab öffnen».</p>
+    <iframe id="ansichtRahmen" title="Inhalt des Angebots" src="about:blank" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </aside>
   <aside class="botfenster" id="rechts" aria-label="DLH-Bot" hidden>
     <div class="bot-kopf">
       <h2><span class="punkt" id="punkt" data-status="ok"></span> DLH-Bot
@@ -701,12 +756,18 @@ function baueFilter(){
   const f = $("#faecher"); f.textContent = "";
   const sichtbar = alleFaecher
     ? FAECHER.map(({fach}) => fach).sort((x, y) => x.localeCompare(y, "de"))   // aufgeklappt: alle alphabetisch (2.10.2026)
+    : Z.fach ? [Z.fach, ...STARTFAECHER.filter(x => x !== Z.fach).slice(0, 6)]   // eingeklappt: gewähltes Fach zuerst (3.10.2026)
     : STARTFAECHER;
   sichtbar.forEach(fach => {
     const n = ANG.filter(a => passt(a,"fach") && (a.faecher||[]).includes(fach)).length;
-    f.appendChild(chip(fach, Z.fach===fach,
+    const c = chip(fach, Z.fach===fach,
       () => { Z.fach = Z.fach===fach ? null : fach; Z.nurEins=null;
-              setzeSortierung(Z.fach ? "format" : "fach"); alles(); }, n));
+              const zuklappen = alleFaecher && Z.fach;   // Wahl in der offenen Liste klappt sie zu (3.10.2026)
+              if (zuklappen) alleFaecher = false;
+              setzeSortierung(Z.fach ? "format" : "fach"); alles();
+              if (zuklappen) $("#faecher button")?.focus({preventScroll:true}); }, n);
+    if (fach === "Überfachlich") c.classList.add("ueberfachlich");
+    f.appendChild(c);
   });
 
   $("#alleFaecher").setAttribute("aria-expanded", String(alleFaecher));
@@ -791,7 +852,7 @@ function karte(a, mitId=true){
   if (a.archiv) meta.push('<span class="merkmal">Archiv</span>');
   d.innerHTML =
     '<div class="karte-kopf">'+
-      '<h3><a data-kategorie="titel" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.titel)+'</a>'+
+      '<h3><a data-kategorie="titel" data-i="'+a._i+'" href="'+esc(a.url)+'" target="_blank" rel="noopener">'+esc(a.titel)+'</a>'+
         '<button class="botfrage" type="button" data-frage="'+esc(a.titel)+'">Bot dazu fragen</button></h3>'+
     '</div>'+
     '<p>'+esc(a.lead)+
@@ -1118,7 +1179,7 @@ $("#suchform").addEventListener("submit", e => {
 });
 /* «Bot fragen» (30.9.2026): Text aus dem Suchfeld geht als Frage an den Bot,
    Suchfeld und Stichwortfilter werden geleert. Leeres Feld: Bot öffnen, Cursor in dessen Eingabe. */
-$("#suchebot").addEventListener("click", () => {
+$("#suchebot")?.addEventListener("click", () => {
   const t = $("#suche").value.trim();
   if (!t){ botOeffnen(); $("#frage").focus(); return; }
   $("#suche").value = ""; Z.suche = ""; Z.nurEins = null; alles();
@@ -1327,6 +1388,43 @@ $("#sortwahl").dataset.kategorie = Z.sortierung;
   const setze = () => { inp.placeholder = imEmpfang() ? start : arbeit; };
   new MutationObserver(setze).observe(document.body, {attributes:true, attributeFilter:["class"]});
   setze(); }
+/* Ansicht rechts (3.10.2026, aus der Dropdown-Fassung): Klick auf einen Titel öffnet die Seite
+   im selben Tab. Ctrl/Cmd-Klick oder mittlere Maustaste öffnet wie gewohnt einen neuen Tab. */
+function ansichtUrl(u){
+  const m = (u||"").match(/^https:\/\/open\.spotify\.com\/(episode|show|track)\/([A-Za-z0-9]+)/);
+  return m ? "https://open.spotify.com/embed/" + m[1] + "/" + m[2] : u;
+}
+function ansichtAuf(a, karteEl){
+  if (!$("#rechts").hidden) botSchliessen();
+  $("#ansichtTitel").textContent = a.titel;
+  $("#ansichtNeu").href = a.url;
+  const f = $("#ansichtRahmen");
+  if (f.dataset.url !== a.url){ f.src = ansichtUrl(a.url); f.dataset.url = a.url; }
+  $("#ansicht").hidden = false;
+  document.body.classList.add("ansicht-offen");
+  document.querySelectorAll(".karte.aktiv").forEach(k => k.classList.remove("aktiv"));
+  if (karteEl){ karteEl.classList.add("aktiv"); karteEl.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+}
+function ansichtZu(){
+  if ($("#ansicht").hidden) return;
+  $("#ansicht").hidden = true;
+  document.body.classList.remove("ansicht-offen");
+  document.querySelectorAll(".karte.aktiv").forEach(k => k.classList.remove("aktiv"));
+  const f = $("#ansichtRahmen"); f.src = "about:blank"; f.dataset.url = "";
+}
+$("#liste").addEventListener("click", e => {
+  const l = e.target.closest("a[data-i]");
+  if (!l || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  const a = ANG.find(x => String(x._i) === l.dataset.i);
+  if (!a) return;
+  e.preventDefault();
+  ansichtAuf(a, l.closest(".karte"));
+});
+$("#ansichtZu").addEventListener("click", ansichtZu);
+{ const _bo = botOeffnen; botOeffnen = function(){ ansichtZu(); _bo(); }; }
+document.addEventListener("keydown", e => { if (e.key === "Escape" && $("#rechts").hidden) ansichtZu(); });
+new MutationObserver(() => { if (imEmpfang()) ansichtZu(); })
+  .observe(document.body, {attributes:true, attributeFilter:["class"]});
 alles();
 botStatus();
 </script>
