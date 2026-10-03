@@ -432,7 +432,7 @@
         <button type="submit" id="suchego">go</button>
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
       </form>
-      <button class="zumstart" id="zumStart" type="button">← zurück zum Start</button>
+      <button class="zumstart" id="zumStart" type="button">← zurück</button>
 
       <div class="kacheln">
         <button class="kachel k-fach" id="kachelFach" type="button">
@@ -472,12 +472,12 @@
         <!-- Reihenfolge Art des Angebots – Einsatz – Stufe (1.10.2026) -->
         <h3>Art des Angebots</h3>
         <div class="chips" id="formate"></div>
-        <div id="weitereEingrenzungen" hidden>
+        <div id="weitereEingrenzungen">
           <div class="fblock"><h4>Einsatz</h4><div class="chips" id="aufwaende"></div></div>
           <div class="fblock"><h4>Stufe</h4><div class="chips" id="stufen"></div></div>
         </div>
-        <a class="faecher-link" id="alleEingrenzungen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" aria-expanded="false">auch nach Einsatz und Stufe</a>
-        <a class="faecher-link" id="eingrenzungenEinklappen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" hidden>einklappen</a>
+        <a class="faecher-link" id="alleEingrenzungen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" aria-expanded="true" hidden>auch nach Einsatz und Stufe</a>
+        <a class="faecher-link" id="eingrenzungenEinklappen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen">einklappen</a>
       </section>
 
       <div class="filter-fuss">
@@ -765,7 +765,7 @@ function baueFilter(){
               const zuklappen = alleFaecher && Z.fach;   // Wahl in der offenen Liste klappt sie zu (3.10.2026)
               if (zuklappen) alleFaecher = false;
               setzeSortierung(Z.fach ? "format" : "fach"); alles();
-              if (zuklappen) $("#faecher button")?.focus({preventScroll:true}); }, n);
+              if (zuklappen){ $("#faecher button")?.focus({preventScroll:true}); kastenZeigen("#gruppeFach"); } }, n);
     if (fach === "Überfachlich") c.classList.add("ueberfachlich");
     f.appendChild(c);
   });
@@ -776,7 +776,11 @@ function baueFilter(){
 
   const l = $("#anliegen"); l.textContent = "";
   let sichtbareAnliegen = 0;
-  ANL.forEach((txt,i) => {
+  // eingeklappt mit Wahl: gewähltes Anliegen zuerst, dann die übrigen in ihrer Reihenfolge (3.10.2026)
+  const reihe = ANL.map((_, i) => i);
+  if (!alleAnliegen && Z.anliegen !== null){ reihe.splice(reihe.indexOf(Z.anliegen), 1); reihe.unshift(Z.anliegen); }
+  reihe.forEach(i => {
+    const txt = ANL[i];
     const n = ANG.filter(a => passt(a,"anliegen") && (a.anliegen||[]).includes(i)).length;
     if (alleFaecher && !n) return;
     if (!alleAnliegen && sichtbareAnliegen >= 5) return;
@@ -787,7 +791,11 @@ function baueFilter(){
     if (!n) b.dataset.leer = "1";
     b.innerHTML = esc(txt.replace(/^…\s*/,"")) + '<span class="n">'+n+'</span>';
     b.addEventListener("click", () => {
-      Z.anliegen = Z.anliegen===i ? null : i; Z.nurEins=null; alles();
+      Z.anliegen = Z.anliegen===i ? null : i; Z.nurEins=null;
+      const zuklappen = alleAnliegen && Z.anliegen !== null;   // Wahl in der offenen Liste klappt sie zu (3.10.2026)
+      if (zuklappen) alleAnliegen = false;
+      alles();
+      if (zuklappen){ $("#anliegen button")?.focus({preventScroll:true}); kastenZeigen("#gruppeAnliegen"); }
     });
     l.appendChild(b);
   });
@@ -1205,13 +1213,14 @@ $("#alleFaecher").addEventListener("click", e => {
   e.preventDefault();
   alleFaecher = true;
   baueFilter();
-  $("#faecher").querySelector("button")?.focus();
+  if (!gewaehltZeigen("#faecher")) $("#faecher").querySelector("button")?.focus();
 });
 $("#faecherEinklappen").addEventListener("click", e => {
   e.preventDefault();
   alleFaecher = false;
   baueFilter();
-  $("#alleFaecher").focus();
+  $("#alleFaecher").focus({preventScroll:true});
+  kastenZeigen("#gruppeFach");
 });
 function eingrenzungenUmschalten(offen){
   $("#weitereEingrenzungen").hidden = !offen;
@@ -1233,6 +1242,7 @@ $("#alleAnliegen").addEventListener("click", e => {
   e.preventDefault();
   alleAnliegen = true;
   baueFilter();
+  if (gewaehltZeigen("#anliegen")) return;
   const weitere = $("#anliegen").querySelectorAll("button")[5];
   (weitere || $("#anliegenEinklappen")).focus();
 });
@@ -1240,8 +1250,31 @@ $("#anliegenEinklappen").addEventListener("click", e => {
   e.preventDefault();
   alleAnliegen = false;
   baueFilter();
-  $("#alleAnliegen").focus();
+  $("#alleAnliegen").focus({preventScroll:true});
+  kastenZeigen("#gruppeAnliegen");
 });
+/* Scrollen beim Ein-/Ausklappen (3.10.2026): Nach dem Einklappen Seite nach oben und den
+   Kasten oben in der Filterspalte zeigen; beim Ausklappen zur gewählten Wahl scrollen. */
+/* Sofort springen statt weich rollen: ein weiches Rollen wird von nachlaufendem
+   Touchpad-/Mausrad-Schwung abgebrochen; darum zusätzlich kurz danach nachkorrigieren. */
+function kastenZeigen(sel){
+  const l = $("#links"), g = $(sel);
+  const springen = () => {
+    window.scrollTo({top:0, behavior:"instant"});
+    if (g && getComputedStyle(l).overflowY !== "visible")
+      l.scrollTo({top:0, behavior:"instant"});   // immer ganz oben mit «Filter frei kombinierbar» (3.10.2026)
+  };
+  springen();
+  requestAnimationFrame(springen);
+  setTimeout(springen, 300);
+}
+function gewaehltZeigen(liste){
+  const b = $(liste).querySelector('[aria-pressed="true"]');
+  if (!b) return false;
+  b.focus({preventScroll:true});
+  b.scrollIntoView({block:"center", behavior:"smooth"});
+  return true;
+}
 $("#form").addEventListener("submit", e => { e.preventDefault(); frageStellen(); });
 $("#btnFilter").addEventListener("click", filterUmschalten);
 $("#btnBot").addEventListener("click", () => { botOeffnen(); $("#frage").focus(); });
@@ -1273,7 +1306,7 @@ function zumStart(){
   botSchliessen();
   allesZuruecksetzen();
   if ($("#links").classList.contains("offen")) filterUmschalten();
-  eingrenzungenUmschalten(false);
+  eingrenzungenUmschalten(true);   // Art/Einsatz/Stufe standardmässig ausgeklappt (3.10.2026)
   $("#links").scrollTop = 0;
   document.body.classList.add("empfang");
   window.scrollTo({top:0});
