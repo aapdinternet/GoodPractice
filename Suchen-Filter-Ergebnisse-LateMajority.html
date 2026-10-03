@@ -525,6 +525,16 @@
     .kachel.k-anfang i{align-self:center}
     .kachel.k-fach, .kachel.k-anliegen{min-height:0; padding:12px 18px}
   }
+
+  /* Nur noch eine Kachel (3.10.2026): «Wo fange ich an?» mit Untertext in der Mitte zentriert,
+     Pfeil rechts, vertikal mittig */
+  .kachel.k-anfang{position:relative; justify-content:center; align-items:center; text-align:center; padding:24px 72px}
+  .kachel.k-anfang div{width:100%}
+  .kachel.k-anfang i{position:absolute; right:26px; top:50%; transform:translateY(-50%); align-self:auto}
+  @media (max-width:900px){
+    .kachel.k-anfang{flex-direction:column; padding:20px 52px}
+    .kachel.k-anfang i{right:18px}
+  }
 </style>
 
 </head>
@@ -553,12 +563,7 @@
         <button class="kachel k-anfang" id="kachelAnfang" type="button">
           <div><b>Wo fange ich an?</b><span>Ich weiss noch nicht, was ich suche – ein ruhiger Einstieg in kleinen Schritten</span></div><i aria-hidden="true">→</i>
         </button>
-        <button class="kachel k-fach" id="kachelFach" type="button">
-          <div><b>Mein Fach</b><span>Steige über Dein eigenes Fach ein</span></div><i aria-hidden="true">→</i>
-        </button>
-        <button class="kachel k-anliegen" id="kachelAnliegen" type="button">
-          <div><b>Ich möchte …</b><span>anders prüfen, KI-Assistenten bauen, meine Lehr-Lern-Aktivitäten digital optimieren, …</span></div><i aria-hidden="true">→</i>
-        </button>
+        <!-- Kacheln «Mein Fach» und «Ich möchte …» entfernt (3.10.2026); ihr JS ist mit ?. abgesichert -->
       </div>
 
     </div>
@@ -1502,8 +1507,8 @@ function fokusStart(art){
   ($(f.wahl.split(",")[0]) || $(f.kasten)).focus({preventScroll:true});
   window.scrollTo({top:0});
 }
-$("#kachelFach").addEventListener("click", () => fokusStart("fach"));
-$("#kachelAnliegen").addEventListener("click", () => fokusStart("anliegen"));
+$("#kachelFach")?.addEventListener("click", () => fokusStart("fach"));
+$("#kachelAnliegen")?.addEventListener("click", () => fokusStart("anliegen"));
 document.addEventListener("click", e => {
   const f = Object.values(FOKUS).find(f => document.body.classList.contains(f.klasse));
   if (!f || e.target.closest(f.kachel)) return;
