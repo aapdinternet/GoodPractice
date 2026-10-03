@@ -496,6 +496,35 @@
     .sit > button{padding:16px 16px; font-size:16.5px}
     .sit-inhalt{padding:0 14px 16px}
   }
+
+  /* Gewichtung umgedreht (3.10.2026): «Wo fange ich an?» gross und violett über beide Spalten,
+     «Mein Fach» und «Ich möchte …» darunter halb so hoch, ohne Füllung, nur Rand und Schrift in der Familienfarbe */
+  .kachel.k-anfang{grid-column:1/-1; min-height:170px; flex-direction:column; align-items:stretch; padding:24px 24px 22px;
+    background:var(--violett); color:#fff; border:0}
+  .kachel.k-anfang:hover{background:var(--violett); border:0}
+  .kachel.k-anfang b{font-size:24px}
+  .kachel.k-anfang span{color:#fff; opacity:.9}
+  .kachel.k-anfang i{align-self:flex-end; color:#fff}
+  .kachel.k-fach, .kachel.k-anliegen{min-height:85px; flex-direction:row; align-items:center; padding:14px 22px;
+    background:transparent; border:2px solid}
+  .kachel.k-fach{color:var(--violett); border-color:var(--violett-rand)}
+  .kachel.k-anliegen{color:var(--orange-tief); border-color:var(--orange-rand)}
+  .kachel.k-fach:hover{background:var(--card); border-color:var(--violett)}
+  .kachel.k-anliegen:hover{background:var(--card); border-color:var(--orange-tief)}
+  .kachel.k-fach b, .kachel.k-anliegen b{font-size:19px}
+  .kachel.k-fach span, .kachel.k-anliegen span{font-size:13.5px; opacity:1; color:var(--muted); margin-top:3px}
+  .kachel.k-fach i, .kachel.k-anliegen i{align-self:center}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .kachel.k-anfang{color:#fff}
+    :root:not([data-theme="light"]) .kachel.k-fach{color:#c9a6dc}
+    :root:not([data-theme="light"]) .kachel.k-anliegen{color:#f6a96b}
+  }
+  @media (max-width:900px){
+    .kachel.k-anfang{min-height:0; flex-direction:row; align-items:center; padding:18px 20px}
+    .kachel.k-anfang b{font-size:20px}
+    .kachel.k-anfang i{align-self:center}
+    .kachel.k-fach, .kachel.k-anliegen{min-height:0; padding:12px 18px}
+  }
 </style>
 
 </head>
@@ -510,7 +539,7 @@
   <!-- ===== Empfang: Titel, Suchfeld, drei Farbflächen. Wird im zweiten Schritt zum schmalen Band. ===== -->
   <header class="start">
     <div class="start-innen">
-      <h1><span class="titel-start">Was brauche ich für meinen Unterricht?</span><span class="titel-arbeit">Stichwortsuche</span></h1>
+      <h1><span class="titel-start">Inspiration vom DLH für Deinen Unterricht</span><span class="titel-arbeit">Stichwortsuche</span></h1>
       <p class="unter" aria-hidden="true">&nbsp;</p>
       <form class="suchform" id="suchform" role="search">
         <input id="suche" type="search" placeholder="Stichwortsuche: aus Titel, Anliegen, Art des Angebots, Fach, Beruf, etc. oder DLH-Bot fragen" autocomplete="off" aria-label="Volltextsuche">
@@ -520,15 +549,15 @@
       <button class="zumstart" id="zumStart" type="button">← zurück</button>
 
       <div class="kacheln">
+        <!-- dritte Tür (LateMajority, 3.10.2026): führt nicht in die Filteransicht, sondern in #einstieg – Gewichtung umgedreht 3.10.2026: gross und violett zuerst, Fach/Anliegen darunter halb so hoch und ohne Füllung -->
+        <button class="kachel k-anfang" id="kachelAnfang" type="button">
+          <div><b>Wo fange ich an?</b><span>Ich weiss noch nicht, was ich suche – ein ruhiger Einstieg in kleinen Schritten</span></div><i aria-hidden="true">→</i>
+        </button>
         <button class="kachel k-fach" id="kachelFach" type="button">
-          <div><b>Mein Fach</b><span>Steigen Sie über Ihr eigenes Fach ein</span></div><i aria-hidden="true">→</i>
+          <div><b>Mein Fach</b><span>Steige über Dein eigenes Fach ein</span></div><i aria-hidden="true">→</i>
         </button>
         <button class="kachel k-anliegen" id="kachelAnliegen" type="button">
           <div><b>Ich möchte …</b><span>anders prüfen, KI-Assistenten bauen, meine Lehr-Lern-Aktivitäten digital optimieren, …</span></div><i aria-hidden="true">→</i>
-        </button>
-        <!-- dritte Tür (LateMajority, 3.10.2026): führt nicht in die Filteransicht, sondern in #einstieg -->
-        <button class="kachel k-anfang" id="kachelAnfang" type="button">
-          <div><b>Wo fange ich an?</b><span>Ich weiss noch nicht, was ich suche – ein ruhiger Einstieg in kleinen Schritten</span></div><i aria-hidden="true">→</i>
         </button>
       </div>
 
@@ -541,8 +570,8 @@
     <div class="ein-innen">
       <button class="ein-zurueck" id="einZurueck" type="button">← zurück zum Start</button>
       <h1 id="einTitel" tabindex="-1">Wo fange ich an?</h1>
-      <p class="ein-lead">Sie müssen nicht alles können. Ein kleiner Schritt genügt.</p>
-      <p class="ein-sub">Welcher Satz passt am ehesten zu Ihnen? Dazu zeigen wir ein bis drei Angebote – nicht mehr – und sagen ehrlich, wie viel Zeit sie brauchen. Auch wer skeptisch ist, ist hier richtig.</p>
+      <p class="ein-lead">Du musst nicht alles können. Ein kleiner Schritt genügt.</p>
+      <p class="ein-sub">Welcher Satz passt am ehesten zu Dir? Dazu zeigen wir ein bis drei Angebote – nicht mehr – und sagen ehrlich, wie viel Zeit sie brauchen. Auch wer skeptisch ist, ist hier richtig.</p>
       <div id="situationen"></div>
 
       <section class="ein-block" aria-labelledby="stimmenTitel">
@@ -569,7 +598,7 @@
         </div>
         <div class="botstart">
           <h3>Oder dem DLH-Bot einen ersten Satz schicken</h3>
-          <p>Wählen Sie einen Anfang. Danach können Sie in eigenen Worten weiterschreiben.</p>
+          <p>Wähle einen Anfang. Danach kannst Du in eigenen Worten weiterschreiben.</p>
           <div class="botsaetze" id="botsaetze"></div>
           <span class="redaktion">Redaktion: Bot so einstellen, dass er bei diesen Einstiegen zurückfragt, statt gleich eine Liste von Angeboten zu liefern.</span>
         </div>
@@ -1113,7 +1142,7 @@ function zeichneListe(){
   const liste = $("#liste"); liste.textContent = "";
   if (!sortiert.length){
     liste.innerHTML = '<div class="leer">Nichts gefunden. Weniger Filter – oder '+
-      'fragen Sie den DLH-Bot, er sucht anders.</div>';
+      'frag den DLH-Bot, er sucht anders.</div>';
     return;
   }
   if (["fach","anliegen","format","aufwand"].includes(Z.sortierung)){
@@ -1156,9 +1185,9 @@ function baueKontext(){
      jeder Karte («Bot dazu fragen») — die nennt einen konkreten Titel und
      trifft deshalb. */
   k.hidden = false;
-  k.innerHTML = '<div>Ihr Filter: <b>'+esc(teile.join(" · "))+'</b><br>'+
+  k.innerHTML = '<div>Dein Filter: <b>'+esc(teile.join(" · "))+'</b><br>'+
     '<span style="color:var(--muted)">Die Liste zeigt den Stand vom '+
-    esc(DB.stand_der_uebersicht||"")+'. Fragen Sie mich nach Hintergrund, '+
+    esc(DB.stand_der_uebersicht||"")+'. Frag mich nach Hintergrund, '+
     'Personen oder kommenden Terminen — das steht hier nicht.</span></div>';
 }
 
@@ -1643,7 +1672,7 @@ const SITUATIONEN = [
     ],
     weiter:{text:"weitere Essenzen auf einer A4-Seite", format:"Essenz"} },
   { satz:"«Meine Klasse nutzt ChatGPT, und ich fühle mich dem ausgeliefert.»",
-    beruhigung:"Sie müssen die Werkzeuge nicht besser beherrschen als Ihre Klasse. Ihre Stärke bleibt, gute Fragen zu stellen und das Denken zu begleiten.",
+    beruhigung:"Du musst die Werkzeuge nicht besser beherrschen als Deine Klasse. Deine Stärke bleibt, gute Fragen zu stellen und das Denken zu begleiten.",
     angebote:[
       {id:272, warum:"Warum das Lernpotenzial im Dialog mit der KI liegt und nicht in der fertigen Antwort – und was das für den Unterricht heisst."},
       {id:373, warum:"Dominic Hassler darüber, was sich noch zu lernen lohnt: echte Kompetenz statt simulierter Leistung."},
@@ -1651,13 +1680,13 @@ const SITUATIONEN = [
     ],
     weiter:{text:"Angebote zu «KI als Tutorin oder Sparringpartnerin»", anliegen:0} },
   { satz:"«Ich will einmal etwas ausprobieren, aber klein und ohne Risiko.»",
-    beruhigung:"Eine Lektion, eine Methode, keine neue Plattform. Passt es nicht, haben Sie eine Erfahrung gewonnen und nichts verloren.",
+    beruhigung:"Eine Lektion, eine Methode, keine neue Plattform. Passt es nicht, hast Du eine Erfahrung gewonnen und nichts verloren.",
     angebote:[
       {id:214, warum:"Ein kurzes formatives Assessment zum Einstieg oder mittendrin, einzeln oder kooperativ."},
       {id:210, warum:"Erst von Hand, dann im Tandem, dann mit KI erweitert: Die Klasse macht ihr Vorwissen sichtbar."},
       {id:270, warum:"Die passende Seite zur Mindmap-Methode: wie Eigenleistung und KI zusammenkommen."}
     ],
-    weiter:{text:"Praxisbeispiele, auch aus Ihrem Fach", format:"Praxisbeispiele KI"} },
+    weiter:{text:"Praxisbeispiele, auch aus Deinem Fach", format:"Praxisbeispiele KI"} },
   { satz:"«Ich bin skeptisch und möchte verstehen, worum es überhaupt geht.»",
     beruhigung:"Skepsis ist eine gute Ausgangslage. Diese Angebote versprechen nichts, sondern ordnen ein – auch die Grenzen.",
     angebote:[
@@ -1683,7 +1712,7 @@ const SITUATIONEN = [
     ],
     weiter:{text:"Angebote zu «Ablenkung zurückdrängen»", anliegen:13} },
   { satz:"«Ich möchte Zeit sparen – nicht noch mehr Arbeit.»",
-    beruhigung:"Beginnen Sie mit einer Aufgabe, die Sie ohnehin jede Woche erledigen. Geht sie schneller, hat sich der Schritt gelohnt.",
+    beruhigung:"Beginne mit einer Aufgabe, die Du ohnehin jede Woche erledigst. Geht sie schneller, hat sich der Schritt gelohnt.",
     angebote:[
       {id:256, warum:"Bewährte Prompting-Strategien mit konkreten Unterrichtsbeispielen, kompakt auf einer Seite."},
       {id:376, warum:"Fertige Prompts nach Anwendungsfall, Rolle und Stufe finden und anpassen, statt selbst zu formulieren.", aufwand:"Aufzeichnung · ca. 1 Stunde · für später"}
@@ -1728,7 +1757,7 @@ function baueEinstieg(){
         <p>${esc(x.warum)}</p>
       </li>`;
     }).join("");
-    const w = s.weiter ? `<p class="sit-weiter">Wenn Sie später mehr möchten: <a href="#" data-weiter="${i}">${esc(s.weiter.text)} →</a></p>` : "";
+    const w = s.weiter ? `<p class="sit-weiter">Wenn Du später mehr möchtest: <a href="#" data-weiter="${i}">${esc(s.weiter.text)} →</a></p>` : "";
     return `<div class="sit" id="sit${i}">
       <button type="button" aria-expanded="false" aria-controls="sitInhalt${i}">${esc(s.satz)}</button>
       <div class="sit-inhalt" id="sitInhalt${i}" hidden>
