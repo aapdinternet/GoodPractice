@@ -499,13 +499,107 @@
     text-decoration:underline; text-underline-offset:2px; cursor:pointer}
   .spaltenwahl:hover{color:var(--ink)}
   body.einspaltig .liste, body.einspaltig .ergebnis-gruppe{grid-template-columns:minmax(0,1fr)}
+  /* dreispaltig heisst auf breiten Bildschirmen immer drei Spalten, unabhängig von der Kartenmindestbreite (11.10.2026) */
+  @media (min-width:901px){
+    body:not(.einspaltig):not(.ansicht-offen) .liste,
+    body:not(.einspaltig):not(.ansicht-offen) .ergebnis-gruppe{grid-template-columns:repeat(3,minmax(0,1fr))}
+  }
   /* einspaltig: rechts bündig mit dem linken Rand von «sortieren nach» (Abstand per JS gemessen) */
   body.einspaltig .liste{margin-right:var(--rechtsfrei,0px)}
   body.einspaltig.ansicht-offen .liste{margin-right:0}
+  /* Einstieg über eine Kachel (11.10.2026): wie in der Fassung mit Filterspalte tritt alles
+     zurück ausser dem geöffneten Dropdown – bis zur Wahl, einem Klick ausserhalb oder Esc */
+  .filterleiste > *{transition:opacity .35s ease, filter .35s ease}
+  body.fokus-dd .bot-fab, body.fokus-dd #ergebnisse,
+  body.fokus-dd .start-innen > :not(.filterleiste),
+  body.fokus-dd .filterleiste > :not(.dd-aktiv){opacity:.28; filter:grayscale(.7)}
+  /* =====================================================================
+     DRITTE TÜR «Wo fange ich an?» (LateMajority-Variante, 3.10.2026)
+     Für Lehrpersonen, die noch nicht suchen: ruhige eigene Ansicht mit
+     Situationen in ihren Worten, je 1–3 kuratierte Angebote, keine Gesamtzahl.
+     ===================================================================== */
+  #einstieg{display:none; background:var(--empfang); min-height:calc(100dvh - 38px); padding:112px 32px 80px}
+  body.einstieg #einstieg{display:block}
+  body.einstieg .start, body.einstieg .haupt, body.einstieg .bot-fab{display:none}
+  body.einstieg .dlhtop{display:flex}
+  .ein-innen{max-width:780px; margin:0 auto}
+  .ein-zurueck{background:none; border:0; color:var(--violett); font:inherit; font-size:15px; font-weight:600; cursor:pointer; padding:0; margin:0 0 26px}
+  .ein-zurueck:hover{text-decoration:underline}
+  #einstieg h1{font-size:clamp(28px,4vw,42px); line-height:1.1; margin:0 0 16px; letter-spacing:-.02em; color:var(--ink)}
+  .ein-lead{font-size:20px; line-height:1.45; margin:0 0 8px; color:var(--ink); font-weight:600}
+  .ein-sub{color:var(--muted); font-size:16px; line-height:1.55; margin:0 0 30px; max-width:640px}
+  .sit{background:var(--card); border-radius:16px; margin:0 0 12px; border:1px solid var(--violett-rand); transition:border-color .2s}
+  .sit > button{display:flex; gap:16px; align-items:center; width:100%; padding:18px 22px; cursor:pointer;
+    background:none; border:0; border-radius:16px; font:inherit; font-size:17.5px; line-height:1.4; color:var(--ink); text-align:left}
+  .sit > button::after{content:"+"; margin-left:auto; font-size:24px; line-height:1; color:var(--violett); flex:none}
+  .sit.offen > button::after{content:"–"}
+  .sit.offen, .sit:hover{border-color:var(--violett)}
+  .sit-inhalt{padding:0 22px 22px}
+  .sit-inhalt[hidden]{display:none}
+  .beruhigung{margin:0 0 16px; padding:12px 16px; border-left:4px solid var(--orange); background:var(--orange-hell);
+    border-radius:0 10px 10px 0; font-size:15.5px; line-height:1.5; color:var(--ink)}
+  .schritte{list-style:none; margin:0; padding:0; display:grid; gap:10px}
+  .schritt{display:grid; grid-template-columns:auto minmax(0,1fr); gap:4px 14px; padding:14px 16px; border:1px solid var(--line);
+    border-radius:12px; background:var(--bg)}
+  .schritt.aktiv{border-color:var(--orange); box-shadow:0 0 0 2px var(--orange-rand)}
+  .schritt .nr{grid-row:1 / span 3; width:30px; height:30px; border-radius:50%; background:var(--violett-hell);
+    color:var(--violett-tief); font-weight:700; display:grid; place-items:center; font-size:14px}
+  .schritt .art{font-size:13px; color:var(--muted)}
+  .schritt .art b{color:var(--violett); font-weight:700}
+  .aufwand-pille{display:inline-block; font-size:12.5px; padding:1px 9px; border-radius:999px; background:var(--petrol-hell);
+    color:var(--ink); margin-left:6px; white-space:nowrap}
+  .schritt a.ein-titel{color:var(--orange); font-weight:700; font-size:16.5px; text-decoration:underline; text-underline-offset:3px; line-height:1.35}
+  .schritt a.ein-titel:hover{color:#b44700}
+  .schritt p{margin:0; font-size:14.5px; line-height:1.5; color:var(--ink)}
+  .sit-weiter{margin:14px 0 0; font-size:14px; color:var(--muted)}
+  .sit-weiter a{color:var(--violett); font-weight:600}
+  .ein-block{margin-top:44px}
+  .ein-block h2{font-size:22px; margin:0 0 6px; letter-spacing:-.01em; color:var(--ink)}
+  .ein-block > p{color:var(--muted); font-size:15.5px; line-height:1.5; margin:0 0 16px}
+  .stimmen{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px}
+  .stimme{background:var(--card); border-radius:14px; padding:16px; border:1px solid var(--line); display:flex; flex-direction:column; gap:8px}
+  .stimme blockquote{margin:0; font-size:15.5px; line-height:1.45; color:var(--ink); font-style:italic}
+  .stimme small{color:var(--muted); font-size:13px; line-height:1.4}
+  .stimme a{color:var(--orange); font-weight:600; font-size:14px}
+  .mensch{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+  .mensch > div{background:var(--card); border-radius:14px; padding:18px; border:1px solid var(--violett-rand)}
+  .mensch h3, .botstart h3{margin:0 0 6px; font-size:17px; color:var(--ink)}
+  .mensch p, .botstart p{margin:0 0 10px; font-size:14.5px; line-height:1.5; color:var(--ink)}
+  .mensch a{color:var(--violett); font-weight:700}
+  .botstart{margin-top:12px; background:var(--card); border-radius:14px; padding:18px; border:1px solid var(--line)}
+  .botsaetze{display:flex; flex-wrap:wrap; gap:8px}
+  .botsaetze button{font:inherit; font-size:14px; padding:8px 14px; border-radius:999px; cursor:pointer;
+    background:var(--violett-hell); color:var(--violett-tief); border:1px solid var(--violett-rand)}
+  .botsaetze button:hover{border-color:var(--violett)}
+  .redaktion{display:block; margin:8px 0 0; border:1.5px dashed var(--orange); color:var(--orange-tief);
+    font-size:12.5px; font-style:normal; line-height:1.4; padding:5px 9px; border-radius:8px; background:transparent}
+  body.ohne-redaktion .redaktion{display:none}
+  .ein-fuss{margin-top:44px; font-size:14.5px; color:var(--muted); display:flex; flex-wrap:wrap; gap:8px 18px; align-items:center}
+  .ein-fuss a{color:var(--violett); font-weight:600}
+  .ein-fuss button{font:inherit; font-size:13px; background:none; border:1px dashed var(--orange); color:var(--orange-tief);
+    border-radius:8px; padding:4px 10px; cursor:pointer; margin-left:auto}
+  body.ansicht-offen #einstieg{padding-right:calc(min(52vw,900px) + 32px)}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .schritt .art b, :root:not([data-theme="light"]) .mensch a,
+    :root:not([data-theme="light"]) .ein-fuss a, :root:not([data-theme="light"]) .sit-weiter a{color:#c9a6dc}
+  }
+  @media (max-width:900px){
+    #einstieg{padding:76px 16px 60px}
+    .stimmen, .mensch{grid-template-columns:minmax(0,1fr)}
+    body.ansicht-offen #einstieg{padding-right:16px}
+    .sit > button{padding:16px 16px; font-size:16.5px}
+    .sit-inhalt{padding:0 14px 16px}
+  }
+
+  /* Drei Kacheln nebeneinander (11.10.2026): «Wo fange ich an?» links, eingefärbt wie «Ich möchte …» */
+  .kachel.k-anfang{background:var(--orange-tief)}
+  .empfang .kacheln{grid-template-columns:repeat(3,minmax(0,1fr))}
+  @media (max-width:900px){ .empfang .kacheln{grid-template-columns:minmax(0,1fr)} }
+
 </style>
 
 </head>
-<body class="empfang">
+<body class="empfang einspaltig">
   <div class="dlhtop">
     <a href="https://dlh.zh.ch/" target="_blank" rel="noopener" aria-label="Digital Learning Hub Sek II">
       <img id="dlhlogo" src="https://dlh.zh.ch/images/elements/DLH-Logo-Wappen-und-Loewe.svg" alt="Digital Learning Hub Sek II">
@@ -536,6 +630,10 @@
       </div>
 
       <div class="kacheln">
+        <!-- dritte Tür «Wo fange ich an?» (aus LateMajority übernommen, 11.10.2026): führt in #einstieg -->
+        <button class="kachel k-anfang" id="kachelAnfang" type="button">
+          <div><b>Wo fange ich an?</b><span>Ich weiss noch nicht, was ich suche – ein ruhiger Einstieg in kleinen Schritten</span></div><i aria-hidden="true">→</i>
+        </button>
         <button class="kachel k-fach" id="kachelFach" type="button">
           <div><b>Mein Fach</b><span>Steige über Dein eigenes Fach ein</span></div><i aria-hidden="true">→</i>
         </button>
@@ -547,6 +645,52 @@
     </div>
     <p class="ki-hinweis">Diese Übersicht wurde mit Unterstützung von KI erstellt. Zuordnungen und Kurzbeschreibungen können Fehler enthalten – massgeblich sind die Originalbeiträge auf <a href="https://dlh.zh.ch/" target="_blank" rel="noopener">dlh.zh.ch</a>.</p>
   </header>
+
+  <!-- ===== «Wo fange ich an?» – ruhige Ansicht mit Situationen (LateMajority, 3.10.2026) ===== -->
+  <section id="einstieg" aria-labelledby="einTitel">
+    <div class="ein-innen">
+      <button class="ein-zurueck" id="einZurueck" type="button">← zurück zum Start</button>
+      <h1 id="einTitel" tabindex="-1">Wo fange ich an?</h1>
+      <p class="ein-lead">Du musst nicht alles können. Ein kleiner Schritt genügt.</p>
+      <p class="ein-sub">Welcher Satz passt am ehesten zu Dir? Dazu zeigen wir ein bis drei Angebote – nicht mehr – und sagen ehrlich, wie viel Zeit sie brauchen. Auch wer skeptisch ist, ist hier richtig.</p>
+      <div id="situationen"></div>
+
+      <section class="ein-block" aria-labelledby="stimmenTitel">
+        <h2 id="stimmenTitel">So haben Kolleginnen und Kollegen angefangen</h2>
+        <p>Lehrpersonen der Sek II, die etwas mit ihrer Klasse ausprobiert und beschrieben haben.</p>
+        <div class="stimmen" id="stimmen"></div>
+      </section>
+
+      <section class="ein-block" aria-labelledby="menschTitel">
+        <h2 id="menschTitel">Lieber mit jemandem reden?</h2>
+        <p>Bei Unsicherheit hilft ein Gespräch oft mehr als jede Liste.</p>
+        <div class="mensch">
+          <div>
+            <h3>Das DLH-Team fragen</h3>
+            <p>Eine kurze Nachricht genügt – auch für eine ganz einfache Frage.</p>
+            <a href="https://dlh.zh.ch/" target="_blank" rel="noopener">Kontakt aufnehmen →</a>
+            <span class="redaktion">Redaktion: Kontaktadresse oder Sprechstunde des DLH einsetzen (Link zeigt vorläufig auf die Startseite).</span>
+          </div>
+          <div>
+            <h3>Bei einem Impuls-Workshop zuhören</h3>
+            <p>Online, rund eine Stunde. Zuhören genügt, Fragen sind willkommen.</p>
+            <a href="https://dlh.zh.ch/home/impuls-workshops" target="_blank" rel="noopener">Nächste Termine ansehen →</a>
+          </div>
+        </div>
+        <div class="botstart">
+          <h3>Oder dem DLH-Bot einen ersten Satz schicken</h3>
+          <p>Wähle einen Anfang. Danach kannst Du in eigenen Worten weiterschreiben.</p>
+          <div class="botsaetze" id="botsaetze"></div>
+          <span class="redaktion">Redaktion: Bot so einstellen, dass er bei diesen Einstiegen zurückfragt, statt gleich eine Liste von Angeboten zu liefern.</span>
+        </div>
+      </section>
+
+      <p class="ein-fuss">
+        <span>Doch lieber selbst stöbern? <a href="#" id="einZurUebersicht">Zur Übersicht aller Angebote</a></span>
+        <button type="button" id="redaktionUmschalten" aria-pressed="false">Redaktionshinweise ausblenden</button>
+      </p>
+    </div>
+  </section>
 
   <div class="haupt">
     <aside class="filter" id="links" aria-label="Filter">
@@ -587,7 +731,7 @@
       <div class="ergebnis-kopf">
         <div class="kopf-links">
           <span class="trefferzahl" id="treffer" aria-live="polite"><b>377</b> von 377 Angeboten</span>
-          <button class="spaltenwahl" id="spaltenwahl" type="button" aria-pressed="false">Einspaltig</button>
+          <button class="spaltenwahl" id="spaltenwahl" type="button" aria-pressed="true">Dreispaltig</button>
           <span class="stand-zeile">Stand 03.10.2026 · <a href="https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm" target="_blank" rel="noopener">Definitionen und Bestandskarte</a></span>
         </div>
         <button class="knopf nur-schmal" id="btnFilter" type="button" aria-controls="links" aria-expanded="false">Filter anzeigen</button>
@@ -1065,7 +1209,7 @@ function zeichneListe(){
   const liste = $("#liste"); liste.textContent = "";
   if (!sortiert.length){
     liste.innerHTML = '<div class="leer">Nichts gefunden. Weniger Filter – oder '+
-      'fragen Sie den DLH-Bot, er sucht anders.</div>';
+      'frag den DLH-Bot, er sucht anders.</div>';
     return;
   }
   if (["fach","anliegen","format","aufwand"].includes(Z.sortierung)){
@@ -1108,9 +1252,9 @@ function baueKontext(){
      jeder Karte («Bot dazu fragen») — die nennt einen konkreten Titel und
      trifft deshalb. */
   k.hidden = false;
-  k.innerHTML = '<div>Ihr Filter: <b>'+esc(teile.join(" · "))+'</b><br>'+
+  k.innerHTML = '<div>Dein Filter: <b>'+esc(teile.join(" · "))+'</b><br>'+
     '<span style="color:var(--muted)">Die Liste zeigt den Stand vom '+
-    esc(DB.stand_der_uebersicht||"")+'. Fragen Sie mich nach Hintergrund, '+
+    esc(DB.stand_der_uebersicht||"")+'. Frag mich nach Hintergrund, '+
     'Personen oder kommenden Terminen — das steht hier nicht.</span></div>';
 }
 
@@ -1370,6 +1514,7 @@ function zumStart(){
   if ($("#links").classList.contains("offen")) filterUmschalten();
   eingrenzungenUmschalten(false);
   $("#links").scrollTop = 0;
+  document.body.classList.remove("einstieg");
   document.body.classList.add("empfang");
   window.scrollTo({top:0});
   $("#suche").focus();
@@ -1592,24 +1737,57 @@ fokusStart = function(art){
   zurArbeit();
   window.scrollTo({top:0});
   // erst nach dem Kachel-Klick öffnen, sonst schliesst ihn der Klick-ausserhalb-Handler gleich wieder
-  setTimeout(() => { ddZu(); ddOeffnen(art); ddEl(art, ".dd-opt")?.focus({preventScroll:true}); }, 0);
+  setTimeout(() => {
+    ddZu(); ddOeffnen(art);
+    $("#"+DD[art].id).classList.add("dd-aktiv");
+    document.body.classList.add("fokus-dd");   // Ergebnis zuerst ausgegraut (11.10.2026)
+    ddEl(art, ".dd-opt")?.focus({preventScroll:true});
+  }, 0);
 };
+{ const _zu = ddZu; ddZu = function(fokus){
+    _zu(fokus);
+    // nur entfernen, wenn gesetzt: classList.remove löst sonst trotzdem eine Attributänderung aus,
+    // und der MutationObserver «zurück zur Startseite» ruft ddZu endlos wieder auf (11.10.2026)
+    if (document.body.classList.contains("fokus-dd")) document.body.classList.remove("fokus-dd");
+    document.querySelectorAll(".dd.dd-aktiv").forEach(d => d.classList.remove("dd-aktiv"));
+  }; }
 mitFilter = function(setzen){ allesZuruecksetzen(); setzen(); alles(); zurArbeit(); };
 filterspalteNachUnten = function(){};
 { const _alles = alles; alles = function(){ _alles(); ddKnoepfe(); }; }
 
 /* Ansicht rechts: Klick auf einen Titel öffnet die Seite im selben Tab.
    Ctrl/Cmd-Klick oder mittlere Maustaste öffnet wie gewohnt einen neuen Tab. */
+/* Downloads von dlh.zh.ch (11.10.2026): jDownloads gibt Dateien unter /downloads/send/ nur heraus,
+   wenn kein fremder Referrer mitkommt – sonst zeigt es die Ordnerübersicht. Darum bei diesen Links
+   (Vorschau, «in neuem Tab öffnen», Download-Links, Bot-Antworten) keinen Referrer senden.
+   Auf dem Handy öffnen solche Dateien gleich in einem neuen Tab statt im Vorschaufenster. */
+const istDownload = u => /\/\/dlh\.zh\.ch\/[^#?]*\/downloads\/send\//.test(u || "");
+const istHandy = () => window.matchMedia("(max-width:900px), (pointer:coarse)").matches;
+function downloadLinksOhneReferrer(wurzel){
+  (wurzel.querySelectorAll ? wurzel : document).querySelectorAll("a[href]").forEach(l => {
+    if (istDownload(l.href)){ l.referrerPolicy = "no-referrer"; l.dataset.dlRef = "1"; }
+    else if (l.dataset.dlRef){ l.referrerPolicy = ""; delete l.dataset.dlRef; }   // z. B. «in neuem Tab öffnen» danach wieder normal
+  });
+}
+new MutationObserver(ms => {
+  ms.forEach(m => {
+    if (m.type === "attributes") downloadLinksOhneReferrer(m.target.parentNode || document);
+    else m.addedNodes.forEach(n => { if (n.nodeType === 1) downloadLinksOhneReferrer(n.parentNode || n); });
+  });
+}).observe(document.body, {childList:true, subtree:true, attributes:true, attributeFilter:["href"]});
+downloadLinksOhneReferrer(document);
 function ansichtUrl(u){
   const m = (u||"").match(/^https:\/\/open\.spotify\.com\/(episode|show|track)\/([A-Za-z0-9]+)/);
   return m ? "https://open.spotify.com/embed/" + m[1] + "/" + m[2] : u;
 }
 function ansichtAuf(a, karteEl){
+  if (istDownload(a.url) && istHandy()){ window.open(a.url, "_blank", "noopener,noreferrer"); return; }
   ddZu();
   if (!$("#rechts").hidden) botSchliessen();
   $("#ansichtTitel").textContent = a.titel;
   $("#ansichtNeu").href = a.url;
   const f = $("#ansichtRahmen");
+  f.referrerPolicy = istDownload(a.url) ? "no-referrer" : "no-referrer-when-downgrade";
   if (f.dataset.url !== a.url){ f.src = ansichtUrl(a.url); f.dataset.url = a.url; }
   const vorher = (karteEl && !document.body.classList.contains("ansicht-offen")) ? karteEl.getBoundingClientRect().top : null;
   $("#ansicht").hidden = false;
@@ -1684,8 +1862,182 @@ function rechtsfreiMessen(){
 }
 new ResizeObserver(rechtsfreiMessen).observe($("#liste").parentElement);
 window.addEventListener("resize", rechtsfreiMessen);
+/* ==========================================================================
+   DRITTE TÜR «Wo fange ich an?» (LateMajority-Variante, 3.10.2026)
+   Kuratierung: Entwurf von Claude aus dem Bestand, vom DLH redaktionell zu bereinigen.
+   Bewusst keine Innovationsfondsprojekte; kleinste Schritte zuerst
+   (Podcast, Essenz, kurze Lektüre, eine Methode), Workshops höchstens als Ausblick.
+   Pflege: nur die beiden Listen SITUATIONEN und STIMMEN anpassen (id = Angebots-id im DB).
+   ========================================================================== */
+const EIN_ART = {
+  "Essenz":"Zum Lesen", "Kuratiertes":"Zum Lesen", "Podcast":"Zum Hören",
+  "eAssessment-Methoden":"Zum Ausprobieren", "Praxisbeispiele KI":"Zum Nachmachen", "Impuls-Workshop":"Zum Anschauen"
+};
+/* ehrlicher Aufwand je Art; Lesezeiten für Kuratiertes sind Schätzungen */
+const EIN_AUFWAND = {
+  "Essenz":"eine A4-Seite · ca. 5 Min.", "Kuratiertes":"kurzer Beitrag · ca. 10 Min.",
+  "Podcast":"eine Folge · z. B. auf dem Heimweg", "eAssessment-Methoden":"eine Methode · direkt im Unterricht",
+  "Praxisbeispiele KI":"ein Unterrichtsbeispiel zum Übernehmen", "Impuls-Workshop":"Aufzeichnung · ca. 1 Stunde"
+};
+const SITUATIONEN = [
+  { satz:"«Ich habe das Gefühl, ich müsste langsam einsteigen, weiss aber nicht womit.»",
+    beruhigung:"Viele Kolleginnen und Kollegen stehen genau hier. Es gibt keinen Rückstand aufzuholen – nur einen ersten Schritt.",
+    angebote:[
+      {id:357, warum:"Lädt dazu ein, den eigenen Umgang mit KI zu reflektieren und Unterricht in Ruhe weiterzudenken."},
+      {id:268, warum:"Was erste Forschungsergebnisse zu KI in der Schule sagen – Chancen und Stolperfallen auf einer Seite."}
+    ],
+    weiter:{text:"weitere Essenzen auf einer A4-Seite", format:"Essenz"} },
+  { satz:"«Meine Klasse nutzt ChatGPT, und ich fühle mich dem ausgeliefert.»",
+    beruhigung:"Du musst die Werkzeuge nicht besser beherrschen als Deine Klasse. Deine Stärke bleibt, gute Fragen zu stellen und das Denken zu begleiten.",
+    angebote:[
+      {id:272, warum:"Warum das Lernpotenzial im Dialog mit der KI liegt und nicht in der fertigen Antwort – und was das für den Unterricht heisst."},
+      {id:373, warum:"Dominic Hassler darüber, was sich noch zu lernen lohnt: echte Kompetenz statt simulierter Leistung."},
+      {id:243, warum:"Ein eingeordneter Blick auf die Forschung: Chancen, Grenzen und Risiken von KI für das Lernen."}
+    ],
+    weiter:{text:"Angebote zu «KI als Tutorin oder Sparringpartnerin»", anliegen:0} },
+  { satz:"«Ich will einmal etwas ausprobieren, aber klein und ohne Risiko.»",
+    beruhigung:"Eine Lektion, eine Methode, keine neue Plattform. Passt es nicht, hast Du eine Erfahrung gewonnen und nichts verloren.",
+    angebote:[
+      {id:214, warum:"Ein kurzes formatives Assessment zum Einstieg oder mittendrin, einzeln oder kooperativ."},
+      {id:210, warum:"Erst von Hand, dann im Tandem, dann mit KI erweitert: Die Klasse macht ihr Vorwissen sichtbar."},
+      {id:270, warum:"Die passende Seite zur Mindmap-Methode: wie Eigenleistung und KI zusammenkommen."}
+    ],
+    weiter:{text:"Praxisbeispiele, auch aus Deinem Fach", format:"Praxisbeispiele KI"} },
+  { satz:"«Ich bin skeptisch und möchte verstehen, worum es überhaupt geht.»",
+    beruhigung:"Skepsis ist eine gute Ausgangslage. Diese Angebote versprechen nichts, sondern ordnen ein – auch die Grenzen.",
+    angebote:[
+      {id:253, warum:"Studienbasierte Antworten auf häufige Fragen von Lehrpersonen zu KI."},
+      {id:362, warum:"Ein Gespräch darüber, warum digitale Mündigkeit dort beginnt, wo man KI bewusst hinterfragt."},
+      {id:367, warum:"Internationale Forschung und Pilotdaten aus dem Kanton Zürich zu KI und kritischem Denken im Gymnasium."}
+    ],
+    weiter:{text:"Angebote zu «verstehen, wie KI funktioniert»", anliegen:14} },
+  { satz:"«Ich habe eine konkrete Sorge: Prüfungen und Schreibaufträge.»",
+    beruhigung:"Diese Sorge teilen viele. An Zürcher Schulen gibt es dazu bereits erprobte Antworten.",
+    angebote:[
+      {id:260, warum:"Generative KI unterläuft klassische Prüfungsformen – wie Leistungsnachweise trotzdem aussagekräftig bleiben."},
+      {id:224, warum:"Eine erprobte Prüfung der KS Uetikon am See: Schreiben mit und ohne KI in einem einzigen Leistungsnachweis."},
+      {id:248, warum:"Was Kreativität, Kooperation, Kommunikation und kritisches Denken für Prüfungen bedeuten."}
+    ],
+    weiter:{text:"Angebote zu «anders prüfen»", anliegen:1} },
+  { satz:"«Die Bildschirme lenken meine Klasse ab, und ich weiss nicht, wie gegensteuern.»",
+    beruhigung:"Das ist kein persönliches Versagen, sondern eine Frage der Unterrichtsgestaltung – und dazu gibt es handfeste Hinweise.",
+    angebote:[
+      {id:370, warum:"Strategien gegen Ablenkung, wenn persönliche Geräte fester Bestandteil des Unterrichts sind."},
+      {id:372, warum:"Wie Unterrichtsgestaltung und Didaktik helfen, die Konzentration aufrechtzuerhalten."},
+      {id:303, warum:"Ein Workshop zum didaktischen Umgang mit Ablenkung, zusammengefasst auf einer Seite."}
+    ],
+    weiter:{text:"Angebote zu «Ablenkung zurückdrängen»", anliegen:13} },
+  { satz:"«Ich möchte Zeit sparen – nicht noch mehr Arbeit.»",
+    beruhigung:"Beginne mit einer Aufgabe, die Du ohnehin jede Woche erledigst. Geht sie schneller, hat sich der Schritt gelohnt.",
+    angebote:[
+      {id:256, warum:"Bewährte Prompting-Strategien mit konkreten Unterrichtsbeispielen, kompakt auf einer Seite."},
+      {id:376, warum:"Fertige Prompts nach Anwendungsfall, Rolle und Stufe finden und anpassen, statt selbst zu formulieren.", aufwand:"Aufzeichnung · ca. 1 Stunde · für später"}
+    ],
+    weiter:{text:"Angebote zu «digital arbeiten und Zeit gewinnen»", anliegen:15} }
+];
+/* Stimmen aus Praxisbeispielen: das Zitat ist vom DLH aus dem jeweiligen Beitrag einzusetzen */
+const STIMMEN = [
+  {id:239, zitat:""},
+  {id:237, zitat:""},
+  {id:230, zitat:""}
+];
+const BOT_SAETZE = [
+  "Ich weiss nicht, wo ich anfangen soll.",
+  "Was wäre ein kleiner erster Schritt in meinem Fach?",
+  "Welche KI-Tools darf ich an meiner Schule überhaupt nutzen?"
+];
+const einAngebot = id => ANG.find(a => a.id === id);
+function einstiegAuf(){
+  fokusEnde(); botSchliessen(); ansichtZu();
+  document.body.classList.remove("empfang");
+  document.body.classList.add("einstieg");
+  window.scrollTo({top:0});
+  $("#einTitel").focus({preventScroll:true});
+}
+function einstiegVerlassen(){ ansichtZu(); botSchliessen(); document.body.classList.remove("einstieg"); }
+function einAnsicht(a, el){
+  ansichtAuf(a, null);
+  document.querySelectorAll(".schritt.aktiv").forEach(k => k.classList.remove("aktiv"));
+  el?.classList.add("aktiv");
+}
+function baueEinstieg(){
+  const box = $("#situationen");
+  box.innerHTML = SITUATIONEN.map((s, i) => {
+    const liste = s.angebote.map((x, n) => {
+      const a = einAngebot(x.id);
+      if (!a){ console.warn("Einstieg: Angebot fehlt", x.id); return ""; }
+      return `<li class="schritt">
+        <span class="nr" aria-hidden="true">${n+1}</span>
+        <span class="art"><b>${esc(EIN_ART[a.format] || a.format)}</b><span class="aufwand-pille">${esc(x.aufwand || EIN_AUFWAND[a.format] || "")}</span></span>
+        <a class="ein-titel" href="${esc(a.url)}" target="_blank" rel="noopener" data-ein="${a.id}">${esc(a.titel)}</a>
+        <p>${esc(x.warum)}</p>
+      </li>`;
+    }).join("");
+    const w = s.weiter ? `<p class="sit-weiter">Wenn Du später mehr möchtest: <a href="#" data-weiter="${i}">${esc(s.weiter.text)} →</a></p>` : "";
+    return `<div class="sit" id="sit${i}">
+      <button type="button" aria-expanded="false" aria-controls="sitInhalt${i}">${esc(s.satz)}</button>
+      <div class="sit-inhalt" id="sitInhalt${i}" hidden>
+        <p class="beruhigung">${esc(s.beruhigung)}</p>
+        <ol class="schritte">${liste}</ol>${w}
+      </div></div>`;
+  }).join("");
+  box.addEventListener("click", e => {
+    const b = e.target.closest(".sit > button");
+    if (b){
+      const sit = b.parentElement, auf = b.getAttribute("aria-expanded") !== "true";
+      box.querySelectorAll(".sit").forEach(x => {   // immer nur eine Situation offen – ruhiger
+        x.classList.remove("offen"); x.querySelector("button").setAttribute("aria-expanded","false");
+        x.querySelector(".sit-inhalt").hidden = true;
+      });
+      if (auf){
+        sit.classList.add("offen"); b.setAttribute("aria-expanded","true");
+        sit.querySelector(".sit-inhalt").hidden = false;
+        sit.scrollIntoView({block:"nearest", behavior:"smooth"});
+      }
+      return;
+    }
+    const l = e.target.closest("a[data-ein]");
+    if (l && !(e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0)){
+      e.preventDefault(); einAnsicht(einAngebot(+l.dataset.ein), l.closest(".schritt")); return;
+    }
+    const wl = e.target.closest("a[data-weiter]");
+    if (wl){
+      e.preventDefault();
+      const w = SITUATIONEN[+wl.dataset.weiter].weiter;
+      einstiegVerlassen();
+      if (w.format) mitFormat(w.format);
+      else mitFilter(() => { Z.anliegen = w.anliegen; }, "#gruppeAnliegen");
+    }
+  });
+  $("#stimmen").innerHTML = STIMMEN.map(s => {
+    const a = einAngebot(s.id); if (!a) return "";
+    const zitat = s.zitat ? `<blockquote>«${esc(s.zitat)}»</blockquote>`
+      : `<blockquote>«…»</blockquote><span class="redaktion">Redaktion: einen Satz der Lehrperson aus dem Praxisbeispiel einsetzen, z. B. wie sie angefangen hat.</span>`;
+    return `<div class="stimme">${zitat}<small>${esc(a.lead)}</small>
+      <a href="${esc(a.url)}" target="_blank" rel="noopener" data-ein="${a.id}">${esc(a.titel)} →</a></div>`;
+  }).join("");
+  $("#stimmen").addEventListener("click", e => {
+    const l = e.target.closest("a[data-ein]");
+    if (!l || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    e.preventDefault(); einAnsicht(einAngebot(+l.dataset.ein), l.closest(".stimme"));
+  });
+  $("#botsaetze").innerHTML = BOT_SAETZE.map(t => `<button type="button">${esc(t)}</button>`).join("");
+  $("#botsaetze").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (b) frageStellen(b.textContent);
+  });
+}
+$("#kachelAnfang").addEventListener("click", einstiegAuf);
+$("#einZurueck").addEventListener("click", () => { einstiegVerlassen(); zumStart(); });
+$("#einZurUebersicht").addEventListener("click", e => { e.preventDefault(); einstiegVerlassen(); allesZuruecksetzen(); zurArbeit(); });
+$("#redaktionUmschalten").addEventListener("click", e => {
+  const aus = document.body.classList.toggle("ohne-redaktion");
+  e.currentTarget.setAttribute("aria-pressed", String(aus));
+  e.currentTarget.textContent = aus ? "Redaktionshinweise einblenden" : "Redaktionshinweise ausblenden";
+});
+
 alles();
 botStatus();
+baueEinstieg();
 </script>
 
 
