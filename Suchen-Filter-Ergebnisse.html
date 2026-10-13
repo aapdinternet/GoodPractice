@@ -426,6 +426,8 @@
   #einstieg h1{font-size:clamp(28px,4vw,42px); line-height:1.1; margin:0 0 16px; letter-spacing:-.02em; color:var(--ink)}
   .ein-lead{font-size:20px; line-height:1.45; margin:0 0 8px; color:var(--ink); font-weight:600}
   .ein-sub{color:var(--muted); font-size:16px; line-height:1.55; margin:0 0 30px; max-width:640px}
+  /* 13.10.2026: Satz in einer Zeile (nur auf breiten Bildschirmen; auf dem Handy bricht er natürlich um) */
+  @media (min-width:901px){ .ein-sub{max-width:none; white-space:nowrap} }
   .sit{background:var(--card); border-radius:16px; margin:0 0 12px; border:1px solid var(--violett-rand); transition:border-color .2s}
   .sit > button{display:flex; gap:16px; align-items:center; width:100%; padding:18px 22px; cursor:pointer;
     background:none; border:0; border-radius:16px; font:inherit; font-size:17.5px; line-height:1.4; color:var(--ink); text-align:left}
@@ -540,7 +542,7 @@
         <button type="submit" id="suchego">go</button>
         <button id="suchereset" type="button" title="Suche löschen">reset</button>
       </form>
-      <button class="zumstart" id="zumStart" type="button">← zurück</button>
+      <button class="zumstart" id="zumStart" type="button">← zurück zum Start</button>
 
       <div class="kacheln">
         <!-- dritte Tür «Wo fange ich an?» (aus LateMajority übernommen, 11.10.2026): führt in #einstieg -->
@@ -564,43 +566,12 @@
     <div class="ein-innen">
       <button class="ein-zurueck" id="einZurueck" type="button">← zurück zum Start</button>
       <h1 id="einTitel" tabindex="-1">Wo fange ich an?</h1>
-      <p class="ein-lead">Du musst nicht alles können. Ein kleiner Schritt genügt.</p>
-      <p class="ein-sub">Welcher Satz passt am ehesten zu Dir? Dazu zeigen wir ein bis drei Angebote – nicht mehr – und sagen ehrlich, wie viel Zeit sie brauchen. Auch wer skeptisch ist, ist hier richtig.</p>
+      <p class="ein-lead">Ein kleiner Schritt genügt. Du musst nicht alles auf einmal können.</p>
+      <p class="ein-sub">Welcher Satz passt am ehesten zu Dir? Dazu zeigen wir ein bis drei Angebote – nicht mehr.</p>
       <div id="situationen"></div>
 
-      <section class="ein-block" aria-labelledby="stimmenTitel">
-        <h2 id="stimmenTitel">So haben Kolleginnen und Kollegen angefangen</h2>
-        <p>Lehrpersonen der Sek II, die etwas mit ihrer Klasse ausprobiert und beschrieben haben.</p>
-        <div class="stimmen" id="stimmen"></div>
-      </section>
-
-      <section class="ein-block" aria-labelledby="menschTitel">
-        <h2 id="menschTitel">Lieber mit jemandem reden?</h2>
-        <p>Bei Unsicherheit hilft ein Gespräch oft mehr als jede Liste.</p>
-        <div class="mensch">
-          <div>
-            <h3>Das DLH-Team fragen</h3>
-            <p>Eine kurze Nachricht genügt – auch für eine ganz einfache Frage.</p>
-            <a href="https://dlh.zh.ch/" target="_blank" rel="noopener">Kontakt aufnehmen →</a>
-            <span class="redaktion">Redaktion: Kontaktadresse oder Sprechstunde des DLH einsetzen (Link zeigt vorläufig auf die Startseite).</span>
-          </div>
-          <div>
-            <h3>Bei einem Impuls-Workshop zuhören</h3>
-            <p>Online, rund eine Stunde. Zuhören genügt, Fragen sind willkommen.</p>
-            <a href="https://dlh.zh.ch/home/impuls-workshops" target="_blank" rel="noopener">Nächste Termine ansehen →</a>
-          </div>
-        </div>
-        <div class="botstart">
-          <h3>Oder dem DLH-Bot einen ersten Satz schicken</h3>
-          <p>Wähle einen Anfang. Danach kannst Du in eigenen Worten weiterschreiben.</p>
-          <div class="botsaetze" id="botsaetze"></div>
-          <span class="redaktion">Redaktion: Bot so einstellen, dass er bei diesen Einstiegen zurückfragt, statt gleich eine Liste von Angeboten zu liefern.</span>
-        </div>
-      </section>
-
       <p class="ein-fuss">
-        <span>Doch lieber selbst stöbern? <a href="#" id="einZurUebersicht">Zur Übersicht aller Angebote</a></span>
-        <button type="button" id="redaktionUmschalten" aria-pressed="false">Redaktionshinweise ausblenden</button>
+        <span>Kontakt aufnehmen? <a href="mailto:info@dlh.zh.ch">info@dlh.zh.ch</a></span>
       </p>
     </div>
   </section>
@@ -632,9 +603,9 @@
         <div class="chips" id="formate"></div>
         <div id="weitereEingrenzungen">
           <div class="fblock"><h4>Einsatz</h4><div class="chips" id="aufwaende"></div></div>
-          <div class="fblock"><h4>Stufe</h4><div class="chips" id="stufen"></div></div>
+          <div class="fblock"><h4>Schultyp</h4><div class="chips" id="stufen"></div></div>
         </div>
-        <a class="faecher-link" id="alleEingrenzungen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" aria-expanded="true" hidden>auch nach Einsatz und Stufe</a>
+        <a class="faecher-link" id="alleEingrenzungen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen" aria-expanded="true" hidden>auch nach Einsatz und Schultyp</a>
         <a class="faecher-link" id="eingrenzungenEinklappen" href="#weitereEingrenzungen" aria-controls="weitereEingrenzungen">einklappen</a>
       </section>
 
@@ -646,7 +617,7 @@
 
     <main id="ergebnisse">
       <div class="ergebnis-kopf">
-        <span class="trefferzahl" id="treffer" aria-live="polite"><b>377</b> von 377 Angeboten</span>
+        <span class="trefferzahl" id="treffer" aria-live="polite"><b>377</b> von 377 Inspirationen</span>
         <button class="knopf nur-schmal" id="btnFilter" type="button" aria-controls="links" aria-expanded="false">Filter anzeigen</button>
         <label class="sortwahl">sortieren nach
           <select id="sortwahl" data-kategorie="fach" autocomplete="off">
@@ -800,6 +771,9 @@ const FORMAT_DEFINITIONEN = {
   "Kuratiertes":"eingeordneter Fund aus Forschung und Praxis",
   "Podcast":"Gespräch der Reihe DLH-Talk zum Hören"
 };
+/* Anzeigenamen in den Filtern (13.10.2026): Daten bleiben gleich, nur die Beschriftung im Feld ändert */
+const ANZEIGE = {format:{"Essenz":"Essenzen aus Impuls-Workshops"}, stufen:{"Überfachlich":"Schultyp übergreifend"}};
+const anzeige = (feld, w) => (ANZEIGE[feld] && ANZEIGE[feld][w]) || w;
 const STUFEN = ["Gymnasium","Berufsbildung","Überfachlich"];
 const AUFWAENDE = ["direkt einsetzbar","erst anpassen","zur Inspiration"];
 
@@ -968,7 +942,7 @@ function baueFilter(){
       const n = ANG.filter(a => passt(a,ausser) &&
         (feld==="stufen" ? (a.stufen||[]).includes(w) : feld==="format" ? hatFormat(a, w) : a[feld]===w)).length;
       if (alleFaecher && !n) return;
-      z.appendChild(chip(w, menge.has(w), () => {
+      z.appendChild(chip(anzeige(feld, w), menge.has(w), () => {
         menge.has(w) ? menge.delete(w) : menge.add(w); Z.nurEins=null; alles();
       }, n));
     });
@@ -1133,7 +1107,7 @@ function zeichneListe(){
         || x.titel.localeCompare(y.titel,"de");
   });
 
-  $("#treffer").innerHTML = '<b>'+t.length+'</b> von '+ANG.length+' Angeboten';
+  $("#treffer").innerHTML = '<b>'+t.length+'</b> von '+ANG.length+' Inspirationen';
   const liste = $("#liste"); liste.textContent = "";
   if (!sortiert.length){
     liste.innerHTML = '<div class="leer">Nichts gefunden. Weniger Filter – oder '+
@@ -1840,27 +1814,27 @@ function baueEinstieg(){
       else mitFilter(() => { Z.anliegen = w.anliegen; }, "#gruppeAnliegen");
     }
   });
-  $("#stimmen").innerHTML = STIMMEN.map(s => {
+  if ($("#stimmen")) $("#stimmen").innerHTML = STIMMEN.map(s => {
     const a = einAngebot(s.id); if (!a) return "";
     const zitat = s.zitat ? `<blockquote>«${esc(s.zitat)}»</blockquote>`
       : `<blockquote>«…»</blockquote><span class="redaktion">Redaktion: einen Satz der Lehrperson aus dem Praxisbeispiel einsetzen, z. B. wie sie angefangen hat.</span>`;
     return `<div class="stimme">${zitat}<small>${esc(a.lead)}</small>
       <a href="${esc(a.url)}" target="_blank" rel="noopener" data-ein="${a.id}">${esc(a.titel)} →</a></div>`;
   }).join("");
-  $("#stimmen").addEventListener("click", e => {
+  $("#stimmen")?.addEventListener("click", e => {
     const l = e.target.closest("a[data-ein]");
     if (!l || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey || e.button !== 0) return;
     e.preventDefault(); einAnsicht(einAngebot(+l.dataset.ein), l.closest(".stimme"));
   });
-  $("#botsaetze").innerHTML = BOT_SAETZE.map(t => `<button type="button">${esc(t)}</button>`).join("");
-  $("#botsaetze").addEventListener("click", e => {
+  if ($("#botsaetze")) $("#botsaetze").innerHTML = BOT_SAETZE.map(t => `<button type="button">${esc(t)}</button>`).join("");
+  $("#botsaetze")?.addEventListener("click", e => {
     const b = e.target.closest("button"); if (b) frageStellen(b.textContent);
   });
 }
 $("#kachelAnfang").addEventListener("click", einstiegAuf);
 $("#einZurueck").addEventListener("click", () => { einstiegVerlassen(); zumStart(); });
-$("#einZurUebersicht").addEventListener("click", e => { e.preventDefault(); einstiegVerlassen(); allesZuruecksetzen(); zurArbeit(); });
-$("#redaktionUmschalten").addEventListener("click", e => {
+$("#einZurUebersicht")?.addEventListener("click", e => { e.preventDefault(); einstiegVerlassen(); allesZuruecksetzen(); zurArbeit(); });
+$("#redaktionUmschalten")?.addEventListener("click", e => {
   const aus = document.body.classList.toggle("ohne-redaktion");
   e.currentTarget.setAttribute("aria-pressed", String(aus));
   e.currentTarget.textContent = aus ? "Redaktionshinweise einblenden" : "Redaktionshinweise ausblenden";
