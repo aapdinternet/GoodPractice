@@ -891,9 +891,10 @@ const FORMAT_DEFINITIONEN = {
   "Podcast":"Gespräch der Reihe DLH-Talk zum Hören"
 };
 /* Anzeigenamen in den Filtern (13.10.2026): Daten bleiben gleich, nur die Beschriftung im Feld ändert */
-const ANZEIGE = {format:{"Essenz":"Essenzen aus Impuls-Workshops"}, stufen:{"Überfachlich":"Schultyp übergreifend"}};
+const ANZEIGE = {format:{"Essenz":"Essenzen aus Impuls-Workshops"}, stufen:{"Überfachlich":"Schultyp übergreifend"},
+               fach:{"Überfachlich":"für alle Fächer"}};   /* 14.10.2026: Fachliste */
 const anzeige = (feld, w) => (ANZEIGE[feld] && ANZEIGE[feld][w]) || w;
-const STUFEN = ["Gymnasium","Berufsbildung","Überfachlich"];
+const STUFEN = ["Gymnasium","Berufsbildung"];   /* «Schultyp übergreifend» entfällt (14.10.2026) */
 const AUFWAENDE = ["direkt einsetzbar","erst anpassen","zur Inspiration"];
 
 /* Umlaute falten wie im Bot, damit "franzoesisch" auch "Französisch" findet. */
@@ -944,7 +945,20 @@ function istGoodPractice(a){
   return false;
 }
 const hatFormat = (a, f) => f === "Good Practice" ? a.gp : a.format === f;
+/* Schultyp nur noch Gymnasium / Berufsbildung (14.10.2026). Daten bleiben unverändert;
+   beim Laden wird «Überfachlich» übersetzt:
+   - nur «Überfachlich», oder Gymnasium + Berufsbildung       -> beide Schultypen
+   - «Überfachlich» + ein Schultyp, Fach nur «Überfachlich»    -> beide Schultypen
+   - «Überfachlich» + ein Schultyp, zusätzlich ein echtes Fach -> nur dieser Schultyp */
+function schultypen(a){
+  const s = new Set(a.stufen || []);
+  const g = s.has("Gymnasium"), b = s.has("Berufsbildung"), u = s.has("Überfachlich");
+  const nurUeberfachlich = (a.faecher || []).every(f => f === "Überfachlich");
+  if ((g && b) || (u && !g && !b) || (u && nurUeberfachlich)) return ["Gymnasium","Berufsbildung"];
+  return g ? ["Gymnasium"] : b ? ["Berufsbildung"] : ["Gymnasium","Berufsbildung"];
+}
 ANG.forEach((a,i) => {
+  a.stufen = schultypen(a);
   a.gp = istGoodPractice(a);
   a._i = i;
   a._such = falte([a.titel, a.lead, a.quelle, (a.faecher||[]).join(" "),
@@ -1000,6 +1014,8 @@ function chip(text, gedrueckt, beiKlick, anzahl){
   return b;
 }
 
+/* «für alle Fächer» (Daten: Überfachlich) steht ausserhalb des Alphabets ganz unten (14.10.2026) */
+const fachReihe = (x, y) => (x==="Überfachlich") - (y==="Überfachlich") || x.localeCompare(y, "de");
 const STARTFAECHER = ["Deutsch", "Mathematik", "ABU", "Englisch", "Berufskunde", "Französisch", "Chemie"];
 let alleFaecher = false;
 let alleAnliegen = false;
@@ -1007,11 +1023,11 @@ let alleAnliegen = false;
 function baueFilter(){
   const f = $("#faecher"); f.textContent = "";
   const sichtbar = alleFaecher
-    ? FAECHER.map(({fach}) => fach).sort((x, y) => x.localeCompare(y, "de"))   // aufgeklappt: alle alphabetisch (2.10.2026)
+    ? FAECHER.map(({fach}) => fach).filter(f => f !== "Überfachlich").sort(fachReihe)   /* «für alle Fächer» nicht in der Fachliste (14.10.2026) */   // aufgeklappt: alle alphabetisch (2.10.2026)
     : STARTFAECHER;
   sichtbar.forEach(fach => {
     const n = ANG.filter(a => passt(a,"fach") && (a.faecher||[]).includes(fach)).length;
-    f.appendChild(chip(fach, Z.fach===fach,
+    f.appendChild(chip(anzeige("fach", fach), Z.fach===fach,
       () => { Z.fach = Z.fach===fach ? null : fach; Z.nurEins=null;
               setzeSortierung(Z.fach ? "format" : "fach"); alles(); }, n));
   });
@@ -1650,7 +1666,7 @@ let ddOffen = null;
 const ddEl = (k, sel) => $("#"+DD[k].id+" "+sel);
 const anlKurz = i => ANL_KURZ[i] || ANL[i].replace(/^…\s*/,"");
 function ddWert(k){
-  if (k === "fach") return Z.fach || "";
+  if (k === "fach") return Z.fach ? anzeige("fach", Z.fach) : "";
   if (k === "anliegen") return Z.anliegen !== null ? anlKurz(Z.anliegen) : "";
   const m = DD[k].menge();
   return m.size ? anzeige(DD[k].feld, [...m][0]) + (m.size > 1 ? " +" + (m.size-1) : "") : "";
@@ -1681,9 +1697,9 @@ function ddBauen(k){
   if (k === "fach"){
     if (Z.fach){ const o = ddOption("alle Fächer", undefined, false, false, () => {
       Z.fach = null; Z.nurEins = null; setzeSortierung("fach"); ddZu(true); alles(); }); o.classList.add("alle"); p.appendChild(o); }
-    FAECHER.map(({fach}) => fach).sort((x,y) => x.localeCompare(y,"de")).forEach(fach => {
+    FAECHER.map(({fach}) => fach).filter(f => f !== "Überfachlich").sort(fachReihe)   /* «für alle Fächer» nicht in der Fachliste (14.10.2026) */.forEach(fach => {
       const n = ANG.filter(a => passt(a,"fach") && (a.faecher||[]).includes(fach)).length;
-      p.appendChild(ddOption(fach, n, Z.fach === fach, false, () => {
+      p.appendChild(ddOption(anzeige("fach", fach), n, Z.fach === fach, false, () => {
         Z.fach = Z.fach === fach ? null : fach; Z.nurEins = null;
         setzeSortierung(Z.fach ? "format" : "fach"); ddZu(true); alles(); }));
     });
