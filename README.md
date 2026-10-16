@@ -5,9 +5,9 @@ wie sie schnell zu den erprobten Angeboten des [Digital Learning Hub Sek II](htt
 
 **→ [Zur Übersicht](https://aapdinternet.github.io/GoodPractice/)**
 
-Fünf Seiten, vom Konzept bis zu den neusten Fassungen, dazu eine Seite zum Nachschlagen.
-Die vier Filterseiten führen durch denselben Bestand in unterschiedlicher Aufmachung,
-drei davon mit DLH-Bot – sie sind zum Vergleichen gedacht. Die beiden neusten Fassungen öffnen zusätzlich
+Sechs Seiten, vom Konzept bis zu den neusten Fassungen, dazu eine Seite zum Nachschlagen.
+Die fünf Filterseiten führen durch denselben Bestand in unterschiedlicher Aufmachung,
+vier davon mit DLH-Bot – sie sind zum Vergleichen gedacht. Die drei neusten Fassungen öffnen zusätzlich
 eine dritte Tür für Lehrpersonen, die noch gar nicht suchen: «Wo fange ich an?».
 
 | Seite | Was sie zeigt |
@@ -17,6 +17,7 @@ eine dritte Tür für Lehrpersonen, die noch gar nicht suchen: «Wo fange ich an
 | [Filter – Ergebnisse – Suchen](https://aapdinternet.github.io/GoodPractice/Filter-Ergebnisse-Suchen.html) | Fassung mit Bot, Anordnung A: drei Spalten. Links die Filter, in der Mitte die Ergebnisliste, rechts Suche und Bot. 369 Angebote, sortierbar nach Fach, Anliegen, Format, Datum, Titel oder Aufwand. |
 | [Suchen – Filter – Ergebnisse](https://aapdinternet.github.io/GoodPractice/Suchen-Filter-Ergebnisse.html) | Neuste Fassung mit Filterspalte, in zwei Schritten: Zuerst ein ruhiger Empfang mit DLH-Logo, dem Titel «Inspiration vom DLH für Deinen Unterricht» und drei Kacheln als Einstieg – Wo fange ich an?, Mein Fach und Ich möchte … «Wo fange ich an?» ist die dritte Tür für Lehrpersonen, die noch nicht suchen («Late Majority»): Sie führt nicht in die Filter, sondern auf eine ruhige eigene Ansicht – «Du musst nicht alles können. Ein kleiner Schritt genügt.» Sieben Situationen in Ich-Form, zu jeder ein beruhigender Satz und ein bis drei kuratierte Angebote mit ehrlichem Aufwand (A4-Seite, Podcastfolge, eine Methode), dazu Stimmen aus Praxisbeispielen, der Weg zu einem Menschen und erste Sätze für den Bot. Nach Mein Fach oder Ich möchte … lenkt ein Scheinwerfer den Blick auf den passenden Filterkasten. In der Arbeitsansicht oben ein violettes Band mit Stichwortsuche, links die Filter – Fach, Anliegen, Art des Angebots mit Good Practice, Einsatz und Stufe –, rechts die Ergebnisse als Karten, sortierbar nach Fach, Art des Angebots, Anliegen, Einsatz, Datum oder Titel. Ein Klick auf einen Titel öffnet das Angebot rechts in einem Ansichtsfenster, PDFs öffnen sich auf dem Handy gleich in einem neuen Tab; der Bot öffnet sich über den orangen Knopf «DLH-Bot fragen» als Seitenfenster. Durchgehend in Du-Form. 377 Einträge, Stand 11. Oktober 2026. |
 | [Suchen – Filter – Ergebnisse mit Dropdowns](https://aapdinternet.github.io/GoodPractice/Suchen-Filter-Ergebnisse-Dropdown.html) | Neuste Fassung ohne Filterspalte, mit demselben Empfang und denselben drei Kacheln, auch «Wo fange ich an?». Im violetten Band stehen oben in der Mitte fünf Dropdowns – Mein Fach, Ich möchte …, Art des Angebots, Einsatz, Stufe –, darunter die Stichwortsuche. Wer über Mein Fach oder Ich möchte … kommt, findet das passende Dropdown hervorgehoben und gleich geöffnet, alles andere tritt bis zur Wahl blass zurück; gewählte Filter bleiben im Band sichtbar und zeigen nur noch ihren Wert. Die Ergebnisse laufen über die ganze Breite, zuerst einspaltig, umschaltbar auf drei Spalten. Ein Klick auf einen Titel öffnet das Angebot rechts in einem Ansichtsfenster im selben Tab, PDFs auf dem Handy in einem neuen Tab. Durchgehend in Du-Form. 377 Einträge, Stand 11. Oktober 2026. |
+| [Suchen – Filter – Ergebnisse mit Dropdowns links](https://aapdinternet.github.io/GoodPractice/Suchen-Filter-Ergebnisse-Dropdown_links.html) | Neuste Fassung, wie die Fassung mit Dropdowns, aber die fünf Dropdowns stehen nicht im Band, sondern untereinander in einer Spalte links neben den Ergebnissen – Mein Fach, Ich möchte …, Art des Angebots, Nutzungsart, Schultyp. Oben steht «Filter – frei kombinierbar», unten der Link zur Übersicht zum Bestand mit dem Stand des Bestands. Die Spalte bleibt beim Scrollen stehen; ein geöffnetes Dropdown klappt in der Spalte auf, über einem gewählten Filter steht klein sein Name. Das violette Band oben hat nur noch eine Zeile mit Stichwortsuche. Kachel-Einstieg, Ansichtsfenster, Bot und Du-Form wie in den anderen beiden neusten Fassungen; auf dem Handy stehen die Dropdowns über den Ergebnissen. 377 Einträge, Stand 16. Oktober 2026. |
 
 Zum Nachschlagen: [Übersicht zum Bestand des DLH](https://aapdinternet.github.io/GoodPractice/Definitionen%20und%20Bestandeskarte.htm) –
 die zwölf Angebotsarten mit Herkunft, Erprobung, Einsatz, Anzahl und Ort, dazu Good Practice als Auswahl
@@ -56,6 +57,8 @@ Am 11. Oktober 2026 wurden alle Links der beiden neusten Fassungen geprüft: Die
 Ansichtsfenster anzeigen. PDFs aus dem Download-Bereich von dlh.zh.ch erscheinen nur, wenn der Aufruf ohne fremde
 Herkunftsangabe (Referrer) kommt – sonst zeigt dlh.zh.ch die Ordnerübersicht; die beiden Fassungen schicken bei diesen
 Links darum keine mit. Der Beitrag zu Synthesia lädt derzeit auch direkt auf dlh.zh.ch nicht.
+Am 16. Oktober 2026 kam die Fassung mit Dropdowns links dazu; sie zeigt denselben Bestand, enthält «Wo fange ich an?»
+ebenfalls und übernimmt den Schutz bei den Download-Links.
 Die älteren Seiten zeigen noch die frühere, regelbasiert vorgeschlagene Zuordnung: Anordnung A 369 Angebote, die Seite ohne Bot 363.
 
 Jede Seite ist eine einzelne HTML-Datei ohne Abhängigkeiten – herunterladen und
