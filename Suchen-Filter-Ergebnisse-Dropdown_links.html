@@ -739,7 +739,7 @@
       <button class="ein-zurueck" id="einZurueck" type="button">← zurück zum Start</button>
       <h1 id="einTitel" tabindex="-1">Wo fange ich an?</h1>
       <p class="ein-lead">Ein kleiner Schritt genügt. Du musst nicht alles auf einmal können.</p>
-      <p class="ein-sub">Welcher Satz passt am ehesten zu Dir? Dazu zeigen wir ein bis drei Angebote – nicht mehr.</p>
+      <p class="ein-sub">Welche Aussage passt am ehesten zu Dir? Dazu zeigen wir max. drei Angebote – nicht mehr.</p>
       <div id="situationen"></div>
 
       <p class="ein-fuss">
@@ -2011,15 +2011,15 @@ const EIN_AUFWAND = {
   "Praxisbeispiele KI":"ein Unterrichtsbeispiel zum Übernehmen", "Impuls-Workshop":"Aufzeichnung · ca. 1 Stunde"
 };
 const SITUATIONEN = [
-  { satz:"«Ich habe das Gefühl, ich müsste langsam einsteigen, weiss aber nicht womit.»",
-    beruhigung:"Viele Kolleginnen und Kollegen stehen genau hier. Es gibt keinen Rückstand aufzuholen – nur einen ersten Schritt.",
+  { satz:"«Ich habe das Gefühl, ich müsste einsteigen, weiss aber nicht, wo anfangen.»",
+    beruhigung:"Viele Kolleginnen und Kollegen stehen genau hier. Zum Anfangen reicht ein erster Schritt.",
     angebote:[
       {id:357, warum:"Lädt dazu ein, den eigenen Umgang mit KI zu reflektieren und Unterricht in Ruhe weiterzudenken."},
       {id:268, warum:"Was erste Forschungsergebnisse zu KI in der Schule sagen – Chancen und Stolperfallen auf einer Seite."}
     ],
     weiter:{text:"weitere Essenzen auf einer A4-Seite", format:"Essenz"} },
-  { satz:"«Meine Klasse nutzt ChatGPT, und ich fühle mich dem ausgeliefert.»",
-    beruhigung:"Du musst die Werkzeuge nicht besser beherrschen als Deine Klasse. Deine Stärke bleibt, gute Fragen zu stellen und das Denken zu begleiten.",
+  { satz:"«Meine Klasse nutzt ChatGPT und ich weiss nicht, wie ich damit sinnvoll umgehen kann.»",
+    beruhigung:"Du musst Dich bei den Tools nicht besser auskennen als Deine Klasse. Deine Stärke, gute Fragen zu stellen und das Denken zu begleiten, wird dabei immer wichtiger.",
     angebote:[
       {id:272, warum:"Warum das Lernpotenzial im Dialog mit der KI liegt und nicht in der fertigen Antwort – und was das für den Unterricht heisst."},
       {id:373, warum:"Dominic Hassler darüber, was sich noch zu lernen lohnt: echte Kompetenz statt simulierter Leistung."},
@@ -2034,16 +2034,16 @@ const SITUATIONEN = [
       {id:270, warum:"Die passende Seite zur Mindmap-Methode: wie Eigenleistung und KI zusammenkommen."}
     ],
     weiter:{text:"Praxisbeispiele, auch aus Deinem Fach", format:"Praxisbeispiele KI"} },
-  { satz:"«Ich bin skeptisch und möchte verstehen, worum es überhaupt geht.»",
-    beruhigung:"Skepsis ist eine gute Ausgangslage. Diese Angebote versprechen nichts, sondern ordnen ein – auch die Grenzen.",
+  { satz:"«Ich bin skeptisch und möchte zuerst verstehen, worum es beim Lernen mit KI geht.»",
+    beruhigung:"Hier findest Du drei Angebote für eine kritische Auseinandersetzung mit KI in der Bildung.",
     angebote:[
       {id:253, warum:"Studienbasierte Antworten auf häufige Fragen von Lehrpersonen zu KI."},
       {id:362, warum:"Ein Gespräch darüber, warum digitale Mündigkeit dort beginnt, wo man KI bewusst hinterfragt."},
       {id:367, warum:"Internationale Forschung und Pilotdaten aus dem Kanton Zürich zu KI und kritischem Denken im Gymnasium."}
     ],
     weiter:{text:"Angebote zu «KI verstehen»", anliegen:14} },
-  { satz:"«Ich habe eine konkrete Sorge: Prüfungen und Schreibaufträge.»",
-    beruhigung:"Diese Sorge teilen viele. An Zürcher Schulen gibt es dazu bereits erprobte Antworten.",
+  { satz:"«Ich habe eine konkrete Herausforderung: Wie kann ich kompetenzorientierter prüfen?»",
+    beruhigung:"An Zürcher Schulen gibt es dazu bereits erprobte Antworten.",
     angebote:[
       {id:260, warum:"Generative KI unterläuft klassische Prüfungsformen – wie Leistungsnachweise trotzdem aussagekräftig bleiben."},
       {id:224, warum:"Eine erprobte Prüfung der KS Uetikon am See: Schreiben mit und ohne KI in einem einzigen Leistungsnachweis."},
@@ -2051,15 +2051,15 @@ const SITUATIONEN = [
     ],
     weiter:{text:"Angebote zu «anders prüfen»", anliegen:1} },
   { satz:"«Die Bildschirme lenken meine Klasse ab, und ich weiss nicht, wie gegensteuern.»",
-    beruhigung:"Das ist kein persönliches Versagen, sondern eine Frage der Unterrichtsgestaltung – und dazu gibt es handfeste Hinweise.",
+    beruhigung:"Dies ist oft eine Frage der Unterrichtsgestaltung – Didaktik kann Ablenkung zurückdrängen.",
     angebote:[
       {id:370, warum:"Strategien gegen Ablenkung, wenn persönliche Geräte fester Bestandteil des Unterrichts sind."},
       {id:372, warum:"Wie Unterrichtsgestaltung und Didaktik helfen, die Konzentration aufrechtzuerhalten."},
       {id:303, warum:"Ein Workshop zum didaktischen Umgang mit Ablenkung, zusammengefasst auf einer Seite."}
     ],
     weiter:{text:"Angebote zu «Konzentration stärken, Ablenkung reduzieren»", anliegen:13} },
-  { satz:"«Ich möchte Zeit sparen – nicht noch mehr Arbeit.»",
-    beruhigung:"Beginne mit einer Aufgabe, die Du ohnehin jede Woche erledigst. Geht sie schneller, hat sich der Schritt gelohnt.",
+  { satz:"«Ich suche nach Entlastung bei der Unterrichtsorganisation – nicht noch mehr Arbeit.»",
+    beruhigung:"KI-Ansätze haben hier ein grosses Potenzial.",
     angebote:[
       {id:256, warum:"Bewährte Prompting-Strategien mit konkreten Unterrichtsbeispielen, kompakt auf einer Seite."},
       {id:376, warum:"Fertige Prompts nach Anwendungsfall, Rolle und Stufe finden und anpassen, statt selbst zu formulieren.", aufwand:"Aufzeichnung · ca. 1 Stunde · für später"}
