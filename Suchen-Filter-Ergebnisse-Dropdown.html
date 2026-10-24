@@ -765,7 +765,7 @@
       <button class="ansicht-zu" id="ansichtZu" type="button" aria-label="Ansicht schliessen">×</button>
     </div>
     <p class="ansicht-hinweis" id="ansichtHinweis">Bleibt das Fenster leer, lässt die Website die Anzeige hier nicht zu – dann «in neuem Tab öffnen».</p>
-    <iframe id="ansichtRahmen" title="Inhalt des Angebots" src="about:blank" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <iframe id="ansichtRahmen" title="Inhalt des Angebots" src="about:blank" referrerpolicy="no-referrer-when-downgrade" allow="fullscreen; picture-in-picture" allowfullscreen></iframe>
     <div class="ansicht-kopie" id="ansichtKopie" hidden></div>
   </aside>
   <aside class="botfenster" id="rechts" aria-label="DLH-Bot" hidden>
@@ -1833,6 +1833,9 @@ function kopieZeigen(a, k){
   box.scrollTop = 0;
 }
 function ansichtUrl(u){
+  /* YouTube lässt sich nur als embed im Ansichtsfenster zeigen (24.10.2026); Startzeit t= bleibt erhalten */
+  const y = (u||"").match(/^https:\/\/(?:www\.)?youtube\.com\/watch\?v=([\w-]{11})(?:.*[?&]t=(\d+))?/);
+  if (y) return "https://www.youtube-nocookie.com/embed/" + y[1] + (y[2] ? "?start=" + y[2] : "");
   const m = (u||"").match(/^https:\/\/open\.spotify\.com\/(episode|show|track)\/([A-Za-z0-9]+)/);
   return m ? "https://open.spotify.com/embed/" + m[1] + "/" + m[2] : u;
 }
@@ -1941,7 +1944,9 @@ window.addEventListener("resize", rechtsfreiMessen);
    ========================================================================== */
 const EIN_ART = {
   "Essenz":"Zum Lesen", "Kuratiertes":"Zum Lesen", "Podcast":"Zum Hören",
-  "eAssessment-Methoden":"Zum Ausprobieren", "Praxisbeispiele KI":"Zum Nachmachen", "Impuls-Workshop":"Zum Anschauen"
+  "eAssessment-Methoden":"Zum Ausprobieren", "Praxisbeispiele KI":"Zum Nachmachen", "Impuls-Workshop":"Zum Anschauen",
+  "Innovationsfonds":"Zum Übernehmen", "Video":"Zum Anschauen",
+  "Webseite":"Zum Lesen", "Holangebot":"Zum Holen", "Werkzeug":"Zum Ausprobieren"
 };
 /* ehrlicher Aufwand je Art; Lesezeiten für Kuratiertes sind Schätzungen */
 const EIN_AUFWAND = {
@@ -1954,7 +1959,8 @@ const SITUATIONEN = [
     beruhigung:"Viele Kolleginnen und Kollegen stehen genau hier. Zum Anfangen reicht ein erster Schritt.",
     angebote:[
       {id:357, warum:"Lädt dazu ein, den eigenen Umgang mit KI zu reflektieren und Unterricht in Ruhe weiterzudenken."},
-      {id:268, warum:"Was erste Forschungsergebnisse zu KI in der Schule sagen – Chancen und Stolperfallen auf einer Seite."}
+      {id:268, warum:"Was erste Forschungsergebnisse zu KI in der Schule sagen – Chancen und Stolperfallen auf einer Seite."},
+      {id:92, aufwand:"Unterrichtsvorlage · mit Handreichung", warum:"Ein erprobtes Projekt aus dem Innovationsfonds: Lernende erweitern ihre digitalen Kompetenzen selbstorganisiert – mit Handreichung zum Übernehmen."}
     ],
     weiter:{text:"weitere Essenzen auf einer A4-Seite", format:"Essenz"} },
   { satz:"«Meine Klasse nutzt ChatGPT und ich weiss nicht, wie ich damit sinnvoll umgehen kann.»",
@@ -1970,25 +1976,25 @@ const SITUATIONEN = [
     angebote:[
       {id:214, warum:"Ein kurzes formatives Assessment zum Einstieg oder mittendrin, einzeln oder kooperativ."},
       {id:210, warum:"Erst von Hand, dann im Tandem, dann mit KI erweitert: Die Klasse macht ihr Vorwissen sichtbar."},
-      {id:270, warum:"Die passende Seite zur Mindmap-Methode: wie Eigenleistung und KI zusammenkommen."}
+      {id:-1, aufwand:"kurzes Video · zum Nachmachen", warum:"Der DLH-Tipp des Monats zum 5-min-Check: wie Du mit KI rasch ein Forms-Quiz erstellst und formatives Feedback ohne grossen Aufwand in den Unterricht bringst."}
     ],
     weiter:{text:"Praxisbeispiele, auch aus Deinem Fach", format:"Praxisbeispiele KI"} },
   { satz:"«Ich bin skeptisch und möchte zuerst verstehen, worum es beim Lernen mit KI geht.»",
     beruhigung:"Hier findest Du drei Angebote für eine kritische Auseinandersetzung mit KI in der Bildung.",
     angebote:[
-      {id:253, warum:"Studienbasierte Antworten auf häufige Fragen von Lehrpersonen zu KI."},
+      {id:-2, aufwand:"Übersichtsseite · ca. 10 Min.", warum:"Wie grosse Sprachmodelle funktionieren – und warum ihre Antworten fehlerhaft, verzerrt oder erfunden sein können."},
       {id:362, warum:"Ein Gespräch darüber, warum digitale Mündigkeit dort beginnt, wo man KI bewusst hinterfragt."},
       {id:367, warum:"Internationale Forschung und Pilotdaten aus dem Kanton Zürich zu KI und kritischem Denken im Gymnasium."}
     ],
     weiter:{text:"Angebote zu «KI verstehen»", anliegen:14} },
-  { satz:"«Ich habe eine konkrete Herausforderung: Wie kann ich kompetenzorientierter prüfen?»",
-    beruhigung:"An Zürcher Schulen gibt es dazu bereits erprobte Antworten.",
+  { satz:"«Ich unterrichte digital. Ich möchte auch digital prüfen, aber wie?»",
+    beruhigung:"Digital prüfen geht auf zwei Arten: formativ, damit Deine Klasse eine Rückmeldung bekommt und sieht, wo sie steht, oder summativ, wenn es um eine Note geht. Anfangen würde ich formativ.",
     angebote:[
-      {id:260, warum:"Generative KI unterläuft klassische Prüfungsformen – wie Leistungsnachweise trotzdem aussagekräftig bleiben."},
-      {id:224, warum:"Eine erprobte Prüfung der KS Uetikon am See: Schreiben mit und ohne KI in einem einzigen Leistungsnachweis."},
-      {id:248, warum:"Was Kreativität, Kooperation, Kommunikation und kritisches Denken für Prüfungen bedeuten."}
+      {id:214, titel:"5-min-Check (formativ)", warum:"Ein kurzes digitales Quiz zum Einstieg oder mittendrin: Die Klasse bekommt sofort eine Rückmeldung, Du siehst, wo sie steht."},
+      {id:216, titel:"Lückentexte – einmal anders (formativ)", warum:"Die Lernenden erstellen mit KI Lückentexte füreinander und üben dabei selbst."},
+      {id:226, titel:"Open-Book-Sprachprüfung (summativ)", aufwand:"eine Prüfung · in zwei Phasen", warum:"Erst ein Teil auf Papier, dann eine Analyse am Gerät mit Hilfsmitteln – ein erprobtes Modell aus dem Italienisch, übertragbar auf andere Fächer."}
     ],
-    weiter:{text:"Angebote zu «anders prüfen»", anliegen:1} },
+    weiter:{text:"alle eAssessment-Methoden", format:"eAssessment-Methoden"} },
   { satz:"«Die Bildschirme lenken meine Klasse ab, und ich weiss nicht, wie gegensteuern.»",
     beruhigung:"Dies ist oft eine Frage der Unterrichtsgestaltung – Didaktik kann Ablenkung zurückdrängen.",
     angebote:[
@@ -1998,10 +2004,11 @@ const SITUATIONEN = [
     ],
     weiter:{text:"Angebote zu «Konzentration stärken, Ablenkung reduzieren»", anliegen:13} },
   { satz:"«Ich suche nach Entlastung bei der Unterrichtsorganisation – nicht noch mehr Arbeit.»",
-    beruhigung:"KI-Ansätze haben hier ein grosses Potenzial.",
+    beruhigung:"Hier spielt KI ihren grössten Vorteil aus: Sie nimmt Dir Routinearbeit ab – vom ersten Ideen-Pingpong bis zum fertigen Unterrichtsentwurf – und spart Dir spürbar Zeit für das, was nur Du kannst.",
     angebote:[
-      {id:256, warum:"Bewährte Prompting-Strategien mit konkreten Unterrichtsbeispielen, kompakt auf einer Seite."},
-      {id:376, warum:"Fertige Prompts nach Anwendungsfall, Rolle und Stufe finden und anpassen, statt selbst zu formulieren.", aufwand:"Aufzeichnung · ca. 1 Stunde · für später"}
+      {id:-3, aufwand:"Übersichtsseite · ca. 10 Min.", warum:"Wo KI Dich konkret entlastet: Unterricht vorbereiten, Material erstellen, Aufgaben entwerfen – auf einer Seite gebündelt."},
+      {id:376, warum:"Fertige Prompts nach Anwendungsfall, Rolle und Stufe finden und anpassen, statt selbst zu formulieren.", aufwand:"Aufzeichnung · ca. 1 Stunde · für später"},
+      {id:-4, aufwand:"Anleitung in vier Schritten · mit Video", warum:"Bau Dir einen eigenen KI-Assistenten mit Deinem Material und klaren Vorgaben – einmal eingerichtet, arbeitet er Dir immer wieder zu."}
     ],
     weiter:{text:"Angebote zu «Material und Werkzeuge überarbeiten»", anliegen:15} }
 ];
@@ -2016,7 +2023,18 @@ const BOT_SAETZE = [
   "Was wäre ein kleiner erster Schritt in meinem Fach?",
   "Welche KI-Tools darf ich an meiner Schule überhaupt nutzen?"
 ];
-const einAngebot = id => ANG.find(a => a.id === id);
+/* Einträge im Einstieg, die nicht in der Datenbank stehen (negative ids, 24.10.2026) */
+const EIN_EXTERN = [
+  {id:-1, format:"Video", titel:"Formatives Feedback im Unterricht",
+   url:"https://www.youtube.com/watch?v=ZzOlebRf39Y&t=10s", lead:"Formative Assessments mit KI-erstellten Forms-Quizzes."},
+  {id:-2, format:"Webseite", titel:"KI verstehen", url:"https://dlh.zh.ch/home/genki/ki-verstehen",
+   lead:"Wie grosse Sprachmodelle funktionieren – Grundlagen auf dlh.zh.ch."},
+  {id:-3, format:"Webseite", titel:"Wo sich KI lohnt", url:"https://dlh.zh.ch/home/genki/lehren-und-lernen-mit-ki/wo-sich-ki-lohnt",
+   lead:"Mehrwert für Lernende, Entlastung für Lehrpersonen, Bereicherung der Methodik."},
+  {id:-4, format:"Webseite", titel:"KI-Assistenten", url:"https://dlh.zh.ch/home/genki/lehren-und-lernen-mit-ki/ki-assistenten",
+   lead:"Eigene KI-Assistenten mit Rolle, eigener Wissensbasis und Leitplanken erstellen – in vier Schritten."}
+];
+const einAngebot = id => ANG.find(a => a.id === id) || EIN_EXTERN.find(a => a.id === id);
 function einstiegAuf(){
   fokusEnde(); botSchliessen(); ansichtZu();
   document.body.classList.remove("empfang");
@@ -2039,7 +2057,7 @@ function baueEinstieg(){
       return `<li class="schritt">
         <span class="nr" aria-hidden="true">${n+1}</span>
         <span class="art"><b>${esc(EIN_ART[a.format] || a.format)}</b><span class="aufwand-pille">${esc(x.aufwand || EIN_AUFWAND[a.format] || "")}</span></span>
-        <a class="ein-titel" href="${esc(a.url)}" target="_blank" rel="noopener" data-ein="${a.id}">${esc(a.titel)}</a>
+        <a class="ein-titel" href="${esc(a.url)}" target="_blank" rel="noopener" data-ein="${a.id}">${esc(x.titel || a.titel)}</a>
         <p>${esc(x.warum)}</p>
       </li>`;
     }).join("");
